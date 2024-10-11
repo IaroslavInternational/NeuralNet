@@ -1,4 +1,5 @@
 #pragma once
+
 #include "InputNeuron.hpp"
 
 class Neuron : public InputNeuron
