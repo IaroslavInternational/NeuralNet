@@ -13,10 +13,15 @@ void OutputLayer::activate()
 	}
 }
 
-void OutputLayer::get_result()
+std::vector<float>& OutputLayer::get_result()
 {
+	static std::vector<float> res;
+	res.clear();
+
 	for (auto& n : neurons)
 	{
-		std::cout << n->get_output() << std::endl;
+		res.push_back(n->get_output());
 	}
+
+	return res;
 }

@@ -10,16 +10,6 @@
 #include <cassert>
 #include <iostream>
 
-/*
-* LAYER:
-* -тип нейронов
-* -массив нейронов
-* -массив исходящих синапсов из этих нейронов
-* Парметры:
-* -кол-во нейронов
-* 
-*/
-
 template<class T>
 class Layer
 {
@@ -29,11 +19,12 @@ public:
 	size_t length() const;
 	template<class T1, class T2> void add_synapse(std::shared_ptr<T1> from, std::shared_ptr<T2> to);
 	std::shared_ptr<T> get_neuron(size_t index);
+	Synapse* get_next_synapse();
 protected:
 	std::vector<std::shared_ptr<T>> neurons;
 	std::vector<Synapse> synapses;
 	std::string name;
-	size_t pos = 0;
+	size_t next_index = 0;
 };
 
 template<class T>
@@ -66,4 +57,16 @@ template<class T>
 std::shared_ptr<T> Layer<T>::get_neuron(size_t index)
 {
 	return neurons[index];
+}
+
+template<class T>
+Synapse* Layer<T>::get_next_synapse()
+{
+	if (next_index > synapses.size() - 1)
+	{
+		next_index = 0;
+		return nullptr;
+	}
+
+	return &synapses[next_index++];
 }

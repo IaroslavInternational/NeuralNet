@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Source\NeuralNet.cpp" />
     <ClCompile Include="src\Source\Neuron\Neuron.cpp" />
     <ClCompile Include="src\Source\Layer\OutputLayer.cpp" />
     <ClCompile Include="src\Source\Layer\HiddenLayer.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\Source\Synapse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\NeuralNet.hpp" />
     <ClInclude Include="src\Include\Layer\HiddenLayer.hpp" />
     <ClInclude Include="src\Include\Layer\InputLayer.hpp" />
     <ClInclude Include="src\Include\Layer\Layer.hpp" />

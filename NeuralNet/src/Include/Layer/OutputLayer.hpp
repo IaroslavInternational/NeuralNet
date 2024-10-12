@@ -8,6 +8,6 @@ public:
 	OutputLayer(size_t n, const std::string& name);
 public:
 	void activate(); 
-	void get_result();
+	std::vector<float>& get_result();
 };
 

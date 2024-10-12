@@ -1,51 +1,68 @@
 ﻿#include <iostream>
 
-#include "Include/Layer/InputLayer.hpp"
-#include "Include/Layer/HiddenLayer.hpp"
-#include "Include/Layer/OutputLayer.hpp"
+#include "Include/NeuralNet.hpp"
 
-/* TO DO:
-* Наследование class Layer
-* class NeuralNet
-* Функционал NeuralNet и Layer
+/* 
+* --- TO DO LIST ---:
+* new: Обучение через МОР -> спроектировать
+* new: спроектировать класс, собирающий всю информацию о НС
 */
 
-/*
-* добавить assert`ы
-* изменить указатели на shared_ptr
-*/
-
-template<class T1, class T2>
-void create_synapses(Layer<T1>* l1, Layer<T2>* l2)
-{
-	size_t c = 0;
-
-	for (size_t i = 0; i < l1->length(); i++)
-	{
-		for (size_t j = 0; j < l2->length(); j++)
-		{
-			l1->add_synapse(l1->get_neuron(i), l2->get_neuron(j));
-		}
-	}
-}
 
 int main()
 {
-	InputLayer input_layer(2, "Input Layer");
-	HiddenLayer hidden_layer(2, "Hidden Layer");
-	OutputLayer output_layer(1, "Output Layer");
+	// Кол-во нейронов во входном слое, Кол-во промеж. слоёв, 
+	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
+	NeuralNet nn(2, 1, 2, 1);
 
-	create_synapses(&input_layer, &hidden_layer);
-	create_synapses(&hidden_layer, &output_layer);
+	std::vector<std::vector<float>> train_set =
+	{
+		{0.0f, 0.0f},
+		{0.0f, 1.0f},
+		{1.0f, 0.0f},
+		{1.0f, 1.0f}
+	};
 
-	input_layer.set_input({ 0, 1 });
-	input_layer.forward();
+	std::vector<std::vector<float>> expected_set =
+	{
+		{0.0f},
+		{1.0f},
+		{1.0f},
+		{0.0f}
+	};
 
-	hidden_layer.activate();
-	hidden_layer.forward();
+	bool out = false;
 
-	output_layer.activate();
-	output_layer.get_result();
+	for (size_t j = 0; j < 200; j++)
+	{
+		if (out)
+		{
+			break;
+		}
+
+		for (size_t i = 0; i < train_set.size(); i++)
+		{
+			nn.train(train_set[i], expected_set[i]);
+		}
+
+		out = nn.get_error().back() < 0.05f;
+	}
+
+	std::cout << "TEST:" << std::endl;
+
+	std::vector<std::vector<float>> res;
+	for (size_t i = 0; i < train_set.size(); i++)
+	{
+		res.push_back(nn.run(train_set[i]));
+	}
+
+	for (auto& r : res)
+	{
+		for (auto& r1 : r)
+		{
+			std::cout << r1 << std::endl;
+		}
+	}
 
 	return 0;
 }

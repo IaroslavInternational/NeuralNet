@@ -19,6 +19,5 @@ float HiddenNeuron::get_output() const
 
 void HiddenNeuron::activate()
 {
-	input = 1 / (1 + exp(-input));
-	output = input;
+	output = 1 / (1 + exp(-input));
 }

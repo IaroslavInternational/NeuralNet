@@ -5,7 +5,7 @@ InputLayer::InputLayer(size_t n, const std::string& name)
 	Layer(n, name)
 {}
 
-void InputLayer::set_input(const std::vector<int>& values)
+void InputLayer::set_input(const std::vector<float>& values)
 {
 	assert(neurons.size() == values.size());
 

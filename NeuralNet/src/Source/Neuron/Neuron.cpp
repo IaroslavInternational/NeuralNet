@@ -16,3 +16,18 @@ float Neuron::get_output() const
 {
 	return output;
 }
+
+void Neuron::set_delta(float delta)
+{
+	this->delta = delta;
+}
+
+float Neuron::get_delta() const
+{
+	return delta;
+}
+
+std::string Neuron::get_name() const
+{
+	return id;
+}

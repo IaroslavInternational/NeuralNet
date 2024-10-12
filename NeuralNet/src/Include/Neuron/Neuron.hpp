@@ -11,9 +11,13 @@ public:
 public:
 	virtual void get_input(float value);
 	virtual float get_output() const;
+	void set_delta(float delta);
+	float get_delta() const;
+	std::string get_name() const;
 protected:
 	float input = 0.0f;
 	float output = 0.0f;
+	float delta = 0.0f;
 	std::string id;
 };
 
