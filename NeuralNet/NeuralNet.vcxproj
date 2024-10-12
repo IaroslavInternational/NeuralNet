@@ -131,22 +131,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Source\Layer.cpp" />
-    <ClCompile Include="src\Source\OutputNeuron.cpp" />
-    <ClCompile Include="src\Source\Neuron.cpp" />
-    <ClCompile Include="src\Source\InputNeuron.cpp" />
+    <ClCompile Include="src\Source\Neuron\Neuron.cpp" />
+    <ClCompile Include="src\Source\Layer\OutputLayer.cpp" />
+    <ClCompile Include="src\Source\Layer\HiddenLayer.cpp" />
+    <ClCompile Include="src\Source\Layer\InputLayer.cpp" />
+    <ClCompile Include="src\Source\Neuron\OutputNeuron.cpp" />
+    <ClCompile Include="src\Source\Neuron\HiddenNeuron.cpp" />
+    <ClCompile Include="src\Source\Neuron\InputNeuron.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Source\Synapse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\Layer\HiddenLayer.hpp" />
+    <ClInclude Include="src\Include\Layer\InputLayer.hpp" />
+    <ClInclude Include="src\Include\Layer\Layer.hpp" />
+    <ClInclude Include="src\Include\Layer\OutputLayer.hpp" />
+    <ClInclude Include="src\Include\Neuron.hpp" />
+    <ClInclude Include="src\Include\Neuron\HiddenNeuron.hpp" />
+    <ClInclude Include="src\Include\Neuron\InputNeuron.hpp" />
+    <ClInclude Include="src\Include\Neuron\Neuron.hpp" />
+    <ClInclude Include="src\Include\Neuron\OutputNeuron.hpp" />
+    <ClInclude Include="src\Include\OutputLayer.hpp" />
+    <ClInclude Include="src\Include\HiddenLayer.hpp" />
+    <ClInclude Include="src\Include\InputLayer.hpp" />
     <ClInclude Include="src\Include\Layer.hpp" />
     <ClInclude Include="src\Include\OutputNeuron.hpp" />
-    <ClInclude Include="src\Include\Neuron.hpp" />
+    <ClInclude Include="src\Include\HiddenNeuron.hpp" />
     <ClInclude Include="src\Include\InputNeuron.hpp" />
     <ClInclude Include="src\Include\Synapse.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

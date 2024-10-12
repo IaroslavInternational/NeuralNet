@@ -1,6 +1,8 @@
 ﻿#include <iostream>
-#include "Include/Layer.hpp"
-#include "Include/OutputNeuron.hpp"
+
+#include "Include/Layer/InputLayer.hpp"
+#include "Include/Layer/HiddenLayer.hpp"
+#include "Include/Layer/OutputLayer.hpp"
 
 /* TO DO:
 * Наследование class Layer
@@ -23,24 +25,20 @@ void create_synapses(Layer<T1>* l1, Layer<T2>* l2)
 		for (size_t j = 0; j < l2->length(); j++)
 		{
 			l1->add_synapse(l1->get_neuron(i), l2->get_neuron(j));
-
-			std::cout << "Synapse " << c << " between " << "N_out " << i << " and N_in " << j << std::endl;
-			c++;
 		}
 	}
 }
 
 int main()
 {
-	Layer<InputNeuron> input_layer(0, "Input Layer");
-	Layer<Neuron> hidden_layer(50, "Hidden Layer");
-	Layer<OutputNeuron> output_layer(4, "Output Layer");
+	InputLayer input_layer(2, "Input Layer");
+	HiddenLayer hidden_layer(2, "Hidden Layer");
+	OutputLayer output_layer(1, "Output Layer");
 
 	create_synapses(&input_layer, &hidden_layer);
-	std::cout << std::endl;
 	create_synapses(&hidden_layer, &output_layer);
 
-	input_layer.set_input({ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1});
+	input_layer.set_input({ 0, 1 });
 	input_layer.forward();
 
 	hidden_layer.activate();

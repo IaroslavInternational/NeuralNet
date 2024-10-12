@@ -1,9 +1,11 @@
 #pragma once
 
-#include "InputNeuron.hpp"
+#include "Neuron.hpp"
 
-class Neuron : public InputNeuron
+class HiddenNeuron : public Neuron
 {
+public:
+	HiddenNeuron(const std::string& name);
 public:
 	void get_input(float value) override;
 	float get_output() const override;

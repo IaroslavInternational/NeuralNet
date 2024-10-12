@@ -1,0 +1,19 @@
+#pragma once
+
+#include "../Synapse.hpp"
+
+#include <string>
+
+class Neuron
+{
+public:
+	Neuron(const std::string& name);
+public:
+	virtual void get_input(float value);
+	virtual float get_output() const;
+protected:
+	float input = 0.0f;
+	float output = 0.0f;
+	std::string id;
+};
+

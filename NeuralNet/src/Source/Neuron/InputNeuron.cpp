@@ -1,4 +1,9 @@
-#include "../Include/InputNeuron.hpp"
+#include "../../Include/Neuron/InputNeuron.hpp"
+
+InputNeuron::InputNeuron(const std::string& name)
+	:
+	Neuron(name)
+{}
 
 void InputNeuron::get_input(float value)
 {

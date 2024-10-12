@@ -1,16 +1,18 @@
 #pragma once
 
-class InputNeuron;
+#include <memory>
+
+class Neuron;
 
 class Synapse
 {
 public:
-	Synapse(InputNeuron* from, InputNeuron* to);
-	Synapse(float w, InputNeuron* from, InputNeuron* to);
+	Synapse(std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to);
+	Synapse(float w, std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to);
 public:
 	void send() const;
 private:
 	float weight;
-	InputNeuron* from;
-	InputNeuron* to;
+	std::shared_ptr<Neuron> from;
+	std::shared_ptr<Neuron> to;
 };
