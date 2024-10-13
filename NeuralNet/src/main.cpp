@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 
 #include "Include/NeuralNet.hpp"
+#include "Include/Monitoring.hpp"
 
 /* 
 * --- TO DO LIST ---:
@@ -14,6 +15,7 @@ int main()
 	// Кол-во нейронов во входном слое, Кол-во промеж. слоёв, 
 	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
 	NeuralNet nn(2, 1, 2, 1);
+	Monitoring mon(&nn);
 
 	std::vector<std::vector<float>> train_set =
 	{
@@ -31,9 +33,21 @@ int main()
 		{0.0f}
 	};
 
+	/*std::vector<float> w =
+	{
+		0.45f, 
+		0.78f,
+		-0.12f,
+		0.13f,
+		1.5f,
+		-2.3f
+	};*/
+
+	//nn.set_weights(&w);
+
 	bool out = false;
 
-	for (size_t j = 0; j < 200; j++)
+	for (size_t j = 0; j < 50; j++)
 	{
 		if (out)
 		{
@@ -43,9 +57,10 @@ int main()
 		for (size_t i = 0; i < train_set.size(); i++)
 		{
 			nn.train(train_set[i], expected_set[i]);
+			mon.update();
 		}
 
-		out = nn.get_error().back() < 0.05f;
+		//out = nn.get_error().back() < 0.05f;
 	}
 
 	std::cout << "TEST:" << std::endl;
@@ -63,6 +78,10 @@ int main()
 			std::cout << r1 << std::endl;
 		}
 	}
+
+	std::cout << std::endl;
+
+	mon.print();
 
 	return 0;
 }

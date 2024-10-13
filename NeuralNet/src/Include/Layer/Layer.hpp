@@ -13,6 +13,7 @@
 template<class T>
 class Layer
 {
+	friend class Monitoring;
 public:
 	Layer(size_t n, const std::string& name);
 public:
@@ -20,6 +21,7 @@ public:
 	template<class T1, class T2> void add_synapse(std::shared_ptr<T1> from, std::shared_ptr<T2> to);
 	std::shared_ptr<T> get_neuron(size_t index);
 	Synapse* get_next_synapse();
+	void set_weights(std::vector<float>* weights);
 protected:
 	std::vector<std::shared_ptr<T>> neurons;
 	std::vector<Synapse> synapses;
@@ -69,4 +71,24 @@ Synapse* Layer<T>::get_next_synapse()
 	}
 
 	return &synapses[next_index++];
+}
+
+template<class T>
+void Layer<T>::set_weights(std::vector<float>* weights)
+{
+	size_t i = 0;
+	for (auto it = weights->begin(); it != weights->end(); ++it)
+	{
+		if (i < synapses.size())
+		{
+			synapses[i].set_weight(*it);
+			i++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	weights->erase(weights->begin(), weights->begin() + i);
 }
