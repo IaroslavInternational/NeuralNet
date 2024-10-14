@@ -13,7 +13,7 @@ Synapse::Synapse(std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to)
 {
 	std::random_device rd;  
 	std::mt19937 gen(rd()); 
-	std::uniform_real_distribution<> distrib(-1.0, 1.0);
+	std::uniform_real_distribution<> distrib(-0.1, 0.1);
 
 	weight = distrib(gen);
 }

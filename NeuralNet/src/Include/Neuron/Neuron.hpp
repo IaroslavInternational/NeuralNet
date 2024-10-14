@@ -14,10 +14,12 @@ public:
 	void set_delta(float delta);
 	float get_delta() const;
 	std::string get_name() const;
+	void set_bias(float b);
 protected:
 	float input = 0.0f;
 	float output = 0.0f;
 	float delta = 0.0f;
+	float offset = 0.0f;
 	std::string id;
 };
 

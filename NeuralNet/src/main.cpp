@@ -14,7 +14,7 @@ int main()
 {
 	// Кол-во нейронов во входном слое, Кол-во промеж. слоёв, 
 	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
-	NeuralNet nn(2, 1, 2, 1);
+	NeuralNet nn(2, 1, 4, 1);
 	Monitoring mon(&nn);
 
 	std::vector<std::vector<float>> train_set =
@@ -46,9 +46,11 @@ int main()
 	//nn.set_weights(&w);
 
 	bool out = false;
-
-	for (size_t j = 0; j < 50; j++)
+	float out_val = 0.0f;
+	std::vector<std::vector<float>> res;
+	for (size_t j = 0; j < 1000000; j++)
 	{
+		out_val = 0.0f;
 		if (out)
 		{
 			break;
@@ -57,29 +59,38 @@ int main()
 		for (size_t i = 0; i < train_set.size(); i++)
 		{
 			nn.train(train_set[i], expected_set[i]);
-			mon.update();
+			//mon.update();
 		}
 
-		//out = nn.get_error().back() < 0.05f;
+		res.clear();
+		for (size_t k = 0; k < 4; k++)
+		{
+			res.push_back(nn.run(train_set[k]));
+		}
+
+		for (size_t s = 0; s < 4; s++)
+		{
+			out_val += pow(res[s][0] - expected_set[s][0], 2);
+		}
+		
+		out = out_val / 4 < 0.0005f;
 	}
 
 	std::cout << "TEST:" << std::endl;
 
-	std::vector<std::vector<float>> res;
+	res.clear();
 	for (size_t i = 0; i < train_set.size(); i++)
 	{
 		res.push_back(nn.run(train_set[i]));
 	}
 
-	for (auto& r : res)
+	for (size_t i = 0; i < expected_set.size(); i++)
 	{
-		for (auto& r1 : r)
-		{
-			std::cout << r1 << std::endl;
-		}
+		std::cout << "Expected: " << expected_set[i][0] << " -> Real: " << res[i][0] << std::endl;
 	}
 
-	std::cout << std::endl;
+
+	//std::cout << std::endl;
 
 	mon.print();
 

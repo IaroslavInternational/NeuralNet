@@ -1,6 +1,7 @@
 #include "../Include/NeuralNet.hpp"
 
-#define LOG(str) std::cout << str << std::endl;
+//#define LOG(str) std::cout << str << std::endl;
+#define LOG(str) //td::cout << str << std::endl;
 
 NeuralNet::NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_size, size_t O_Layer_size)
 	:
@@ -35,21 +36,19 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 		//error.push_back(expected[i] - result[i]);
 	}
 
-	
-	
-	std::cout << "Res: " << std::endl;
+	LOG("Res: ")
 	for (auto& r : result)
 	{
-		std::cout << r << std::endl;
+		LOG(r)
 	}
 
-	std::cout << "Err: " << std::endl;
+	LOG("Err: ")
 	for (auto& e : error)
 	{
-		std::cout << e << std::endl;
+		LOG(e)
 	}
 
-	std::cout << "Iterations " << iterations << std::endl;
+	LOG("Iterations " + std::to_string(iterations))
 
 	LOG("")
 
@@ -59,7 +58,7 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 	// —читаем дельту дл€ выходного сло€
 	for (size_t i = 0; i < result.size(); i++)
 	{
-		delta_output.push_back(((expected[i] - result[i]) * ((expected[i] - result[i]) * result[i])));
+		delta_output.push_back(((expected[i] - result[i]) * ((1.0f - result[i]) * result[i])));
 		LOG(delta_output[i])
 	}
 	
@@ -81,7 +80,7 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 		auto n_out = syn->get_from()->get_output();
 		auto w = syn->get_weight();
 		auto d_out = delta_output[0];
-		auto n_delta = ((expected[0] - n_out) * n_out) * (w * d_out);
+		auto n_delta = ((1.0f - n_out) * n_out) * (w * d_out);
 		syn->get_from()->set_delta(n_delta);
 
 		auto grad = n_out * d_out;

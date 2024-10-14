@@ -31,3 +31,8 @@ std::string Neuron::get_name() const
 {
 	return id;
 }
+
+void Neuron::set_bias(float b)
+{
+	offset = b;
+}
