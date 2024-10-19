@@ -23,3 +23,16 @@ void Monitoring::print()
 	}
 	ofile.close();
 }
+
+void Monitoring::show_weights()
+{
+	for (auto& w : nn->input_layer.synapses)
+	{
+		std::cout << w.weight << "f," << std::endl;
+	}
+
+	for (auto& w : nn->hidden_layers[0].synapses)
+	{
+		std::cout << w.weight << "f," << std::endl;
+	}
+}

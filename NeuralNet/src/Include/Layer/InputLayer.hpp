@@ -4,6 +4,7 @@
 
 class InputLayer : public Layer<InputNeuron>
 {
+	friend class Monitoring;
 public:
 	InputLayer(size_t n, const std::string& name);
 public:

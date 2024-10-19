@@ -33,22 +33,29 @@ int main()
 		{0.0f}
 	};
 
-	/*std::vector<float> w =
+	std::vector<float> w =
 	{
-		0.45f, 
-		0.78f,
-		-0.12f,
-		0.13f,
-		1.5f,
-		-2.3f
-	};*/
+-8.61197f,
+3.5581f,
+-6.17751f,
+3.49245f,
+2.81937f,
+-8.6373f,
+-6.13125f,
+-1.18834f,
+5.2806f,
+8.1035f,
+-16.4926f,
+-4.24173f
+
+	};
 
 	//nn.set_weights(&w);
 
 	bool out = false;
 	float out_val = 0.0f;
 	std::vector<std::vector<float>> res;
-	for (size_t j = 0; j < 1000000; j++)
+	for (size_t j = 0; j < 100000; j++)
 	{
 		out_val = 0.0f;
 		if (out)
@@ -89,6 +96,9 @@ int main()
 		std::cout << "Expected: " << expected_set[i][0] << " -> Real: " << res[i][0] << std::endl;
 	}
 
+	mon.show_weights();
+
+	std::cout << std::endl;
 
 	//std::cout << std::endl;
 

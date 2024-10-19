@@ -9,6 +9,7 @@ public:
 public:
 	void update();
 	void print();
+	void show_weights();
 private:
 	std::vector<float> data;
 	NeuralNet* nn;
