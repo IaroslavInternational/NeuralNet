@@ -15,5 +15,5 @@ void OutputNeuron::activate()
 {
 	input += offset;
 	output = 1 / (1 + exp(-input));
-	input = 0;
+	input = 0.0f;
 }

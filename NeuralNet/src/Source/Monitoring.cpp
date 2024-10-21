@@ -10,7 +10,7 @@ Monitoring::Monitoring(NeuralNet* nn)
 void Monitoring::update()
 {
 	//data.push_back(nn->hidden_layers[0].synapses[0].get_weight());
-	data.push_back(nn->error[0]);
+	//data.push_back(nn->error[0]);
 }
 
 void Monitoring::print()

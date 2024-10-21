@@ -15,7 +15,7 @@ Synapse::Synapse(std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to)
 	std::mt19937 gen(rd()); 
 	std::uniform_real_distribution<> distrib(-0.1, 0.1);
 
-	weight = distrib(gen);
+	weight = (float)distrib(gen);
 }
 
 Synapse::Synapse(float w, std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to)
@@ -34,11 +34,6 @@ void Synapse::send() const
 	to->get_input(from->get_output()*weight);
 }
 
-bool Synapse::valid() const
-{
-	return !(from == nullptr || to == nullptr);
-}
-
 std::shared_ptr<Neuron> Synapse::get_from()
 {
 	return from;
@@ -51,7 +46,6 @@ std::shared_ptr<Neuron> Synapse::get_to()
 
 void Synapse::set_weight(float weight)
 {
-	std::cout << "n w = " << weight << std::endl;
 	this->weight = weight;
 }
 
@@ -62,7 +56,7 @@ float Synapse::get_weight() const
 
 void Synapse::update_weight(float delta, float alfa)
 {
-	float delta_w = delta + alfa * prev_weight_delta;
-	weight += delta + alfa * prev_weight_delta;
+	delta_w = delta + alfa * prev_weight_delta;
+	weight += delta_w;
 	prev_weight_delta = delta_w;
 }

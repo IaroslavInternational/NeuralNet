@@ -8,7 +8,6 @@
 #include <vector>
 #include <string>
 #include <cassert>
-#include <iostream>
 
 template<class T>
 class Layer
@@ -20,7 +19,6 @@ public:
 	size_t length() const;
 	template<class T1, class T2> void add_synapse(std::shared_ptr<T1> from, std::shared_ptr<T2> to);
 	std::shared_ptr<T> get_neuron(size_t index);
-	Synapse* get_next_synapse();
 	void set_weights(std::vector<float>* weights);
 public:
 	std::vector<Synapse>* get_synapses();
@@ -28,7 +26,6 @@ protected:
 	std::vector<std::shared_ptr<T>> neurons;
 	std::vector<Synapse> synapses;
 	std::string name;
-	size_t next_index = 0;
 };
 
 template<class T>
@@ -61,18 +58,6 @@ template<class T>
 std::shared_ptr<T> Layer<T>::get_neuron(size_t index)
 {
 	return neurons[index];
-}
-
-template<class T>
-Synapse* Layer<T>::get_next_synapse()
-{
-	if (next_index > synapses.size() - 1)
-	{
-		next_index = 0;
-		return nullptr;
-	}
-
-	return &synapses[next_index++];
 }
 
 template<class T>

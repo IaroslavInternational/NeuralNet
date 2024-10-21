@@ -12,7 +12,6 @@ public:
 	Synapse(float w, std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to);
 public:
 	void send() const;
-	bool valid() const;
 	std::shared_ptr<Neuron> get_from();
 	std::shared_ptr<Neuron> get_to();
 	void set_weight(float weight);
@@ -21,6 +20,7 @@ public:
 private: 
 	float weight;
 	float prev_weight_delta = 0.0f;
+	float delta_w = 0.0f;
 	std::shared_ptr<Neuron> from;
 	std::shared_ptr<Neuron> to;
 };
