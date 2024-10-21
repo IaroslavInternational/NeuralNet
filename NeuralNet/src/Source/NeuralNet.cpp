@@ -33,7 +33,6 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 	for (size_t i = 0; i < result.size(); i++)
 	{
 		error.push_back(pow((expected[i] - result[i]), 2) / 1);
-		//error.push_back(expected[i] - result[i]);
 	}
 
 	LOG("Res: ")
@@ -61,33 +60,29 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 		delta_output.push_back(((expected[i] - result[i]) * ((1.0f - result[i]) * result[i])));
 		LOG(delta_output[i])
 	}
+
+	// Устанавливаем дельту для выходного слоя синапсов
+	train_synapses = hidden_layers.back().get_synapses();
+	for (size_t i = 0; i < result.size(); i++)
+	{
+		for (size_t j = 0; j < train_synapses->size(); j++)
+		{
+			for (auto& s : *train_synapses)
+			{
+				s.get_to()->set_delta(((expected[i] - result[i]) * ((1.0f - result[i]) * result[i])));
+			}
+		}
+	}
 	
 	LOG("")
 
-	LOG("ADJ W from H to O:")
-	while (!false)
+	for (int i = hidden_layers.size() - 1; i >= 0; i--)
 	{
-		auto syn = hidden_layers.back().get_next_synapse();
-
-		if (syn == nullptr)
-		{
-			break;
+		train_synapses = hidden_layers[i].get_synapses();
+		for (size_t j = 0; j < train_synapses->size() - 1; j++)
+		{	
+			update_synapse(&train_synapses->at(j));
 		}
-
-		LOG("Syn " + syn->get_from()->get_name())
-		LOG("Old w: " + std::to_string(syn->get_weight()))
-
-		auto n_out = syn->get_from()->get_output();
-		auto w = syn->get_weight();
-		auto d_out = delta_output[0];
-		auto n_delta = ((1.0f - n_out) * n_out) * (w * d_out);
-		syn->get_from()->set_delta(n_delta);
-
-		auto grad = n_out * d_out;
-
-		syn->update_weight(E * grad, a);
-
-		LOG("New w: " + std::to_string(syn->get_weight()))
 	}
 
 	LOG("")
@@ -167,4 +162,11 @@ void NeuralNet::create_synapses(Layer<T1>* l1, Layer<T2>* l2)
 			l1->add_synapse(l1->get_neuron(i), l2->get_neuron(j));
 		}
 	}
+}
+
+void NeuralNet::update_synapse(Synapse* synapse)
+{
+	synapse->get_from()->set_delta(((1.0f - synapse->get_from()->get_output()) * synapse->get_from()->get_output()) *
+		(synapse->get_weight() * synapse->get_to()->get_delta()));
+	synapse->update_weight(E * synapse->get_from()->get_output() * synapse->get_to()->get_delta(), a);
 }

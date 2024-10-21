@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <chrono>
 
 #include "Include/NeuralNet.hpp"
 #include "Include/Monitoring.hpp"
@@ -55,6 +56,10 @@ int main()
 	bool out = false;
 	float out_val = 0.0f;
 	std::vector<std::vector<float>> res;
+
+	// Get starting timepoint
+	auto start = std::chrono::high_resolution_clock::now();
+
 	for (size_t j = 0; j < 100000; j++)
 	{
 		out_val = 0.0f;
@@ -82,6 +87,13 @@ int main()
 		
 		out = out_val / 4 < 0.0005f;
 	}
+
+	// Get ending timepoint
+	auto stop = std::chrono::high_resolution_clock::now();
+
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+	std::cout << "Training time: " << duration.count() << " ms" << std::endl;
 
 	std::cout << "TEST:" << std::endl;
 

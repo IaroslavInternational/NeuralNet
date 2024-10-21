@@ -17,6 +17,7 @@ public:
 	void set_weights(std::vector<float>* weights);
 private:
 	template<class T1, class T2> void create_synapses(Layer<T1>* l1, Layer<T2>* l2);
+	void update_synapse(Synapse* synapse);
 private:
 	InputLayer input_layer;
 	std::vector<HiddenLayer> hidden_layers;
@@ -28,4 +29,6 @@ private:
 	float E = 0.7f;
 	float a = 0.3f;
 	std::vector<float> delta_output;
+private:
+	std::vector<Synapse>* train_synapses = nullptr;
 };

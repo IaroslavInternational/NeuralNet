@@ -22,6 +22,8 @@ public:
 	std::shared_ptr<T> get_neuron(size_t index);
 	Synapse* get_next_synapse();
 	void set_weights(std::vector<float>* weights);
+public:
+	std::vector<Synapse>* get_synapses();
 protected:
 	std::vector<std::shared_ptr<T>> neurons;
 	std::vector<Synapse> synapses;
@@ -91,4 +93,10 @@ void Layer<T>::set_weights(std::vector<float>* weights)
 	}
 	
 	weights->erase(weights->begin(), weights->begin() + i);
+}
+
+template<class T>
+std::vector<Synapse>* Layer<T>::get_synapses()
+{
+	return &synapses;
 }
