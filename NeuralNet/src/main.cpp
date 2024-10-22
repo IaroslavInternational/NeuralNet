@@ -34,8 +34,7 @@ int main()
 		{0.0f}
 	};
 
-	bool out = false;
-	float out_val = 0.0f;
+	float out_val = 1.0f;
 	std::vector<std::vector<float>> res;
 	res.reserve(4);
 
@@ -44,7 +43,7 @@ int main()
 
 	for (size_t j = 0; j < 100000; j++)
 	{
-		if (out)
+		if (out_val < 0.005f)
 		{
 			break;
 		}
@@ -56,18 +55,17 @@ int main()
 		{
 			nn.train(train_set[i], expected_set[i]);
 			res.push_back(nn.get_result());
-			//mon.update();
 		}
 
 		for (size_t i = 0; i < expected_set.size(); i++)
 		{
-			for (size_t j = 0; j < 1; j++)  // Размер вых. слоя
+			for (size_t k = 0; k < 1; k++)  // Размер вых. слоя
 			{
-				out_val += pow(res[i][j] - expected_set[i][j], 2);
+				out_val += pow(res[i][k] - expected_set[i][k], 2);
 			}
 		}
 		
-		out = out_val / expected_set.size() < 0.0005f;
+		mon.get_error(out_val);
 	}
 
 	// Get ending timepoint
@@ -91,7 +89,7 @@ int main()
 
 	//mon.show_weights();
 
-	//mon.print();
+	mon.save();
 
 	return 0;
 }

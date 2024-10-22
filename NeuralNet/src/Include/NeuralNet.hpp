@@ -26,7 +26,6 @@ private:
 	float error;
 	float E = 0.7f;
 	float a = 0.3f;
-	size_t iterations = 0;
 private:
 	std::vector<Synapse>* train_synapses = nullptr;
 };

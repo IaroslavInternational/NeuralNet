@@ -1,5 +1,6 @@
 #include "../Include/Monitoring.hpp"
 #include <fstream>
+#include <iostream>
 
 Monitoring::Monitoring(NeuralNet* nn)
 	:
@@ -13,26 +14,22 @@ void Monitoring::update()
 	//data.push_back(nn->error[0]);
 }
 
-void Monitoring::print()
+
+
+void Monitoring::save()
 {
 	std::ofstream ofile{};
-	ofile.open("data.txt", std::ios::out); //app is append which means it will put the text at the end
+	ofile.open("data.txt", std::ios::out);
 	for (auto& d : data)
 	{
 		ofile << d << std::endl;
 	}
 	ofile.close();
+
+	system("python main.py");
 }
 
-void Monitoring::show_weights()
+void Monitoring::get_error(float error)
 {
-	for (auto& w : nn->input_layer.synapses)
-	{
-		std::cout << w.weight << "f," << std::endl;
-	}
-
-	for (auto& w : nn->hidden_layers[0].synapses)
-	{
-		std::cout << w.weight << "f," << std::endl;
-	}
+	data.push_back(error);
 }

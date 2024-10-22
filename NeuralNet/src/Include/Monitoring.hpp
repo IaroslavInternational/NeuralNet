@@ -8,8 +8,8 @@ public:
 	Monitoring(NeuralNet* nn);
 public:
 	void update();
-	void print();
-	void show_weights();
+	void save();
+	void get_error(float error);
 private:
 	std::vector<float> data;
 	NeuralNet* nn;

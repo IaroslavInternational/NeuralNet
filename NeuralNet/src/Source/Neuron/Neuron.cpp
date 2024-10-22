@@ -27,12 +27,7 @@ float Neuron::get_delta() const
 	return delta;
 }
 
-std::string Neuron::get_name() const
+const std::string& Neuron::get_name() const
 {
 	return id;
-}
-
-void Neuron::set_bias(float b)
-{
-	offset = b;
 }

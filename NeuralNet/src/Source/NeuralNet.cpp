@@ -46,8 +46,6 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 	{
 		update_synapse(&train_synapses->at(j));
 	}
-
-	iterations++;
 }
 
 void NeuralNet::run(const std::vector<float>& inputs)
