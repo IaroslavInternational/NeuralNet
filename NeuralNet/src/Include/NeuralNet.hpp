@@ -25,7 +25,7 @@ private:
 	std::vector<float> result;
 	float error;
 	float E = 0.7f;
-	float a = 0.3f;
+	float a = 0.5f;
 private:
 	std::vector<Synapse>* train_synapses = nullptr;
 };

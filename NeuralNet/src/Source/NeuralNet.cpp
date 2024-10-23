@@ -22,6 +22,8 @@ NeuralNet::NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_siz
 
 void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>& expected)
 {
+	assert(inputs.size() == input_layer.length() && expected.size() == output_layer.length());
+
 	// Прогоняем входы через нейросеть
 	run(inputs);
 	

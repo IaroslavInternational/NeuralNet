@@ -4,35 +4,16 @@
 #include "Include/NeuralNet.hpp"
 #include "Include/Monitoring.hpp"
 
-/* 
-* --- TO DO LIST ---:
-* new: Обучение через МОР -> спроектировать
-* new: спроектировать класс, собирающий всю информацию о НС
-*/
-
+#include "Include/Library.hpp"
 
 int main()
 {
+	auto train_sets = Net::get_train_set("train\\");
+
 	// Кол-во нейронов во входном слое, Кол-во промеж. слоёв, 
 	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
-	NeuralNet nn(2, 1, 4, 1);
+	NeuralNet nn(49, 1, 20, 3);
 	Monitoring mon(&nn);
-
-	std::vector<std::vector<float>> train_set =
-	{
-		{0.0f, 0.0f},
-		{0.0f, 1.0f},
-		{1.0f, 0.0f},
-		{1.0f, 1.0f}
-	};
-
-	std::vector<std::vector<float>> expected_set =
-	{
-		{0.0f},
-		{1.0f},
-		{1.0f},
-		{0.0f}
-	};
 
 	float out_val = 1.0f;
 	std::vector<std::vector<float>> res;
@@ -41,7 +22,7 @@ int main()
 	// Get starting timepoint
 	auto start = std::chrono::high_resolution_clock::now();
 
-	for (size_t j = 0; j < 100000; j++)
+	for (size_t j = 0; j < 10000; j++)
 	{
 		if (out_val < 0.005f)
 		{
@@ -51,20 +32,21 @@ int main()
 		out_val = 0.0f;
 		res.clear();
 
-		for (size_t i = 0; i < train_set.size(); i++)
+		for (size_t i = 0; i < train_sets.first.size(); i++)
 		{
-			nn.train(train_set[i], expected_set[i]);
+			nn.train(train_sets.first[i], train_sets.second[i]);
 			res.push_back(nn.get_result());
 		}
 
-		for (size_t i = 0; i < expected_set.size(); i++)
+		for (size_t i = 0; i < train_sets.second.size(); i++)
 		{
-			for (size_t k = 0; k < 1; k++)  // Размер вых. слоя
+			for (size_t k = 0; k < 3; k++)  // Размер вых. слоя
 			{
-				out_val += pow(res[i][k] - expected_set[i][k], 2);
+				out_val += pow(res[i][k] - train_sets.second[i][k], 2);
 			}
 		}
 		
+		out_val = out_val / (train_sets.second.size() * 3);
 		mon.get_error(out_val);
 	}
 
@@ -76,15 +58,20 @@ int main()
 	std::cout << "TEST:" << '\n';
 
 	res.clear();
-	for (size_t i = 0; i < train_set.size(); i++)
+	for (size_t i = 0; i < train_sets.first.size(); i++)
 	{
-		nn.run(train_set[i]);
+		nn.run(train_sets.first[i]);
 		res.push_back(nn.get_result());
 	}
 
-	for (size_t i = 0; i < expected_set.size(); i++)
+	for (size_t i = 0; i < train_sets.second.size(); i++)
 	{
-		std::cout << "Expected: " << expected_set[i][0] << " -> Actual: " << res[i][0] << '\n';
+		for (size_t j = 0; j < 3; j++)
+		{
+			std::cout << "Expected: " << train_sets.second[i][j] << " -> Actual: " << res[i][j] << '\n';
+		}
+
+		std::cout << "\n";
 	}
 
 	//mon.show_weights();
