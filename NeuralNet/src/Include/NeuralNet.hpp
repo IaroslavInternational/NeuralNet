@@ -4,6 +4,8 @@
 #include "Layer/HiddenLayer.hpp"
 #include "Layer/OutputLayer.hpp"
 
+#include "Library.hpp"
+
 class NeuralNet
 {
 	friend class Monitoring;
@@ -13,7 +15,7 @@ public:
 	void train(const std::vector<float>& inputs, const std::vector<float>& expected);
 	void run(const std::vector<float>& inputs);
 	std::vector<float>& get_result();
-	void set_weights(std::vector<float>* weights);
+	void set_weights(const Net::fmatrix& weights);
 private:
 	template<class T1, class T2> void create_synapses(Layer<T1>* l1, Layer<T2>* l2);
 	void update_synapse(Synapse* synapse);

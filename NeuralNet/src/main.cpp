@@ -5,6 +5,7 @@
 #include "Include/Monitoring.hpp"
 
 #include "Include/Library.hpp"
+#include "Include/Input.hpp"
 
 int main()
 {
@@ -15,7 +16,9 @@ int main()
 	NeuralNet nn(49, 1, 20, 3);
 	Monitoring mon(&nn);
 
-	float out_val = 1.0f;
+	nn.set_weights(weights);
+
+	float out_val = -1.0f;
 	std::vector<std::vector<float>> res;
 	res.reserve(4);
 
@@ -74,9 +77,8 @@ int main()
 		std::cout << "\n";
 	}
 
-	//mon.show_weights();
-
 	mon.save();
+	mon.save_weights();
 
 	return 0;
 }

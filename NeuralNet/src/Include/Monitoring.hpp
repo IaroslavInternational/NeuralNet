@@ -9,6 +9,7 @@ public:
 public:
 	void update();
 	void save();
+	void save_weights();
 	void get_error(float error);
 private:
 	std::vector<float> data;

@@ -70,11 +70,19 @@ std::vector<float>& NeuralNet::get_result()
 	return result;
 }
 
-// Refactor
-void NeuralNet::set_weights(std::vector<float>* weights)
+void NeuralNet::set_weights(const Net::fmatrix& weights)
 {
-	input_layer.set_weights(weights);
-	hidden_layers[0].set_weights(weights);
+	for (size_t i = 0; i < weights.size(); i++)
+	{
+		if (i == 0)
+		{
+			input_layer.set_weights(weights[i]);
+		}
+		else
+		{
+			hidden_layers[i - 1].set_weights(weights[i]);
+		}
+	}
 }
 
 template<class T1, class T2>

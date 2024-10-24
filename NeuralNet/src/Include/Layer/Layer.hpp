@@ -19,7 +19,7 @@ public:
 	size_t length() const;
 	template<class T1, class T2> void add_synapse(std::shared_ptr<T1> from, std::shared_ptr<T2> to);
 	std::shared_ptr<T> get_neuron(size_t index);
-	void set_weights(std::vector<float>* weights);
+	void set_weights(const std::vector<float>& weights);
 public:
 	std::vector<Synapse>* get_synapses();
 protected:
@@ -61,23 +61,14 @@ std::shared_ptr<T> Layer<T>::get_neuron(size_t index)
 }
 
 template<class T>
-void Layer<T>::set_weights(std::vector<float>* weights)
+void Layer<T>::set_weights(const std::vector<float>& weights)
 {
-	size_t i = 0;
-	for (auto it = weights->begin(); it != weights->end(); ++it)
+	assert(weights.size() == synapses.size());
+
+	for (size_t i = 0; i < synapses.size(); i++)
 	{
-		if (i < synapses.size())
-		{
-			synapses[i].set_weight(*it);
-			i++;
-		}
-		else
-		{
-			break;
-		}
+		synapses[i].set_weight(weights[i]);
 	}
-	
-	weights->erase(weights->begin(), weights->begin() + i);
 }
 
 template<class T>

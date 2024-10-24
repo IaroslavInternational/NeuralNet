@@ -88,6 +88,6 @@ namespace Net
 			}
 		}
 
-		return std::move(set);
+		return set;
 	}
 }
