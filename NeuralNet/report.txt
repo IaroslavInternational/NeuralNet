@@ -1,0 +1,3 @@
+Report file for Neural Net
+Date:	2024-11-06 19:40:43.3144830 GMT+3
+Training time:	17455ms

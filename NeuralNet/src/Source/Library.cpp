@@ -17,7 +17,7 @@ namespace Net
 		{
 			strings.push_back(temp);
 		}
-
+		
 		return strings;
 	}
 

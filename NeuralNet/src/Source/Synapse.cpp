@@ -4,8 +4,6 @@
 #include <random>
 #include <cassert>
 
-#include <iostream> // !
-
 Synapse::Synapse(std::shared_ptr<Neuron> from, std::shared_ptr<Neuron> to)
 	:
 	from(from),

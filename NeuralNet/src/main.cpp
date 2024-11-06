@@ -1,5 +1,4 @@
 ﻿#include <iostream>
-#include <chrono>
 
 #include "Include/NeuralNet.hpp"
 #include "Include/Monitoring.hpp"
@@ -16,18 +15,20 @@ int main()
 	NeuralNet nn(49, 1, 20, 3);
 	Monitoring mon(&nn);
 
+#if SET_WEIGHTS == 1
 	nn.set_weights(weights);
+#endif // SET_WEIGHTS
 
-	float out_val = -1.0f;
+	float out_val = 1.0f;
 	std::vector<std::vector<float>> res;
-	res.reserve(4);
+	res.reserve(train_sets.first.size());
 
-	// Get starting timepoint
-	auto start = std::chrono::high_resolution_clock::now();
+	// Засекаем время тренировки сети
+	mon.start();
 
-	for (size_t j = 0; j < 10000; j++)
+	for (size_t j = 0; j < 15000; j++)
 	{
-		if (out_val < 0.005f)
+		if (out_val < 0.002f)
 		{
 			break;
 		}
@@ -53,12 +54,10 @@ int main()
 		mon.get_error(out_val);
 	}
 
-	// Get ending timepoint
-	auto stop = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-	std::cout << "Training time: " << duration.count() << " ms" << '\n';
+	// Конец счёта времени тренировки сети
+	mon.end();
 
-	std::cout << "TEST:" << '\n';
+	std::cout << "Validation test:" << '\n';
 
 	res.clear();
 	for (size_t i = 0; i < train_sets.first.size(); i++)
@@ -69,6 +68,7 @@ int main()
 
 	for (size_t i = 0; i < train_sets.second.size(); i++)
 	{
+		std::cout << "Train set N_" << i << "\n";
 		for (size_t j = 0; j < 3; j++)
 		{
 			std::cout << "Expected: " << train_sets.second[i][j] << " -> Actual: " << res[i][j] << '\n';
@@ -79,6 +79,7 @@ int main()
 
 	mon.save();
 	mon.save_weights();
+	mon.save_report();
 
 	return 0;
 }
