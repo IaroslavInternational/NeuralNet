@@ -33,6 +33,7 @@ namespace Net
 		std::vector<std::string> lines;
 		lines.reserve(500);
 		
+		// DANGER ERROR PATH
 		for (const auto& entry : std::filesystem::directory_iterator(path))
 		{
 			file.open(entry.path().string());
