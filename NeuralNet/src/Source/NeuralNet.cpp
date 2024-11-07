@@ -46,13 +46,14 @@ void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>
 		train_synapses->at(i).get_to()->set_delta(((expected[i] - result[i]) * ((1.0f - result[i]) * result[i])));
 	}
 
+	workers.clear();
 	// Обновляем веса синапсов для скрытых слоёв
 	for (int i = hidden_layers.size() - 1; i >= 0; i--)
 	{
 		train_synapses = hidden_layers[i].get_synapses();
 		for (size_t j = 0; j < train_synapses->size(); j++)
 		{	
-			update_synapse(&train_synapses->at(j));
+			workers.push_back(std::async(std::launch::async, &NeuralNet::update_synapse, this, &train_synapses->at(j))); // DANGER
 		}
 	}
 

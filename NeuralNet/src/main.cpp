@@ -13,22 +13,26 @@ int main()
 	// Кол-во нейронов во входном слое, Кол-во промеж. слоёв, 
 	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
 	NeuralNet nn(49, 1, 20, 3);
-	Monitoring mon(&nn);
+	Monitoring mon(&nn, "Figures 2.0");
+
+	constexpr size_t max_epochs = 15000;  // Кол-во эпох тренировки
+	constexpr float  min_error  = 0.002f; // Цель ошибки
 
 #if SET_WEIGHTS == 1
 	nn.set_weights(weights);
 #endif // SET_WEIGHTS
 
 	float out_val = 1.0f;
-	std::vector<std::vector<float>> res;
+	Net::fmatrix res;
 	res.reserve(train_sets.first.size());
 
 	// Засекаем время тренировки сети
 	mon.start();
 
-	for (size_t j = 0; j < 15000; j++)
+	size_t epoch;
+	for (epoch = 0; epoch < max_epochs; epoch++)
 	{
-		if (out_val < 0.002f)
+		if (out_val < min_error)
 		{
 			break;
 		}
@@ -44,7 +48,7 @@ int main()
 
 		for (size_t i = 0; i < train_sets.second.size(); i++)
 		{
-			for (size_t k = 0; k < 3; k++)  // Размер вых. слоя
+			for (size_t k = 0; k < train_sets.second[0].size(); k++)  // Размер вых. слоя
 			{
 				out_val += pow(res[i][k] - train_sets.second[i][k], 2);
 			}
@@ -53,6 +57,9 @@ int main()
 		out_val = out_val / (train_sets.second.size() * 3);
 		mon.get_error(out_val);
 	}
+
+	// Получаем для мониторинга кол-во эпох
+	mon.get_epoch(epoch);
 
 	// Конец счёта времени тренировки сети
 	mon.end();
@@ -69,7 +76,7 @@ int main()
 	for (size_t i = 0; i < train_sets.second.size(); i++)
 	{
 		std::cout << "Train set N_" << i << "\n";
-		for (size_t j = 0; j < 3; j++)
+		for (size_t j = 0; j < train_sets.second[0].size(); j++)  // Размер вых. слоя
 		{
 			std::cout << "Expected: " << train_sets.second[i][j] << " -> Actual: " << res[i][j] << '\n';
 		}

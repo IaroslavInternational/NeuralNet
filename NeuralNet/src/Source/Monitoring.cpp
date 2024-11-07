@@ -3,9 +3,10 @@
 #include <iostream>
 #include <sstream>
 
-Monitoring::Monitoring(NeuralNet* nn)
+Monitoring::Monitoring(NeuralNet* nn, const std::string& model_name)
 	:
-	nn(nn)
+	nn(nn),
+	model_name(model_name)
 {
 	data.reserve(10000);
 }
@@ -26,7 +27,16 @@ void Monitoring::save()
 	}
 	ofile.close();
 
-	system("python main.py");
+	try
+	{
+		system("python main.py");
+	}
+	catch (const std::exception& ex)
+	{
+		std::ostringstream out;
+		out << "Python problem appears! " << ex.what();
+		throw std::exception(out.str().c_str());
+	}
 }
 
 void Monitoring::save_weights()
@@ -83,8 +93,14 @@ void Monitoring::save_report()
 {
 	std::ostringstream out;
 	out << "Report file for Neural Net\n";
-	out << "Date:\t" << std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now() } << "\n";
+	out << "Date:\t" << std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now() } << "\n\n";
+
+	out << "Model " << model_name << ": \n";
+	out << "Input layer size:\t" << nn->input_layer.neurons.size() << "\n";
+	out << "Hidden layers amount:\t" << nn->hidden_layers.size() << "\n";
+	out << "Output layer size:\t" << nn->output_layer.neurons.size() << "\n";
 	out << "Training time:\t" << get_duration() << "ms" << "\n";
+	out << "Number of epochs:\t" << epoch << "\n";
 
 	std::ofstream ofile("report.txt", std::ios::out);
 	ofile << out.str();
@@ -94,6 +110,11 @@ void Monitoring::save_report()
 void Monitoring::get_error(float error)
 {
 	data.push_back(error);
+}
+
+void Monitoring::get_epoch(size_t epoch)
+{
+	this->epoch = epoch;
 }
 
 void Monitoring::start()

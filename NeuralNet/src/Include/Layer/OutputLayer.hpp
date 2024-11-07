@@ -4,6 +4,7 @@
 
 class OutputLayer : public Layer<OutputNeuron>
 {
+	friend class Monitoring;
 public:
 	OutputLayer(size_t n, const std::string& name);
 public:

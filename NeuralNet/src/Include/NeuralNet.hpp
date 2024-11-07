@@ -6,6 +6,8 @@
 
 #include "Library.hpp"
 
+#include <future>
+
 class NeuralNet
 {
 	friend class Monitoring;
@@ -26,8 +28,9 @@ private:
 private:
 	std::vector<float> result;
 	float error;
-	const float E = 0.7f;
-	const float a = 0.3f;
+	float E = 0.7f;
+	float a = 0.3f;
 private:
 	std::vector<Synapse>* train_synapses = nullptr;
+	std::vector<std::future<void>> workers;
 };

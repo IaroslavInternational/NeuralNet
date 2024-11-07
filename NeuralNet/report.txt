@@ -1,3 +1,9 @@
 Report file for Neural Net
-Date:	2024-11-06 19:40:43.3144830 GMT+3
-Training time:	17455ms
+Date:	2024-11-07 21:43:34.3536356 GMT+3
+
+Model Figures 2.0: 
+Input layer size:	49
+Hidden layers amount:	1
+Output layer size:	3
+Training time:	419ms
+Number of epochs:	44

@@ -50,7 +50,7 @@ namespace Net
 			}
 			else
 			{
-				throw std::exception("Cannot read a file !");
+				throw std::exception("Cannot read a file!");
 			}
 
 			// Заполнение сета
@@ -85,6 +85,10 @@ namespace Net
 
 				set.first.push_back(values);
 				values.clear();
+			}
+			else
+			{
+				throw std::exception("Empty file!");
 			}
 		}
 
