@@ -22,7 +22,7 @@ int main()
 
 	std::string cmd;						 // Текущая команда
 	std::future<Net::train_set> worker;		 // Загрузка датасета в отдельном потоке
-	std::vector<std::future<void>> workers;  // Сохранение результатов
+	std::vector<std::future<void>> workers;  // Сохранение результатов в отдельном потоке
 	bool is_set_loaded = false;				 // Флаг загрузки датасета
 	bool is_net_trained = false;			 // Флаг тренировки
 	bool is_weights_set = false;			 // Флаг установки весов
@@ -51,6 +51,7 @@ int main()
 			}
 
 			train_sets = worker.get();
+			Net::shuffle_data(train_sets);
 			res.reserve(train_sets.first.size());
 
 			// Засекаем время тренировки сети

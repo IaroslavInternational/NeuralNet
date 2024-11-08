@@ -1,9 +1,10 @@
 #include "../Include/Library.hpp"
 
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <filesystem>
+#include <algorithm>
+#include <random>
 
 namespace Net
 {
@@ -54,6 +55,8 @@ namespace Net
 				throw std::exception("Cannot read a file!");
 			}
 
+			lines.shrink_to_fit();
+
 			// Заполнение сета
 			if (lines.size() > 0)
 			{
@@ -94,5 +97,32 @@ namespace Net
 		}
 
 		return set;
+	}
+
+	void shuffle_data(train_set& data)
+	{
+		std::random_device rd;
+		std::mt19937 g(rd());
+
+		std::vector<int> idx;
+
+		for (int i = 0; i < (int)data.first.size(); i++)
+		{
+			idx.push_back(i);
+		}
+
+		std::shuffle(idx.begin(), idx.end(), g);
+
+		train_set shuffled_set;
+		shuffled_set.first.resize(data.first.size());
+		shuffled_set.second.resize(data.second.size());
+
+		for (size_t i = 0; i < idx.size(); i++)
+		{
+			shuffled_set.first[i] = data.first[idx[i]];
+			shuffled_set.second[i] = data.second[idx[i]];
+		}
+
+		data = std::move(shuffled_set);
 	}
 }
