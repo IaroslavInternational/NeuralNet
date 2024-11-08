@@ -13,7 +13,7 @@ int main()
 	NeuralNet nn(49, 1, 20, 3);
 	Monitoring mon(&nn, "Figures 2.0");  // Объект системы мониторинга
 
-	constexpr size_t max_epochs = 15000;  // Кол-во эпох тренировки
+	constexpr size_t max_epochs = 5000;   // Кол-во эпох тренировки
 	constexpr float  min_error  = 0.002f; // Цель ошибки
 
 	float out_val = 0.0f;		// Ошибка
@@ -78,7 +78,7 @@ int main()
 				{
 					for (size_t k = 0; k < train_sets.second[0].size(); k++)  // Размер вых. слоя
 					{
-						out_val += pow(res[i][k] - train_sets.second[i][k], 2);
+						out_val += (float)pow(res[i][k] - train_sets.second[i][k], 2);
 					}
 				}
 
@@ -127,6 +127,7 @@ int main()
 				std::cout << "\n";
 			}
 
+			workers.clear();
 			workers.push_back(std::async(std::launch::async, &Monitoring::save, &mon));
 			workers.push_back(std::async(std::launch::async, &Monitoring::save_weights, &mon));
 			workers.push_back(std::async(std::launch::async, &Monitoring::save_report, &mon));

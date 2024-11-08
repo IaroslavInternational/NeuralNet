@@ -46,7 +46,7 @@ void Monitoring::save_weights()
 
 	for (size_t i = 0; i < nn->input_layer.synapses.size(); i++)
 	{
-		out << nn->input_layer.synapses[i].weight;
+		out << nn->input_layer.synapses[i].weight << "f";
 
 		if (i != nn->input_layer.synapses.size() - 1)
 		{
@@ -58,13 +58,13 @@ void Monitoring::save_weights()
 		}
 	}
 
-	out << ",\n{";
+	out << ",\n\t{";
 
 	for (size_t i = 0; i < nn->hidden_layers.size(); i++)
 	{
 		for (size_t j = 0; j < nn->hidden_layers[i].synapses.size(); j++)
 		{
-			out << nn->hidden_layers[i].synapses[j].weight;
+			out << nn->hidden_layers[i].synapses[j].weight << "f";
 
 			if (j != nn->hidden_layers[i].synapses.size() - 1)
 			{
