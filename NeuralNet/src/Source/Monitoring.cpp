@@ -37,6 +37,8 @@ void Monitoring::save()
 		out << "Python problem appears! " << ex.what();
 		throw std::exception(out.str().c_str());
 	}
+
+	data.clear();
 }
 
 void Monitoring::save_weights()
@@ -89,7 +91,7 @@ void Monitoring::save_weights()
 	ofile.close();
 }
 
-void Monitoring::save_report()
+void Monitoring::save_report(const std::string& report)
 {
 	std::ostringstream out;
 	out << "Report file for Neural Net\n";
@@ -98,9 +100,17 @@ void Monitoring::save_report()
 	out << "Model " << model_name << ": \n";
 	out << "Input layer size:\t" << nn->input_layer.neurons.size() << "\n";
 	out << "Hidden layers amount:\t" << nn->hidden_layers.size() << "\n";
+
+	for (size_t i = 0; i < nn->hidden_layers.size(); i++)
+	{
+		out << "\tHidden layer N_" << i << ", size:\t" << nn->hidden_layers[0].neurons.size() << "\n";
+	}
+
 	out << "Output layer size:\t" << nn->output_layer.neurons.size() << "\n";
 	out << "Training time:\t" << get_duration() << "ms" << "\n";
-	out << "Number of epochs:\t" << epoch << "\n";
+	out << "Number of epochs:\t" << epoch << "\n\n";
+	out << "Report:\n";
+	out << report;
 
 	std::ofstream ofile("report.txt", std::ios::out);
 	ofile << out.str();

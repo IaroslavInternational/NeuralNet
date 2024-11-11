@@ -14,7 +14,7 @@ int main()
 {
 	// Кол-во нейронов во входном слое, Кол-во промеж. слоёв, 
 	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
-	NeuralNet nn(49, 1, 20, 3);
+	NeuralNet nn(49, 1, 14, 3);
 	Monitoring mon(&nn, "Figures 2.0");  // Объект системы мониторинга
 
 	constexpr size_t max_epochs = 5000;   // Кол-во эпох тренировки
@@ -120,21 +120,53 @@ int main()
 				res.push_back(nn.get_result());
 			}
 
+			size_t pass_counter = 0;
+			size_t fail_counter = 0;
+			size_t acc = 0;
+			std::ostringstream oss;
+
 			for (size_t i = 0; i < train_sets.second.size(); i++)
 			{
-				std::cout << "Train set N_" << i << "\n";
+				oss << "Train set N_" << i << "\n";
 				for (size_t j = 0; j < train_sets.second[0].size(); j++)  // Размер вых. слоя
 				{
-					std::cout << "Expected: " << train_sets.second[i][j] << " -> Actual: " << res[i][j] << '\n';
+					oss << "Expected: " << train_sets.second[i][j] << " -> Actual: " << roundf(res[i][j] * 100) / 100 << "\t";
+					
+					if (fabs(res[i][j] - train_sets.second[i][j]) <= 0.3f)
+					{
+						oss << "Pass\n";
+						pass_counter++;
+					}
+					else
+					{
+						oss << "Failed\n";
+						fail_counter++;
+					}
 				}
 
-				std::cout << "\n";
+				oss << "\n";
 			}
 
+			acc = (pass_counter * 100) / (pass_counter + fail_counter);  // Точность
+			oss << "Acc: \t" << acc << "%\n";
+			oss << "Pass: \t" << pass_counter << "\n";
+			oss << "Fail: \t" << fail_counter << "\n";
+
+			if (acc > 85)
+			{
+				oss << "The Neural Network converges\n";
+			}
+			else
+			{
+				oss << "The Neural Network is not converges\n";
+			}
+
+			std::cout << oss.str();
+			 
 			workers.clear();
 			workers.push_back(std::async(std::launch::async, &Monitoring::save, &mon));
 			workers.push_back(std::async(std::launch::async, &Monitoring::save_weights, &mon));
-			workers.push_back(std::async(std::launch::async, &Monitoring::save_report, &mon));
+			workers.push_back(std::async(std::launch::async, &Monitoring::save_report, &mon, oss.str()));
 		}
 		else if (cmd == "set w")  // Установка весов
 		{

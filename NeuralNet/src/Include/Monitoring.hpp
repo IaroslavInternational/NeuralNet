@@ -11,7 +11,7 @@ public:
 public:
 	void save();
 	void save_weights();
-	void save_report();
+	void save_report(const std::string& report);
 	void get_error(float error);
 	void get_epoch(size_t epoch);
 public:
