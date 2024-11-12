@@ -126,7 +126,7 @@ namespace Net
 		data = std::move(shuffled_set);
 	}
 
-	fvector load_input()
+	fvector load_input(const std::string& filename)
 	{
 		fvector inputs;
 		std::string current;
@@ -134,7 +134,7 @@ namespace Net
 		std::vector<std::string> strings;
 		lines.reserve(500);
 
-		std::ifstream file("input.nn_input");
+		std::ifstream file(filename);
 
 		if (file.is_open())
 		{

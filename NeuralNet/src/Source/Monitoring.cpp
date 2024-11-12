@@ -29,7 +29,7 @@ void Monitoring::save()
 
 	try
 	{
-		system("python main.py");
+		system("python scripts/main.py");
 	}
 	catch (const std::exception& ex)
 	{

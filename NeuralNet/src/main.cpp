@@ -1,15 +1,17 @@
 ﻿/*
-* SANDBOX FILE
+* ===== NET SANDBOX FILE ===== 
 */
 
 #include "Include/NeuralNet.hpp"
 #include "Include/Monitoring.hpp"
+#include "Include/Modules/ModuleData.hpp"
 
 #include "Include/Library.hpp"
 #include "Include/Input.hpp"
 
 #include <iostream>
 
+// Команды
 enum class commands
 {
 	load_train_set,
@@ -19,6 +21,7 @@ enum class commands
 	run_net
 };
 
+// Список соответствий команда
 std::map<std::string, commands> cmd_list =
 {
 	{"load set", commands::load_train_set},
@@ -28,6 +31,8 @@ std::map<std::string, commands> cmd_list =
 	{"run", commands::run_net}
 };
 
+
+// Обработка строковой команды
 commands proc_cmd(const std::string& cmd)
 {
 	return cmd_list[cmd];
@@ -39,6 +44,8 @@ int main()
 	// Кол-во нейронов в промеж. слое, Кол-во нейронов в выходном слое
 	NeuralNet nn(49, 1, 14, 3);
 	Monitoring mon(&nn, "Figures 2.0");  // Объект системы мониторинга
+	
+	ModuleData m_data("scripts/image2bin.py"); // Тест модуля предобработки изображения
 
 	constexpr size_t max_epochs = 5000;   // Кол-во эпох тренировки
 	constexpr float  min_error  = 0.002f; // Цель ошибки
@@ -56,10 +63,10 @@ int main()
 	bool is_weights_set = false;			 // Флаг установки весов
 	
 	std::ostringstream oss;
-	size_t pass_counter = 0;
-	size_t fail_counter = 0;
-	size_t acc = 0;
-	Net::fvector inputs;
+	size_t pass_counter = 0;  // Счётчик правильных результатов
+	size_t fail_counter = 0;  // Счётчик неправильных результатов
+	size_t acc = 0;			  // Точность прогона
+	Net::fvector inputs;	  // Входы для сети
 
 	// Цикл программы
 	while (true)
@@ -198,7 +205,21 @@ int main()
 				nn.set_weights(weights);
 				break;
 			case commands::run_net:
-				inputs = Net::load_input();
+				workers.clear();
+
+				std::cout << "cmd>run>";
+				std::getline(std::cin, cmd);
+
+				std::remove("nni/proc_data.nni");
+				workers.push_back(std::async(std::launch::async, &ModuleData::proc, &m_data, cmd));  // Тест обработки изображения
+				
+				while (!m_data.is_finished())
+				{
+					std::cout << "Waiting for data...\n";
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				}
+
+				inputs = Net::load_input("nni/proc_data.nni");
 				nn.run(inputs);
 
 				res.clear();

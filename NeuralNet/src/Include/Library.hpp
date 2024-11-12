@@ -13,5 +13,5 @@ namespace Net
 	std::vector<std::string> split(const std::string& str, char delimiter);
 	train_set				 get_train_set(const std::string& path);
 	void				     shuffle_data(train_set& data);
-	fvector				     load_input();
+	fvector				     load_input(const std::string& filename = "nni/input.nni");
 };
