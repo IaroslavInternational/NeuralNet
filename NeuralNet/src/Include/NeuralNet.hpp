@@ -14,8 +14,8 @@ class NeuralNet
 public:
 	NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_size, size_t O_Layer_size);
 public:
-	void run(const std::vector<float>& inputs);
-	void train(const std::vector<float>& inputs, const std::vector<float>& expected);
+	void run(const Net::fvector& inputs);
+	void train(const Net::fvector& inputs, const Net::fvector& expected);
 	void set_weights(const Net::fmatrix& weights);
 	void set_params(float E = 0.7f, float a = 0.3f);
 	std::vector<float>& get_result();

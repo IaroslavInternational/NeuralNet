@@ -125,4 +125,49 @@ namespace Net
 
 		data = std::move(shuffled_set);
 	}
+
+	fvector load_input()
+	{
+		fvector inputs;
+		std::string current;
+		std::vector<std::string> lines;
+		std::vector<std::string> strings;
+		lines.reserve(500);
+
+		std::ifstream file("input.nn_input");
+
+		if (file.is_open())
+		{
+			while (std::getline(file, current))
+			{
+				lines.push_back(current);
+			}
+
+			file.close();
+			lines.shrink_to_fit();
+
+			if (lines.size() > 0)
+			{
+				for (size_t i = 0; i < lines.size(); i++)
+				{
+					strings = split(lines[i], ' ');
+
+					for (auto& s : strings)
+					{
+						inputs.push_back(std::stof(s));
+					}
+				}
+			}
+			else
+			{
+				throw std::exception("Empty file!");
+			}
+		}
+		else
+		{
+			throw std::exception("Cannot read a input file!");
+		}
+
+		return inputs;
+	}
 }

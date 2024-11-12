@@ -37,7 +37,7 @@ NeuralNet::NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_siz
 /* Public */
 
 
-void NeuralNet::run(const std::vector<float>& inputs)
+void NeuralNet::run(const Net::fvector& inputs)
 {
 	input_layer.set_input(inputs);
 	input_layer.forward();
@@ -52,7 +52,7 @@ void NeuralNet::run(const std::vector<float>& inputs)
 	result = output_layer.get_result();
 }
 
-void NeuralNet::train(const std::vector<float>& inputs, const std::vector<float>& expected)
+void NeuralNet::train(const Net::fvector& inputs, const Net::fvector& expected)
 {
 	assert(inputs.size() == input_layer.length() && expected.size() == output_layer.length());
 
