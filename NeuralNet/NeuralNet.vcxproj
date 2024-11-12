@@ -135,6 +135,7 @@
     <ClCompile Include="src\Source\Library.cpp" />
     <ClCompile Include="src\Source\Modules\ModuleData.cpp" />
     <ClCompile Include="src\Source\Monitoring.cpp" />
+    <ClCompile Include="src\Source\NetSystem.cpp" />
     <ClCompile Include="src\Source\NeuralNet.cpp" />
     <ClCompile Include="src\Source\Neuron\Neuron.cpp" />
     <ClCompile Include="src\Source\Layer\OutputLayer.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="src\Source\Synapse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\NetSystem.hpp" />
     <ClInclude Include="src\Include\Modules\ModuleData.hpp" />
     <ClInclude Include="src\Include\Modules\Module.hpp" />
     <ClInclude Include="src\Include\Input.hpp" />
