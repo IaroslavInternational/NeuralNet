@@ -24,4 +24,5 @@ private:
 	std::future<Net::train_set> set_loader;
 	std::vector<std::future<void>> workers;
 	Net::train_set train_set;   // Датасет для тренировки
+	Net::fvector result;
 };

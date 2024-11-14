@@ -19,7 +19,7 @@ void NetSystem::run()
 
 	std::vector<std::string> args = 
 	{
-		"test_data/circle_image.png"
+		"test_data/triangle_noise.png"
 	};
 
 	for (size_t i = 0; i < modules.size(); i++)
@@ -42,6 +42,8 @@ void NetSystem::run()
 
 	auto inputs = Net::load_input("nni/proc_data.nni");
 	net.run(inputs);
+
+	result = net.get_result();
 }
 
 void NetSystem::train(const std::string& set_name)
