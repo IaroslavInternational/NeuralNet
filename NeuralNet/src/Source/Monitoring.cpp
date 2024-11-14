@@ -44,47 +44,19 @@ void Monitoring::save()
 void Monitoring::save_weights()
 {
 	std::ostringstream out;
-	out << "Net::fmatrix weights =\n{\n\t{";
 
 	for (size_t i = 0; i < nn->input_layer.synapses.size(); i++)
 	{
-		out << nn->input_layer.synapses[i].weight << "f";
-
-		if (i != nn->input_layer.synapses.size() - 1)
-		{
-			out << ", ";
-		}
-		else
-		{
-			out << "}";
-		}
+		out << nn->input_layer.synapses[i].weight << "\n";
 	}
-
-	out << ",\n\t{";
 
 	for (size_t i = 0; i < nn->hidden_layers.size(); i++)
 	{
 		for (size_t j = 0; j < nn->hidden_layers[i].synapses.size(); j++)
 		{
-			out << nn->hidden_layers[i].synapses[j].weight << "f";
-
-			if (j != nn->hidden_layers[i].synapses.size() - 1)
-			{
-				out << ", ";
-			}
-			else
-			{
-				out << "}";
-			}
-		}
-
-		if (i != nn->hidden_layers.size() - 1)
-		{
-			out << ",\n\t{";
+			out << nn->hidden_layers[i].synapses[j].weight << "\n";
 		}
 	}
-
-	out << "\n};";
 
 	std::ofstream ofile("weights.txt", std::ios::out);
 	ofile << out.str();

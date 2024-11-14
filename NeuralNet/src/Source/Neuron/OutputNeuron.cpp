@@ -13,6 +13,6 @@ void OutputNeuron::get_input(float value)
 
 void OutputNeuron::activate()
 {
-	output = 1 / (1 + exp(-input));
+	output = 1.0f / (1.0f + exp(-input));
 	input = 0.0f;
 }

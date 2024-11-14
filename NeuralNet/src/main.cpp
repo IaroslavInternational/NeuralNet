@@ -3,13 +3,58 @@
 */
 
 #include "Include/Library.hpp"
-#include "Include/Input.hpp"
 #include "Include/NetSystem.hpp"
 
 #include <iostream>
+#include <fstream>
+
+Net::fmatrix weights;
+
+void load()
+{
+	weights.resize(2);
+	weights[0].reserve(49*14);
+	weights[1].reserve(14*3);
+
+	std::string current;
+	std::ifstream file("weights.txt");
+
+	size_t counter = 0;
+	size_t idx = 0;
+
+	if (file.is_open())
+	{
+		while (std::getline(file, current))
+		{
+			if (counter < 49 * 14)
+			{
+				idx = 0;
+			}
+			else if (counter < 49 * 14 + 14 * 3)
+			{
+				idx = 1;
+			}
+			else
+			{
+				break;
+			}
+
+			weights[idx].push_back(std::stof(current));
+
+			counter++;
+		}
+
+		file.close();
+	}
+	else
+	{
+		throw std::exception("Cannot read a input file!");
+	}
+}
 
 int main()
 {
+	load();
 	NetSystem nsystem("");
 
 	std::string cmd;						 // Текущая команда

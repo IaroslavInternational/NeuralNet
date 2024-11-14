@@ -32,12 +32,12 @@ void Synapse::send() const
 	to->get_input(from->get_output()*weight);
 }
 
-std::shared_ptr<Neuron> Synapse::get_from()
+std::shared_ptr<Neuron>& Synapse::get_from()
 {
 	return from;
 }
 
-std::shared_ptr<Neuron> Synapse::get_to()
+std::shared_ptr<Neuron>& Synapse::get_to()
 {
 	return to;
 }
@@ -52,9 +52,11 @@ float Synapse::get_weight() const
 	return weight;
 }
 
-void Synapse::update_weight(float delta, float alfa)
+void Synapse::update_weight(float E, float alfa)
 {
-	delta_w = delta + alfa * prev_weight_delta;
+	from->set_delta(((1.0f - from->get_output()) * from->get_output()) * (weight * to->get_delta())); // new delta arg
+	delta_w = E * from->get_output() * to->get_delta() + alfa * prev_weight_delta; // new alfa arg
+
 	weight += delta_w;
 	prev_weight_delta = delta_w;
 }

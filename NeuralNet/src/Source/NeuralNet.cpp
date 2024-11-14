@@ -30,7 +30,7 @@ NeuralNet::NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_siz
 
 	// Синпасы между последним скрытым слоем и выходным слоем
 	create_synapses(&hidden_layers.back(), &output_layer);
-	
+
 	// =============================
 }
 
@@ -83,7 +83,7 @@ void NeuralNet::train(const Net::fvector& inputs, const Net::fvector& expected)
 		train_synapses = hidden_layers[i].get_synapses();
 		for (size_t j = 0; j < train_synapses->size(); j++)
 		{	
-			workers.push_back(std::async(std::launch::async, &NeuralNet::update_synapse, this, &train_synapses->at(j)));
+			workers.push_back(std::async(std::launch::async, &Synapse::update_weight, &train_synapses->at(j), E, a));
 		}
 	}
 
@@ -91,7 +91,7 @@ void NeuralNet::train(const Net::fvector& inputs, const Net::fvector& expected)
 	train_synapses = input_layer.get_synapses();
 	for (size_t j = 0; j < train_synapses->size(); j++)
 	{
-		update_synapse(&train_synapses->at(j));
+		train_synapses->at(j).update_weight(E, a);
 	}
 }
 
@@ -134,11 +134,4 @@ void NeuralNet::create_synapses(Layer<T1>* l1, Layer<T2>* l2)
 			l1->add_synapse(l1->get_neuron(i), l2->get_neuron(j));
 		}
 	}
-}
-
-void NeuralNet::update_synapse(Synapse* synapse)
-{
-	synapse->get_from()->set_delta(((1.0f - synapse->get_from()->get_output()) * synapse->get_from()->get_output()) *
-		(synapse->get_weight() * synapse->get_to()->get_delta()));
-	synapse->update_weight(E * synapse->get_from()->get_output() * synapse->get_to()->get_delta(), a);
 }

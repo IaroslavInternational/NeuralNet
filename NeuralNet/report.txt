@@ -1,239 +1,239 @@
 Report file for Neural Net
-Date:	2024-11-12 19:39:36.6148959 GMT+3
+Date:	2024-11-14 11:03:37.9117844 GMT+3
 
-Model Figures 2.1: 
+Model Figures 2.2: 
 Input layer size:	49
 Hidden layers amount:	1
 	Hidden layer N_0, size:	14
 Output layer size:	3
-Training time:	204ms
-Number of epochs:	26
+Training time:	122ms
+Number of epochs:	25
 
 Report:
 Train set N_0
-Expected: 1 -> Actual: 0.98	Pass
-Expected: 0 -> Actual: 0.02	Pass
 Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_1
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.06	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.01	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_2
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.98	Pass
-
-Train set N_3
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.98	Pass
-
-Train set N_4
-Expected: 1 -> Actual: 0.92	Pass
-Expected: 0 -> Actual: 0.03	Pass
-Expected: 0 -> Actual: 0.02	Pass
-
-Train set N_5
-Expected: 0 -> Actual: 0.08	Pass
-Expected: 1 -> Actual: 0.93	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_6
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_7
-Expected: 0 -> Actual: 0.09	Pass
-Expected: 1 -> Actual: 0.94	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_8
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
-
-Train set N_9
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 1 -> Actual: 0.98	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_10
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
-
-Train set N_11
-Expected: 0 -> Actual: 0.06	Pass
-Expected: 1 -> Actual: 0.93	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_12
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
-
-Train set N_13
 Expected: 0 -> Actual: 0.02	Pass
 Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.02	Pass
 
-Train set N_14
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
-
-Train set N_15
+Train set N_3
 Expected: 0 -> Actual: 0.04	Pass
 Expected: 0 -> Actual: 0	Pass
 Expected: 1 -> Actual: 0.99	Pass
 
-Train set N_16
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_17
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.98	Pass
-
-Train set N_18
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
-
-Train set N_19
-Expected: 0 -> Actual: 0.02	Pass
+Train set N_4
 Expected: 1 -> Actual: 0.96	Pass
 Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.01	Pass
+
+Train set N_5
+Expected: 0 -> Actual: 0.05	Pass
+Expected: 1 -> Actual: 0.94	Pass
+Expected: 0 -> Actual: 0.01	Pass
+
+Train set N_6
+Expected: 0 -> Actual: 0.04	Pass
+Expected: 1 -> Actual: 0.96	Pass
+Expected: 0 -> Actual: 0.01	Pass
+
+Train set N_7
+Expected: 0 -> Actual: 0.12	Pass
+Expected: 1 -> Actual: 0.86	Pass
+Expected: 0 -> Actual: 0.01	Pass
+
+Train set N_8
+Expected: 1 -> Actual: 0.95	Pass
+Expected: 0 -> Actual: 0.06	Pass
+Expected: 0 -> Actual: 0.01	Pass
+
+Train set N_9
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.97	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_10
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.99	Pass
+
+Train set N_11
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.99	Pass
+
+Train set N_12
+Expected: 1 -> Actual: 0.95	Pass
+Expected: 0 -> Actual: 0.04	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_13
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.96	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_14
+Expected: 1 -> Actual: 0.95	Pass
+Expected: 0 -> Actual: 0.09	Pass
+Expected: 0 -> Actual: 0.01	Pass
+
+Train set N_15
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.96	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_16
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.07	Pass
+Expected: 1 -> Actual: 0.97	Pass
+
+Train set N_17
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.99	Pass
+
+Train set N_18
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.98	Pass
+
+Train set N_19
+Expected: 1 -> Actual: 0.97	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_20
 Expected: 0 -> Actual: 0.01	Pass
-Expected: 0 -> Actual: 0.03	Pass
-Expected: 1 -> Actual: 0.98	Pass
-
-Train set N_21
 Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
 Expected: 1 -> Actual: 0.99	Pass
 
-Train set N_22
-Expected: 1 -> Actual: 0.98	Pass
+Train set N_21
+Expected: 1 -> Actual: 0.95	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_22
+Expected: 1 -> Actual: 0.97	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_23
-Expected: 1 -> Actual: 0.93	Pass
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 0 -> Actual: 0.02	Pass
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_24
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.01	Pass
+Expected: 1 -> Actual: 0.93	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.03	Pass
 
 Train set N_25
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 1 -> Actual: 0.97	Pass
+Expected: 1 -> Actual: 0.98	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_26
-Expected: 1 -> Actual: 0.94	Pass
-Expected: 0 -> Actual: 0.03	Pass
-Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.05	Pass
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_27
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.04	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_28
-Expected: 1 -> Actual: 0.92	Pass
-Expected: 0 -> Actual: 0.04	Pass
+Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.02	Pass
+Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_29
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.03	Pass
-Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.97	Pass
+Expected: 0 -> Actual: 0.02	Pass
 
 Train set N_30
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 1 -> Actual: 0.97	Pass
-
-Train set N_31
-Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.96	Pass
+Expected: 0 -> Actual: 0.06	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
+Train set N_31
+Expected: 0 -> Actual: 0.12	Pass
+Expected: 1 -> Actual: 0.81	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
 Train set N_32
-Expected: 0 -> Actual: 0.04	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_33
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_34
-Expected: 0 -> Actual: 0.11	Pass
-Expected: 1 -> Actual: 0.9	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_35
-Expected: 1 -> Actual: 0.95	Pass
-Expected: 0 -> Actual: 0.07	Pass
-Expected: 0 -> Actual: 0.01	Pass
-
-Train set N_36
 Expected: 0 -> Actual: 0.01	Pass
 Expected: 0 -> Actual: 0.03	Pass
-Expected: 1 -> Actual: 0.98	Pass
+Expected: 1 -> Actual: 0.97	Pass
+
+Train set N_34
+Expected: 1 -> Actual: 0.91	Pass
+Expected: 0 -> Actual: 0.04	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_35
+Expected: 1 -> Actual: 0.93	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.02	Pass
+
+Train set N_36
+Expected: 1 -> Actual: 0.96	Pass
+Expected: 0 -> Actual: 0.06	Pass
+Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_37
-Expected: 1 -> Actual: 0.96	Pass
 Expected: 0 -> Actual: 0.05	Pass
+Expected: 1 -> Actual: 0.95	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_38
-Expected: 0 -> Actual: 0.06	Pass
-Expected: 0 -> Actual: 0	Pass
-Expected: 1 -> Actual: 0.98	Pass
+Expected: 1 -> Actual: 0.94	Pass
+Expected: 0 -> Actual: 0.07	Pass
+Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_39
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 1 -> Actual: 0.97	Pass
+Expected: 1 -> Actual: 0.93	Pass
+Expected: 0 -> Actual: 0.06	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_40
-Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.04	Pass
 Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.02	Pass
-
-Train set N_41
-Expected: 0 -> Actual: 0.03	Pass
-Expected: 1 -> Actual: 0.98	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
+Train set N_41
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.97	Pass
+
 Train set N_42
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.05	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_43
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.04	Pass
+Expected: 1 -> Actual: 0.97	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_44
 Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.98	Pass
+Expected: 1 -> Actual: 0.94	Pass
+Expected: 0 -> Actual: 0.04	Pass
 
 Train set N_45
 Expected: 0 -> Actual: 0.03	Pass
@@ -241,89 +241,89 @@ Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_46
-Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_47
+Expected: 1 -> Actual: 0.96	Pass
 Expected: 0 -> Actual: 0.03	Pass
-Expected: 1 -> Actual: 0.98	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_48
-Expected: 1 -> Actual: 0.89	Pass
-Expected: 0 -> Actual: 0.16	Pass
 Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_49
-Expected: 0 -> Actual: 0.04	Pass
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_50
+Expected: 0 -> Actual: 0.01	Pass
 Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 1 -> Actual: 0.95	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Train set N_51
-Expected: 0 -> Actual: 0.02	Pass
 Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
+Expected: 0 -> Actual: 0.06	Pass
+Expected: 1 -> Actual: 0.95	Pass
 
 Train set N_52
-Expected: 0 -> Actual: 0.14	Pass
-Expected: 1 -> Actual: 0.79	Pass
-Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.97	Pass
+Expected: 0 -> Actual: 0.04	Pass
+Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_53
 Expected: 0 -> Actual: 0.01	Pass
-Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
 Expected: 1 -> Actual: 0.99	Pass
 
 Train set N_54
-Expected: 0 -> Actual: 0.04	Pass
+Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.03	Pass
+Expected: 1 -> Actual: 0.98	Pass
+
+Train set N_55
+Expected: 0 -> Actual: 0.03	Pass
 Expected: 1 -> Actual: 0.97	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
-Train set N_55
-Expected: 0 -> Actual: 0.02	Pass
-Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.99	Pass
-
 Train set N_56
-Expected: 0 -> Actual: 0.03	Pass
-Expected: 1 -> Actual: 0.98	Pass
+Expected: 0 -> Actual: 0.13	Pass
+Expected: 1 -> Actual: 0.9	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_57
-Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.96	Pass
+Expected: 0 -> Actual: 0.02	Pass
 
 Train set N_58
 Expected: 1 -> Actual: 0.97	Pass
-Expected: 0 -> Actual: 0.02	Pass
+Expected: 0 -> Actual: 0.04	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_59
-Expected: 0 -> Actual: 0.03	Pass
 Expected: 0 -> Actual: 0.01	Pass
-Expected: 1 -> Actual: 0.98	Pass
+Expected: 0 -> Actual: 0.05	Pass
+Expected: 1 -> Actual: 0.97	Pass
 
 Train set N_60
-Expected: 1 -> Actual: 0.96	Pass
-Expected: 0 -> Actual: 0.03	Pass
+Expected: 0 -> Actual: 0.09	Pass
+Expected: 1 -> Actual: 0.91	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_61
-Expected: 0 -> Actual: 0.05	Pass
-Expected: 1 -> Actual: 0.96	Pass
+Expected: 1 -> Actual: 0.91	Pass
+Expected: 0 -> Actual: 0.15	Pass
 Expected: 0 -> Actual: 0.01	Pass
 
 Train set N_62
-Expected: 1 -> Actual: 0.95	Pass
-Expected: 0 -> Actual: 0.04	Pass
-Expected: 0 -> Actual: 0.01	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 0 -> Actual: 0.02	Pass
+Expected: 1 -> Actual: 0.98	Pass
 
 Acc: 	100%
 Pass: 	189

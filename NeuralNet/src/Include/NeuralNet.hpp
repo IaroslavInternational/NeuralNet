@@ -21,7 +21,6 @@ public:
 	std::vector<float>& get_result();
 private:
 	template<class T1, class T2> void create_synapses(Layer<T1>* l1, Layer<T2>* l2);
-	void update_synapse(Synapse* synapse);
 private:
 	InputLayer input_layer;
 	std::vector<HiddenLayer> hidden_layers;
