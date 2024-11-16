@@ -7,7 +7,7 @@
 NetSystem::NetSystem(const std::string& config)
 	:
 	net(49, 1, 14, 3),
-	mon(&net, "Figures 2.2")
+	mon(&net, "Figures 2.3")
 {
 	add_module(std::move(std::make_unique<ModuleData>("scripts/im2bin.py")));
 }
@@ -88,7 +88,7 @@ void NetSystem::train(const std::string& set_name)
 			}
 		}
 
-		out_val = out_val / (train_set.second.size() * 3);
+		out_val = out_val / (train_set.second.size() * train_set.second[0].size());
 		mon.get_error(out_val);
 	}
 

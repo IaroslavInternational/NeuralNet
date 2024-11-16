@@ -143,9 +143,11 @@
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Source\GUI.cpp" />
     <ClCompile Include="src\Source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\GUI.hpp" />
     <ClInclude Include="libs\imgui\imconfig.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
     <ClInclude Include="libs\imgui\imgui_impl_dx11.h" />

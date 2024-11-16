@@ -1,12 +1,33 @@
 #include "../Include/Window.hpp"
 
+#include "../../libs/imgui/imgui.h"
+#include "../../libs/imgui/imgui_impl_win32.h"
+#include "../../libs/imgui/imgui_impl_dx11.h"
+
+static UINT g_ResizeWidth;
+static UINT g_ResizeHeight;
+
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-Window::Window(int width, int height, LPCWSTR name)
+Window::Window()
 {    
-    wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, name, nullptr};
+    width = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
+    height = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), VERTRES);
+    
+    for (size_t i = 0; i < 3; i++)
+    {
+        clear_color[i] = 0.098f;
+    }
+
+    clear_color[3] = 1.0f;
+
+    wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"Net", nullptr };
     ::RegisterClassExW(&wc);
-    hwnd = ::CreateWindowW(wc.lpszClassName, L"Net", WS_OVERLAPPEDWINDOW, 100, 100, width, height, nullptr, nullptr, wc.hInstance, nullptr);
+    hwnd = CreateWindowEx(
+        WS_EX_APPWINDOW, wc.lpszClassName, L"Net", WS_POPUP | WS_MAXIMIZE,
+        CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+        HWND_DESKTOP, NULL, wc.hInstance, this
+    );
 
     // Initialize Direct3D
     if (!CreateDeviceD3D())
@@ -24,11 +45,6 @@ Window::Window(int width, int height, LPCWSTR name)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
@@ -84,14 +100,11 @@ void Window::frame_start()
 
 void Window::render()
 {
-    ImGui::ShowDemoWindow();
-
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     // Rendering
     ImGui::Render();
-    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+    
     g_pd3dDeviceContext->OMSetRenderTargets(1, g_mainRenderTargetView.GetAddressOf(), nullptr);
-    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView.Get(), clear_color_with_alpha);
+    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView.Get(), clear_color);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
@@ -99,7 +112,6 @@ void Window::end_start()
 {
     // Present
     HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
-    //HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync
     g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
 }
 
@@ -169,8 +181,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_SIZE:
         if (wParam == SIZE_MINIMIZED)
             return 0;
-        //g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
-        //g_ResizeHeight = (UINT)HIWORD(lParam);
+        g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
+        g_ResizeHeight = (UINT)HIWORD(lParam);
         return 0;
     case WM_SYSCOMMAND:
         if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
