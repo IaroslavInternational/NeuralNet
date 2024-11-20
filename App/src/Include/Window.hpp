@@ -8,8 +8,10 @@
 #pragma warning(default:4265)
 
 #pragma comment (lib, "d3d11.lib")
+
 class Window
 {
+	friend class GUI;
 public:
 	Window();
 	~Window();
@@ -26,7 +28,7 @@ private:
 	int width;
 	int height;
 	float clear_color[4];
-private:
+public:
 	WNDCLASSEXW wc;
 	HWND hwnd;
 	Microsoft::WRL::ComPtr<ID3D11Device> g_pd3dDevice = nullptr;

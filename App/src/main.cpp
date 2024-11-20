@@ -5,14 +5,14 @@
 int main(int, char**)
 {
     Window wnd;
-    GUI ui;
+    GUI ui(&wnd);
 
     while (!false)
     {
         wnd.frame_start();
         
-        wnd.render();
         ui.render();
+        wnd.render();
         
         wnd.end_start();
     }

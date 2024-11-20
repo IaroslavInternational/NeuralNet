@@ -13,7 +13,7 @@ Window::Window()
 {    
     width = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
     height = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), VERTRES);
-    
+   
     for (size_t i = 0; i < 3; i++)
     {
         clear_color[i] = 0.098f;
@@ -35,6 +35,14 @@ Window::Window()
         CleanupDeviceD3D();
         ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
     }
+
+    D3D11_VIEWPORT Viewport =
+    {
+        0.0f, 0.0f,
+        (float)width, (float)height,
+        0.0f, 1.0f
+    };
+    g_pd3dDeviceContext->RSSetViewports(1, &Viewport);
 
     // Show the window
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
@@ -95,7 +103,6 @@ void Window::frame_start()
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-
 }
 
 void Window::render()
