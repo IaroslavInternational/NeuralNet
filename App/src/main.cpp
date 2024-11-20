@@ -1,21 +1,15 @@
-﻿#include "Include/Window.hpp"
-#include "Include/GUI.hpp"
+#include "Include/MainWindow.hpp"
+#include "Include/App.hpp"
 
-// Main code
-int main(int, char**)
+int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
-    Window wnd;
-    GUI ui(&wnd);
+	MainWindow wnd(hInst, pArgs, 1200, 700);
+	App app(wnd);
 
-    while (!false)
-    {
-        wnd.frame_start();
-        
-        ui.render();
-        wnd.render();
-        
-        wnd.end_start();
-    }
+	while (wnd.ProcessMessage())
+	{
+		app.Go();
+	}
 
-    return 0;
+	return 0;
 }
