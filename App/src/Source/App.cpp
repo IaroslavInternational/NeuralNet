@@ -6,19 +6,16 @@ App::App(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	rManager(),
-	ui()
+	ui(),
+	obj(rManager["item1.bmp"])
 {
-	rManager.Add(Texture("item1.bmp", 50, 50, Color(255, 255, 255, 255)));
-	rManager.Add(Texture("item2.bmp", 250, 50, Color(255, 255, 255, 255)));
-
-	auto& tex1 = rManager["item1.bmp"]; // test
 }
 
 void App::Go()
 {
 	gfx.BeginFrame();	
 	
-	ui.Render();
+	ui.Render(&obj);
 
 	UpdateModel();
 	ComposeFrame();
@@ -33,5 +30,5 @@ void App::UpdateModel()
 
 void App::ComposeFrame()
 {
-
+	obj.Draw(gfx);
 }

@@ -97,6 +97,16 @@ std::string Texture::GetPath()
 	return path;
 }
 
+int Texture::GetX() const
+{
+	return x;
+}
+
+int Texture::GetY() const
+{
+	return y;
+}
+
 void Texture::PutPixel(int pos_x, int pos_y, Color c)
 {
 	assert(pos_x >= 0);

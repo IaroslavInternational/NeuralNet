@@ -8,7 +8,7 @@
 
 class Texture
 {
-	friend class TextureHasher;
+	friend class UI;
 public:
 	Texture(const std::string& path, int x, int y, Color chromakey);
 	Texture(const Texture& tex)
@@ -28,6 +28,8 @@ public:
 public:
 	void Draw(Graphics& gfx) const;
 	std::string GetPath();
+	int GetX() const;
+	int GetY() const;
 private:
 	void PutPixel(int pos_x, int pos_y, Color c);
 	Color& GetPixel(int pos_x, int pos_y) const;

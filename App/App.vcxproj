@@ -157,6 +157,7 @@
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Source\Objects\Object2D.cpp" />
     <ClCompile Include="src\Source\Objects\ResourceManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Source\Core\DXErr.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="libs\imgui\imstb_rectpack.h" />
     <ClInclude Include="libs\imgui\imstb_textedit.h" />
     <ClInclude Include="libs\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\Include\Objects\Object2D.hpp" />
     <ClInclude Include="src\Include\Objects\ResourceManager.hpp" />
     <ClInclude Include="src\Include\Core\AppWin.hpp" />
     <ClInclude Include="src\Include\Core\Colors.hpp" />

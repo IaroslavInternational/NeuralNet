@@ -11,9 +11,9 @@ public:
 	ResourceManager();
 public:
 	void Add(Texture tex);
-	Texture& operator[](const std::string& key)
+	Texture* operator[](const std::string& key)
 	{
-		return textures.at(key);
+		return &textures.at(key);
 	};
 private:
 	std::unordered_map<std::string, Texture> textures;

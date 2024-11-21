@@ -5,6 +5,8 @@
 #include "Core/Graphics.hpp"
 #include "Core/FrameTimer.hpp"
 #include "Objects/ResourceManager.hpp"
+#include "Objects/Object2D.hpp"
+
 #include "UI.hpp"
 
 class App
@@ -26,4 +28,5 @@ private:
 private:
 	std::vector<std::future<void>> workers;
 	ResourceManager rManager;
+	Object2D obj;
 };

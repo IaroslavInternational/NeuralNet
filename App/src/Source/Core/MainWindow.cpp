@@ -1,11 +1,11 @@
-#include "../Include/MainWindow.hpp"
-#include "../Include/Resource.hpp"
-#include "../Include/Graphics.hpp"
-#include "../Include/App.hpp"
+#include "../../Include/Core/MainWindow.hpp"
+#include "../../Include/Core/Resource.hpp"
+#include "../../Include/Core/Graphics.hpp"
+#include "../../Include/App.hpp"
 
-#include "../../libs/imgui/imgui.h"
-#include "../../libs/imgui/imgui_impl_win32.h"
-#include "../../libs/imgui/imgui_impl_dx11.h"
+#include "../../../libs/imgui/imgui.h"
+#include "../../../libs/imgui/imgui_impl_win32.h"
+#include "../../../libs/imgui/imgui_impl_dx11.h"
 
 #include <assert.h>
 
@@ -29,9 +29,8 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs, int width, int height)
 	wr.right = ScreenWidth + wr.left;
 	wr.top = 100;
 	wr.bottom = ScreenHeight + wr.top;
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_SIZEBOX, FALSE);
-	hWnd = CreateWindow(wndClassName, L"Neuro",
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_SIZEBOX,
+	AdjustWindowRect(&wr, WS_POPUP | WS_OVERLAPPED, FALSE);
+	hWnd = CreateWindow(wndClassName, L"Neuro", WS_POPUP | WS_OVERLAPPED,
 		wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, hInst, this);
 
@@ -176,6 +175,13 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 		mouse.OnLeftPressed(x, y);
+
+		if (x > 100 && y < 23)
+		{
+			ReleaseCapture();
+			SendMessage(hWnd, WM_SYSCOMMAND, 0xF012, 0);
+		}
+
 		break;
 	}
 	case WM_RBUTTONDOWN:
@@ -213,6 +219,7 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+
 	// ************ END MOUSE MESSAGES ************ //
 	}
 

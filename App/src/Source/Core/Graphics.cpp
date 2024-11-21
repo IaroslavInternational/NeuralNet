@@ -1,10 +1,10 @@
-#include "../Include/MainWindow.hpp"
-#include "../Include/Graphics.hpp"
-#include "../Include/DXErr.hpp"
+#include "../../Include/Core/MainWindow.hpp"
+#include "../../Include/Core/Graphics.hpp"
+#include "../../Include/Core/DXErr.hpp"
 
-#include "../../libs/imgui/imgui.h"
-#include "../../libs/imgui/imgui_impl_win32.h"
-#include "../../libs/imgui/imgui_impl_dx11.h"
+#include "../../../libs/imgui/imgui.h"
+#include "../../../libs/imgui/imgui_impl_win32.h"
+#include "../../../libs/imgui/imgui_impl_dx11.h"
 
 #include <assert.h>
 #include <string>
@@ -12,8 +12,8 @@
 
 namespace FramebufferShaders
 {
-	#include "../shaders/FramebufferPS.shh"
-	#include "../shaders/FramebufferVS.shh"
+	#include "../../shaders/FramebufferPS.shh"
+	#include "../../shaders/FramebufferVS.shh"
 }
 
 #pragma comment( lib,"d3d11.lib" )
@@ -224,13 +224,11 @@ Graphics::Graphics(HWNDKey& key, int width, int height)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsLight();
-
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(key.hWnd);
 	ImGui_ImplDX11_Init(pDevice.Get(), pImmediateContext.Get());
+
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts\\SegoeUISemilight.ttf", 17.0F, NULL, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic());
 }
 
 Graphics::~Graphics()
@@ -306,7 +304,7 @@ void Graphics::EndFrame()
 void Graphics::BeginFrame()
 {
 	// clear the sysbuffer
-	memset(pSysBuffer, 23u, sizeof(Color) * ScreenHeight * ScreenWidth);
+	memset(pSysBuffer, 25u, sizeof(Color) * ScreenHeight * ScreenWidth);
 
 	// Start the Dear ImGui frame
 	ImGui_ImplDX11_NewFrame();
