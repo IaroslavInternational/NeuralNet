@@ -4,7 +4,8 @@
 App::App(MainWindow& wnd)
 	:
 	wnd(wnd),
-	gfx(wnd, wnd.GetWidth(), wnd.GetHeight())
+	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
+	tex("item.bmp", 50, 50, Color(255, 255, 255, 255))
 {
 }
 
@@ -23,4 +24,5 @@ void App::UpdateModel()
 
 void App::ComposeFrame()
 {
+	tex.Draw(gfx);
 }

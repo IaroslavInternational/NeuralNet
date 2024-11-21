@@ -4,6 +4,7 @@
 #include "Mouse.hpp"
 #include "Graphics.hpp"
 #include "FrameTimer.hpp"
+#include "Texture.hpp"
 
 #include <random>
 
@@ -22,4 +23,7 @@ private:
 	MainWindow& wnd;
 	Graphics gfx;
 	FrameTimer ft;
+private:
+	std::vector<std::future<void>> workers;
+	Texture tex;
 };

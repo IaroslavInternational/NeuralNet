@@ -29,29 +29,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Sounds\Eat.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-    <Media Include="Sounds\Music_Loop.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-    <Media Include="Sounds\Slither0.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-    <Media Include="Sounds\Slither1.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-    <Media Include="Sounds\Slither2.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-    <Media Include="Sounds\Title.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-    <Media Include="Sounds\Fart.wav">
-      <Filter>Sounds</Filter>
-    </Media>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -79,12 +56,16 @@
     <ClCompile Include="src\Source\Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\FramebufferVS.shh" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="XAudio\XAudio2_7_32.dll" />
     <None Include="XAudio\XAudio2_7_64.dll" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Include\AppWin.hpp">
@@ -138,12 +119,18 @@
     <ClInclude Include="XAudio\xma2defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Include\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico-16.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="ico-32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="item.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

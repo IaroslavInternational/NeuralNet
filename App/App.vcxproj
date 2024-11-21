@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props" Condition="Exists('..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -96,6 +97,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EntryPointSymbol>
@@ -136,6 +138,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <PreprocessorDefinitions>NDEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -148,15 +151,6 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Sounds\Eat.wav" />
-    <Media Include="Sounds\Fart.wav" />
-    <Media Include="Sounds\Music_Loop.wav" />
-    <Media Include="Sounds\Slither0.wav" />
-    <Media Include="Sounds\Slither1.wav" />
-    <Media Include="Sounds\Slither2.wav" />
-    <Media Include="Sounds\Title.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Source\DXErr.cpp" />
     <ClCompile Include="src\Source\FrameTimer.cpp" />
@@ -166,8 +160,10 @@
     <ClCompile Include="src\Source\MainWindow.cpp" />
     <ClCompile Include="src\Source\Mouse.cpp" />
     <ClCompile Include="src\Source\Sound.cpp" />
+    <ClCompile Include="src\Source\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="src\shaders\FramebufferVS.shh" />
     <None Include="XAudio\XAudio2_7_32.dll" />
@@ -186,6 +182,7 @@
     <ClInclude Include="src\Include\Resource.hpp" />
     <ClInclude Include="src\Include\Sound.hpp" />
     <ClInclude Include="src\Include\SoundEffect.hpp" />
+    <ClInclude Include="src\Include\Texture.hpp" />
     <ClInclude Include="XAudio\audiodefs.h" />
     <ClInclude Include="XAudio\comdecl.h" />
     <ClInclude Include="XAudio\XAudio2.h" />
@@ -195,8 +192,14 @@
   <ItemGroup>
     <Image Include="ico-16.ico" />
     <Image Include="ico-32.ico" />
+    <Image Include="item.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props'))" />
+  </Target>
 </Project>
