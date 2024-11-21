@@ -3,6 +3,10 @@
 #include "../Include/Graphics.hpp"
 #include "../Include/App.hpp"
 
+#include "../../libs/imgui/imgui.h"
+#include "../../libs/imgui/imgui_impl_win32.h"
+#include "../../libs/imgui/imgui_impl_dx11.h"
+
 #include <assert.h>
 
 MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs, int width, int height)
@@ -75,6 +79,8 @@ bool MainWindow::ProcessMessage()
 	return true;
 }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT WINAPI MainWindow::_HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (msg == WM_NCCREATE)
@@ -102,6 +108,9 @@ LRESULT WINAPI MainWindow::_HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, L
 
 LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		return true;
+
 	switch (msg)
 	{
 	case WM_DESTROY:
@@ -109,8 +118,8 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_SIZE:
-		w = LOWORD(lParam);
-		h = HIWORD(lParam);
+		ScreenWidth = LOWORD(lParam);
+		ScreenHeight = HIWORD(lParam);
 		break;
 
 		// ************ KEYBOARD MESSAGES ************ //

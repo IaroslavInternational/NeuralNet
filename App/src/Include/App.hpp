@@ -5,6 +5,7 @@
 #include "Graphics.hpp"
 #include "FrameTimer.hpp"
 #include "Texture.hpp"
+#include "UI.hpp"
 
 #include <random>
 
@@ -22,6 +23,7 @@ private:
 private:
 	MainWindow& wnd;
 	Graphics gfx;
+	UI ui;
 	FrameTimer ft;
 private:
 	std::vector<std::future<void>> workers;

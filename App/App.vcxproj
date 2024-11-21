@@ -151,6 +151,13 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="libs\imgui\imgui.cpp" />
+    <ClCompile Include="libs\imgui\imgui_demo.cpp" />
+    <ClCompile Include="libs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="libs\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="libs\imgui\imgui_tables.cpp" />
+    <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Source\DXErr.cpp" />
     <ClCompile Include="src\Source\FrameTimer.cpp" />
@@ -161,6 +168,7 @@
     <ClCompile Include="src\Source\Mouse.cpp" />
     <ClCompile Include="src\Source\Sound.cpp" />
     <ClCompile Include="src\Source\Texture.cpp" />
+    <ClCompile Include="src\Source\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -170,6 +178,14 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\imgui\imconfig.h" />
+    <ClInclude Include="libs\imgui\imgui.h" />
+    <ClInclude Include="libs\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="libs\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="libs\imgui\imgui_internal.h" />
+    <ClInclude Include="libs\imgui\imstb_rectpack.h" />
+    <ClInclude Include="libs\imgui\imstb_textedit.h" />
+    <ClInclude Include="libs\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Include\AppWin.hpp" />
     <ClInclude Include="src\Include\Colors.hpp" />
     <ClInclude Include="src\Include\DXErr.hpp" />
@@ -183,6 +199,7 @@
     <ClInclude Include="src\Include\Sound.hpp" />
     <ClInclude Include="src\Include\SoundEffect.hpp" />
     <ClInclude Include="src\Include\Texture.hpp" />
+    <ClInclude Include="src\Include\UI.hpp" />
     <ClInclude Include="XAudio\audiodefs.h" />
     <ClInclude Include="XAudio\comdecl.h" />
     <ClInclude Include="XAudio\XAudio2.h" />

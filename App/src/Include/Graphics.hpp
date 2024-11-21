@@ -7,6 +7,7 @@
 
 class Graphics
 {
+	friend class UI;
 private:
 	struct FSQVertex
 	{

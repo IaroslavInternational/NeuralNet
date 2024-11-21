@@ -10,6 +10,7 @@
 class HWNDKey
 {
 	friend Graphics::Graphics(HWNDKey&, int, int);
+	friend class UI;
 public:
 	HWNDKey(const HWNDKey&) = delete;
 	HWNDKey& operator=(HWNDKey&) = delete;
@@ -21,6 +22,7 @@ protected:
 
 class MainWindow : public HWNDKey
 {
+	friend class UI;
 public:
 	MainWindow(HINSTANCE hInst, wchar_t* pArgs, int width, int height);
 	MainWindow(const MainWindow&) = delete;
@@ -48,8 +50,6 @@ private:
 public:
 	Keyboard kbd;
 	Mouse mouse;
-	int w;
-	int h;
 private:
 	static constexpr wchar_t* wndClassName = L"Neuro";
 	HINSTANCE hInst = nullptr;

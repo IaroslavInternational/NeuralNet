@@ -5,15 +5,20 @@ App::App(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
-	tex("item.bmp", 50, 50, Color(255, 255, 255, 255))
+	tex("item.bmp", 50, 50, Color(255, 255, 255, 255)),
+	ui()
 {
 }
 
 void App::Go()
 {
 	gfx.BeginFrame();	
+	
+	ui.Render();
+
 	UpdateModel();
 	ComposeFrame();
+
 	gfx.EndFrame();
 }
 

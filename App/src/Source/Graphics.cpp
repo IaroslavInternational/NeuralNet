@@ -2,6 +2,10 @@
 #include "../Include/Graphics.hpp"
 #include "../Include/DXErr.hpp"
 
+#include "../../libs/imgui/imgui.h"
+#include "../../libs/imgui/imgui_impl_win32.h"
+#include "../../libs/imgui/imgui_impl_dx11.h"
+
 #include <assert.h>
 #include <string>
 #include <array>
@@ -212,10 +216,29 @@ Graphics::Graphics(HWNDKey& key, int width, int height)
 	// allocate memory for sysbuffer (16-byte aligned for faster access)
 	pSysBuffer = reinterpret_cast<Color*>(
 		_aligned_malloc(sizeof(Color) * ScreenWidth * ScreenHeight, 16u));
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplWin32_Init(key.hWnd);
+	ImGui_ImplDX11_Init(pDevice.Get(), pImmediateContext.Get());
 }
 
 Graphics::~Graphics()
 {
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 	// free sysbuffer memory (aligned free)
 	if (pSysBuffer)
 	{
@@ -260,6 +283,11 @@ void Graphics::EndFrame()
 	pImmediateContext->PSSetShaderResources(0u, 1u, pSysBufferTextureView.GetAddressOf());
 	pImmediateContext->PSSetSamplers(0u, 1u, pSamplerState.GetAddressOf());
 	pImmediateContext->Draw(6u, 0u);
+	// Rendering
+	ImGui::Render();
+
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui::EndFrame();
 
 	// flip back/front buffers
 	if (FAILED(hr = pSwapChain->Present(1u, 0u)))
@@ -278,7 +306,12 @@ void Graphics::EndFrame()
 void Graphics::BeginFrame()
 {
 	// clear the sysbuffer
-	memset(pSysBuffer, 0u, sizeof(Color) * ScreenHeight * ScreenWidth);
+	memset(pSysBuffer, 23u, sizeof(Color) * ScreenHeight * ScreenWidth);
+
+	// Start the Dear ImGui frame
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 }
 
 void Graphics::PutPixel(int x, int y, Color c)
