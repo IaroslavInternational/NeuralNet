@@ -1,4 +1,4 @@
-#include "Include/MainWindow.hpp"
+#include "Include/Core/MainWindow.hpp"
 #include "Include/App.hpp"
 
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)

@@ -1,4 +1,4 @@
-#include "../Include/Texture.hpp"
+#include "../../Include/Objects/Texture.hpp"
 
 #include <cassert>
 #include <fstream>
@@ -78,7 +78,7 @@ Texture::Texture(const std::string& path, int x, int y, Color chromakey)
 	}
 }
 
-void Texture::Draw(Graphics& gfx)
+void Texture::Draw(Graphics& gfx) const
 {
 	for (int i = 0; i < height; i++)
 	{
@@ -92,6 +92,11 @@ void Texture::Draw(Graphics& gfx)
 	}
 }
 
+std::string Texture::GetPath()
+{
+	return path;
+}
+
 void Texture::PutPixel(int pos_x, int pos_y, Color c)
 {
 	assert(pos_x >= 0);
@@ -101,7 +106,7 @@ void Texture::PutPixel(int pos_x, int pos_y, Color c)
 	pPixels.get()[pos_y * width + pos_x] = c;
 }
 
-Color& Texture::GetPixel(int pos_x, int pos_y)
+Color& Texture::GetPixel(int pos_x, int pos_y) const
 {
 	assert(pos_x >= 0);
 	assert(pos_x < width);

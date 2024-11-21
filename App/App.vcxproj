@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props" Condition="Exists('..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -158,20 +157,20 @@
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Source\Objects\ResourceManager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Source\DXErr.cpp" />
-    <ClCompile Include="src\Source\FrameTimer.cpp" />
+    <ClCompile Include="src\Source\Core\DXErr.cpp" />
+    <ClCompile Include="src\Source\Core\FrameTimer.cpp" />
     <ClCompile Include="src\Source\App.cpp" />
-    <ClCompile Include="src\Source\Graphics.cpp" />
-    <ClCompile Include="src\Source\Keyboard.cpp" />
-    <ClCompile Include="src\Source\MainWindow.cpp" />
-    <ClCompile Include="src\Source\Mouse.cpp" />
-    <ClCompile Include="src\Source\Sound.cpp" />
-    <ClCompile Include="src\Source\Texture.cpp" />
+    <ClCompile Include="src\Source\Core\Graphics.cpp" />
+    <ClCompile Include="src\Source\Device\Keyboard.cpp" />
+    <ClCompile Include="src\Source\Core\MainWindow.cpp" />
+    <ClCompile Include="src\Source\Device\Mouse.cpp" />
+    <ClCompile Include="src\Source\Sound\Sound.cpp" />
+    <ClCompile Include="src\Source\Objects\Texture.cpp" />
     <ClCompile Include="src\Source\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="src\shaders\FramebufferVS.shh" />
     <None Include="XAudio\XAudio2_7_32.dll" />
@@ -186,19 +185,20 @@
     <ClInclude Include="libs\imgui\imstb_rectpack.h" />
     <ClInclude Include="libs\imgui\imstb_textedit.h" />
     <ClInclude Include="libs\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\Include\AppWin.hpp" />
-    <ClInclude Include="src\Include\Colors.hpp" />
-    <ClInclude Include="src\Include\DXErr.hpp" />
-    <ClInclude Include="src\Include\FrameTimer.hpp" />
+    <ClInclude Include="src\Include\Objects\ResourceManager.hpp" />
+    <ClInclude Include="src\Include\Core\AppWin.hpp" />
+    <ClInclude Include="src\Include\Core\Colors.hpp" />
+    <ClInclude Include="src\Include\Core\DXErr.hpp" />
+    <ClInclude Include="src\Include\Core\FrameTimer.hpp" />
     <ClInclude Include="src\Include\App.hpp" />
-    <ClInclude Include="src\Include\Graphics.hpp" />
-    <ClInclude Include="src\Include\Keyboard.hpp" />
-    <ClInclude Include="src\Include\MainWindow.hpp" />
-    <ClInclude Include="src\Include\Mouse.hpp" />
-    <ClInclude Include="src\Include\Resource.hpp" />
-    <ClInclude Include="src\Include\Sound.hpp" />
-    <ClInclude Include="src\Include\SoundEffect.hpp" />
-    <ClInclude Include="src\Include\Texture.hpp" />
+    <ClInclude Include="src\Include\Core\Graphics.hpp" />
+    <ClInclude Include="src\Include\Device\Keyboard.hpp" />
+    <ClInclude Include="src\Include\Core\MainWindow.hpp" />
+    <ClInclude Include="src\Include\Device\Mouse.hpp" />
+    <ClInclude Include="src\Include\Core\Resource.hpp" />
+    <ClInclude Include="src\Include\Sound\Sound.hpp" />
+    <ClInclude Include="src\Include\Sound\SoundEffect.hpp" />
+    <ClInclude Include="src\Include\Objects\Texture.hpp" />
     <ClInclude Include="src\Include\UI.hpp" />
     <ClInclude Include="XAudio\audiodefs.h" />
     <ClInclude Include="XAudio\comdecl.h" />
@@ -209,14 +209,9 @@
   <ItemGroup>
     <Image Include="ico-16.ico" />
     <Image Include="ico-32.ico" />
-    <Image Include="item.bmp" />
+    <Image Include="item1.bmp" />
+    <Image Include="item2.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng-v142.1.6.37.2\build\native\libpng-v142.props'))" />
-  </Target>
 </Project>

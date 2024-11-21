@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics.hpp"
+#include "../Core/Graphics.hpp"
 
 #include <string>
 #include <memory>
@@ -8,13 +8,29 @@
 
 class Texture
 {
+	friend class TextureHasher;
 public:
 	Texture(const std::string& path, int x, int y, Color chromakey);
+	Texture(const Texture& tex)
+	{
+		path = tex.path;
+		x = tex.x;
+		y = tex.y;
+		width = tex.width;
+		height = tex.height;
+		chromakey = tex.chromakey;
+		pPixels.reset(tex.pPixels.get());
+	};
+	~Texture()
+	{
+		pPixels.release();
+	}
 public:
-	void Draw(Graphics& gfx);
+	void Draw(Graphics& gfx) const;
+	std::string GetPath();
 private:
 	void PutPixel(int pos_x, int pos_y, Color c);
-	Color& GetPixel(int pos_x, int pos_y);
+	Color& GetPixel(int pos_x, int pos_y) const;
 private:
 	std::string path;
 	int x;

@@ -2,8 +2,8 @@
 
 #include "AppWin.hpp"
 #include "Graphics.hpp"
-#include "Keyboard.hpp"
-#include "Mouse.hpp"
+#include "../Device/Keyboard.hpp"
+#include "../Device/Mouse.hpp"
 
 #include <string>
 

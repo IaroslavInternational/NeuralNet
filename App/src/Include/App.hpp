@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Keyboard.hpp"
-#include "Mouse.hpp"
-#include "Graphics.hpp"
-#include "FrameTimer.hpp"
-#include "Texture.hpp"
+#include "Device/Keyboard.hpp"
+#include "Device/Mouse.hpp"
+#include "Core/Graphics.hpp"
+#include "Core/FrameTimer.hpp"
+#include "Objects/ResourceManager.hpp"
 #include "UI.hpp"
-
-#include <random>
 
 class App
 {
@@ -27,5 +25,5 @@ private:
 	FrameTimer ft;
 private:
 	std::vector<std::future<void>> workers;
-	Texture tex;
+	ResourceManager rManager;
 };

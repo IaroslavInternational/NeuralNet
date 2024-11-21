@@ -32,31 +32,31 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\DXErr.cpp">
+    <ClCompile Include="src\Source\Core\DXErr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\FrameTimer.cpp">
+    <ClCompile Include="src\Source\Core\FrameTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Source\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\Graphics.cpp">
+    <ClCompile Include="src\Source\Core\Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\Keyboard.cpp">
+    <ClCompile Include="src\Source\Device\Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\MainWindow.cpp">
+    <ClCompile Include="src\Source\Core\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\Mouse.cpp">
+    <ClCompile Include="src\Source\Device\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\Sound.cpp">
+    <ClCompile Include="src\Source\Sound\Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Source\Texture.cpp">
+    <ClCompile Include="src\Source\Objects\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="libs\imgui\imgui.cpp">
@@ -83,49 +83,51 @@
     <ClCompile Include="src\Source\UI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source\Objects\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\FramebufferVS.shh" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="XAudio\XAudio2_7_32.dll" />
     <None Include="XAudio\XAudio2_7_64.dll" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Include\AppWin.hpp">
+    <ClInclude Include="src\Include\Core\AppWin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Colors.hpp">
+    <ClInclude Include="src\Include\Core\Colors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\DXErr.hpp">
+    <ClInclude Include="src\Include\Core\DXErr.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\FrameTimer.hpp">
+    <ClInclude Include="src\Include\Core\FrameTimer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Include\App.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Graphics.hpp">
+    <ClInclude Include="src\Include\Core\Graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Keyboard.hpp">
+    <ClInclude Include="src\Include\Device\Keyboard.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\MainWindow.hpp">
+    <ClInclude Include="src\Include\Core\MainWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Mouse.hpp">
+    <ClInclude Include="src\Include\Device\Mouse.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Resource.hpp">
+    <ClInclude Include="src\Include\Core\Resource.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Sound.hpp">
+    <ClInclude Include="src\Include\Sound\Sound.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\SoundEffect.hpp">
+    <ClInclude Include="src\Include\Sound\SoundEffect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XAudio\audiodefs.h">
@@ -143,7 +145,7 @@
     <ClInclude Include="XAudio\xma2defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Include\Texture.hpp">
+    <ClInclude Include="src\Include\Objects\Texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libs\imgui\imconfig.h">
@@ -173,6 +175,9 @@
     <ClInclude Include="src\Include\UI.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Include\Objects\ResourceManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico-16.ico">
@@ -181,7 +186,10 @@
     <Image Include="ico-32.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="item.bmp">
+    <Image Include="item2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="item1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
