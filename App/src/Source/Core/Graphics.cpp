@@ -228,7 +228,7 @@ Graphics::Graphics(HWNDKey& key, int width, int height)
 	ImGui_ImplWin32_Init(key.hWnd);
 	ImGui_ImplDX11_Init(pDevice.Get(), pImmediateContext.Get());
 
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts\\SegoeUISemilight.ttf", 17.0F, NULL, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic());
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/segoeui.ttf", 18.0f, NULL, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic());
 }
 
 Graphics::~Graphics()
@@ -304,7 +304,7 @@ void Graphics::EndFrame()
 void Graphics::BeginFrame()
 {
 	// clear the sysbuffer
-	memset(pSysBuffer, 25u, sizeof(Color) * ScreenHeight * ScreenWidth);
+	memset(pSysBuffer, ClearColor, sizeof(Color) * ScreenHeight * ScreenWidth);
 
 	// Start the Dear ImGui frame
 	ImGui_ImplDX11_NewFrame();

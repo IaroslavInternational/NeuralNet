@@ -44,4 +44,5 @@ private:
 private:
 	int ScreenWidth;
 	int ScreenHeight;
+	int ClearColor = 17;
 };

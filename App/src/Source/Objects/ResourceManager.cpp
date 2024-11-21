@@ -2,11 +2,12 @@
 
 ResourceManager::ResourceManager()
 {
-	Add(Texture("item1.bmp", 360, 180, Color(255, 255, 255, 255)));
-	Add(Texture("item2.bmp", 250, 50, Color(255, 255, 255, 255)));
+	// JSON parse here or smth else
+	Add(Texture("item1.bmp", Color(255, 255, 255, 255)));
+	Add(Texture("item2.bmp", Color(255, 255, 255, 255)));
 }
 
-void ResourceManager::Add(Texture tex)
+void ResourceManager::Add(Texture& tex)
 {
 	textures.insert({ tex.GetPath(), tex });
 }

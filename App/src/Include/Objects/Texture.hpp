@@ -10,12 +10,10 @@ class Texture
 {
 	friend class UI;
 public:
-	Texture(const std::string& path, int x, int y, Color chromakey);
+	Texture(const std::string& path, Color chromakey);
 	Texture(const Texture& tex)
 	{
 		path = tex.path;
-		x = tex.x;
-		y = tex.y;
 		width = tex.width;
 		height = tex.height;
 		chromakey = tex.chromakey;
@@ -26,20 +24,16 @@ public:
 		pPixels.release();
 	}
 public:
-	void Draw(Graphics& gfx) const;
+	void Draw(int x, int y, Graphics& gfx) const;
 	std::string GetPath();
-	int GetX() const;
-	int GetY() const;
 private:
 	void PutPixel(int pos_x, int pos_y, Color c);
 	Color& GetPixel(int pos_x, int pos_y) const;
 private:
-	std::string path;
-	int x;
-	int y;
-	int width;
-	int height;
-	Color chromakey;
+	std::string path;  // Путь к изображению
+	int width;		   // Ширина изображения
+	int height;		   // Высота изображения
+	Color chromakey;   // Хромокей
 	std::unique_ptr<Color> pPixels = nullptr;
 private:
 	std::vector<std::future<void>> workers;

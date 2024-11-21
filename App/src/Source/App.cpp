@@ -6,16 +6,27 @@ App::App(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	rManager(),
-	ui(),
-	obj(rManager["item1.bmp"])
+	ui(this)
 {
+	viewPortX = 0.2f * (float)wnd.GetWidth(); 
+	viewPortY = 25.0f;  
+
+	for (size_t i = 1; i < 5; i++)
+	{
+		objects.push_back(Object2D(100, 100*i, rManager["item1.bmp"]));
+	}
+
+	for (auto& obj : objects)
+	{
+		obj.Translate(viewPortX, viewPortY);
+	}
 }
 
 void App::Go()
 {
 	gfx.BeginFrame();	
 	
-	ui.Render(&obj);
+	ui.Render();
 
 	UpdateModel();
 	ComposeFrame();
@@ -30,5 +41,8 @@ void App::UpdateModel()
 
 void App::ComposeFrame()
 {
-	obj.Draw(gfx);
+	for (auto& obj : objects)
+	{
+		obj.Draw(gfx);
+	}
 }

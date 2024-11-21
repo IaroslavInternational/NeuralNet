@@ -11,6 +11,7 @@
 
 class App
 {
+	friend class UI;
 public:
 	App(class MainWindow& wnd);
 	App(const App&) = delete;
@@ -25,8 +26,10 @@ private:
 	Graphics gfx;
 	UI ui;
 	FrameTimer ft;
+	float viewPortX;  // Отсутп от боковой панели
+	float viewPortY;  // Высота меню
 private:
 	std::vector<std::future<void>> workers;
 	ResourceManager rManager;
-	Object2D obj;
+	std::vector<Object2D> objects;
 };

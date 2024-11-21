@@ -176,7 +176,7 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 		mouse.OnLeftPressed(x, y);
 
-		if (x > 100 && y < 23)
+		if (x > 100 && x < ScreenWidth - 25 && y < 23)
 		{
 			ReleaseCapture();
 			SendMessage(hWnd, WM_SYSCOMMAND, 0xF012, 0);

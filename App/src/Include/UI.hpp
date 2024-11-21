@@ -1,14 +1,16 @@
 #pragma once
 
-class Object2D;
+class App;
 
 class UI
 {
 public:
-	UI();
+	UI(App* app);
 public:
-	void Render(Object2D* obj);
+	void Render();
 private:
 	void SetPanelSizeAndPosition(int corner, float width, float height, float x_offset, float y_offset);
+private:
+	App* pApp;
 };
 

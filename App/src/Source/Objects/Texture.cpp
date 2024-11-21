@@ -3,11 +3,9 @@
 #include <cassert>
 #include <fstream>
 
-Texture::Texture(const std::string& path, int x, int y, Color chromakey)
+Texture::Texture(const std::string& path, Color chromakey)
 	:
 	path(path),
-	x(x),
-	y(y),
 	chromakey(chromakey)
 {
 	std::ifstream file(path, std::ios::binary);
@@ -78,7 +76,7 @@ Texture::Texture(const std::string& path, int x, int y, Color chromakey)
 	}
 }
 
-void Texture::Draw(Graphics& gfx) const
+void Texture::Draw(int x, int y, Graphics& gfx) const
 {
 	for (int i = 0; i < height; i++)
 	{
@@ -95,16 +93,6 @@ void Texture::Draw(Graphics& gfx) const
 std::string Texture::GetPath()
 {
 	return path;
-}
-
-int Texture::GetX() const
-{
-	return x;
-}
-
-int Texture::GetY() const
-{
-	return y;
 }
 
 void Texture::PutPixel(int pos_x, int pos_y, Color c)

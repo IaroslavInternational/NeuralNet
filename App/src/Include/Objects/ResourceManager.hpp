@@ -10,7 +10,7 @@ class ResourceManager
 public:
 	ResourceManager();
 public:
-	void Add(Texture tex);
+	void Add(Texture& tex);
 	Texture* operator[](const std::string& key)
 	{
 		return &textures.at(key);
