@@ -1,3 +1,12 @@
+/* ============================================================
+* Файл App.cpp
+* Реализация класса приложения App
+* Методы:
+*	- Go: отрисовка объектов и UI (главная ф-ия)
+*	- UpdateModel: обновление параметров объектов
+*	- ComposeFrame: Отрисовка объектов
+============================================================ */
+
 #include "../Include/Core/MainWindow.hpp"
 #include "../Include/App.hpp"
 
@@ -5,21 +14,13 @@ App::App(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
-	rManager(),
-	ui(this)
+	ui(this),
+	dList(wnd.GetWidth())
 {
-	viewPortX = 0.2f * (float)wnd.GetWidth(); 
-	viewPortY = 25.0f;  
-
-	for (size_t i = 1; i < 5; i++)
-	{
-		objects.push_back(Object2D(100, 100*i, rManager["item1.bmp"]));
-	}
-
-	for (auto& obj : objects)
-	{
-		obj.Translate(viewPortX, viewPortY);
-	}
+	r = 25;
+	g = 25;
+	b = 25;
+	gridColor = Colors::MakeRGB(r, g, b);
 }
 
 void App::Go()
@@ -37,12 +38,33 @@ void App::Go()
 void App::UpdateModel()
 {
 	const float dt = ft.Mark();
+
+	gridColor = Colors::MakeRGB(r, g, b);
 }
 
 void App::ComposeFrame()
 {
+	// Grid
+	/*for (size_t i = viewPortX; i < wnd.GetWidth(); i++)
+	{
+		for (size_t j = viewPortY + gridPadding; j < wnd.GetHeight(); j += gridPadding)
+		{
+			gfx.PutPixel(i, j, gridColor);
+		}
+	}
+
+	for (size_t i = viewPortY; i < wnd.GetHeight(); i++)
+	{
+		for (size_t j = viewPortX + gridPadding; j < wnd.GetWidth(); j += gridPadding)
+		{
+			gfx.PutPixel(j, i, gridColor);
+		}
+	}
+
 	for (auto& obj : objects)
 	{
 		obj.Draw(gfx);
-	}
+	}*/
+
+	dList.Draw(gfx);
 }

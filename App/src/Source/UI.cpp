@@ -24,6 +24,8 @@ UI::UI(App* app)
 	colors[ImGuiCol_TabSelected] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 	colors[ImGuiCol_TabHovered] = ImVec4(0.25f, 0.25f, 0.25f, 0.80f);
 	colors[ImGuiCol_Tab] = ImVec4(0.02f, 0.02f, 0.02f, 0.86f);
+	colors[ImGuiCol_Button] = ImVec4(0.55f, 0.47f, 0.03f, 0.91f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.05f, 0.07f, 0.09f, 1.00f);
 }
 
 void UI::Render()
@@ -56,13 +58,27 @@ void UI::Render()
 		{
 			if (ImGui::BeginTabItem("Проекты"))
 			{
-				for (size_t i = 0; i < pApp->objects.size(); i++)
+				for (auto& obj : pApp->dList.dList)
 				{
-					ImGui::SliderInt(std::string(std::string("pos x ") + std::to_string(i)).c_str(), &pApp->objects[i].x, pApp->viewPortX, 700);
-					ImGui::SliderInt(std::string(std::string("pos y ") + std::to_string(i)).c_str(), &pApp->objects[i].y, pApp->viewPortY, 700);
-
+					ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.position.x, pApp->dList.viewPortX, 700);
+					ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.position.y, pApp->dList.viewPortY, 700);
 					ImGui::Separator();
 				}
+
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Test"))
+			{
+				if (ImGui::Button("Spawn"))
+				{
+					pApp->dList.Add(Object2D(0, 0, pApp->rManager["item2.bmp"]));
+				}
+
+				ImGui::SliderInt("Grid Color R", &pApp->r, 0, 255);
+				ImGui::SliderInt("Grid Color G", &pApp->g, 0, 255);
+				ImGui::SliderInt("Grid Color B", &pApp->b, 0, 255);
+				ImGui::SliderInt("Grid Size", &pApp->gridPadding, 1, 200);
 
 				ImGui::EndTabItem();
 			}

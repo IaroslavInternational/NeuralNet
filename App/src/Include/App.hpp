@@ -1,3 +1,14 @@
+/* ============================================================
+* Заголовочный файл App.hpp
+* Класс приложения App
+* Функционал:
+*	- Рендер объектов
+* Атрибуты:
+*	- Адрес окна
+*	- Класс Graphics
+*	- UI
+============================================================ */
+
 #pragma once
 
 #include "Device/Keyboard.hpp"
@@ -6,9 +17,11 @@
 #include "Core/FrameTimer.hpp"
 #include "Objects/ResourceManager.hpp"
 #include "Objects/Object2D.hpp"
+#include "Objects/DrawList.hpp"
 
 #include "UI.hpp"
 
+// Класс приложения
 class App
 {
 	friend class UI;
@@ -17,19 +30,21 @@ public:
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;
 public:
-	void Go();
+	void Go();  // Метод запуска приложения (в цикле)
 private:
-	void ComposeFrame();
-	void UpdateModel();
+	void UpdateModel();	  // Обновление параметров объектов
+	void ComposeFrame();  // Отрисовка объектов 
 private:
-	MainWindow& wnd;
-	Graphics gfx;
-	UI ui;
-	FrameTimer ft;
-	float viewPortX;  // Отсутп от боковой панели
-	float viewPortY;  // Высота меню
+	MainWindow& wnd;  // Адрес окна отрисовки
+	Graphics gfx;	  // Графический API
+	UI ui;			  // Интерфейс
+	FrameTimer ft;	  // Таймер
 private:
-	std::vector<std::future<void>> workers;
-	ResourceManager rManager;
-	std::vector<Object2D> objects;
+	std::vector<std::future<void>> workers;  // Потоки
+	ResourceManager rManager;				 // Менеджер ресурсов
+	DrawList dList;							 // Список объектов для отрисовки
+
+	int r, g, b;
+	int gridPadding = 40;
+	Color gridColor;
 };

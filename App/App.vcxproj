@@ -150,6 +150,7 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Source\Objects\DrawList.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
     <ClCompile Include="libs\imgui\imgui_draw.cpp" />
@@ -178,6 +179,7 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\Objects\DrawList.hpp" />
     <ClInclude Include="libs\imgui\imconfig.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
     <ClInclude Include="libs\imgui\imgui_impl_dx11.h" />

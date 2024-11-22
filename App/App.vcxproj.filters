@@ -89,6 +89,9 @@
     <ClCompile Include="src\Source\Objects\Object2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source\Objects\DrawList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\FramebufferVS.shh" />
@@ -182,6 +185,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Include\Objects\Object2D.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Include\Objects\DrawList.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

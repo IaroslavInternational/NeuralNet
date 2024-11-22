@@ -1,0 +1,21 @@
+{
+  "res-1": [
+    {
+      "path": "item1.bmp",
+      "ch-key-a": 255,
+      "ch-key-r": 255,
+      "ch-key-g": 255,
+      "ch-key-b": 255
+    }
+  ],
+
+  "res-2": [
+    {
+      "path": "item2.bmp",
+      "ch-key-a": 255,
+      "ch-key-r": 255,
+      "ch-key-g": 255,
+      "ch-key-b": 255
+    }
+  ]
+}

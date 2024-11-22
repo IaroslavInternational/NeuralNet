@@ -1,10 +1,41 @@
 #include "../../Include/Objects/ResourceManager.hpp"
 
+#include "../../../libs/json.hpp"
+
+#include <fstream>
+
 ResourceManager::ResourceManager()
 {
-	// JSON parse here or smth else
-	Add(Texture("item1.bmp", Color(255, 255, 255, 255)));
-	Add(Texture("item2.bmp", Color(255, 255, 255, 255)));
+	using json = nlohmann::json;
+	using namespace std::string_literals;
+
+	std::ifstream dataFile("data/rManager.json");
+	if (!dataFile.is_open())
+	{
+		throw ("Не удаётся открыть файл с данными о ресурасах");
+	}
+
+	json j;
+	dataFile >> j;
+
+	std::string currentStr = "";
+	int currentColor[4] = {};
+
+	for (json::iterator m = j.begin(); m != j.end(); ++m)
+	{
+		auto& d = m.key();
+
+		for (const auto& obj : j.at(d))
+		{
+			currentStr = obj.at("path");
+			currentColor[0] = obj.at("ch-key-a");
+			currentColor[1] = obj.at("ch-key-r");
+			currentColor[2] = obj.at("ch-key-g");
+			currentColor[3] = obj.at("ch-key-b");
+
+			Add(Texture(currentStr, Color(currentColor[0], currentColor[1], currentColor[2], currentColor[3])));
+		}
+	}
 }
 
 void ResourceManager::Add(Texture& tex)

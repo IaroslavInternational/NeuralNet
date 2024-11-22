@@ -2,6 +2,7 @@
 
 class Color
 {
+	friend class UI;
 public:
 	unsigned int dword;
 public:
