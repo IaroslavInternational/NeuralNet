@@ -7,10 +7,11 @@ class UI
 public:
 	UI(App* app);
 public:
-	void Render();
+	void Render(float dt);
 private:
 	void SetPanelSizeAndPosition(int corner, float width, float height, float x_offset, float y_offset);
 private:
 	App* pApp;
+	float appScale = 1.0f;
 };
 

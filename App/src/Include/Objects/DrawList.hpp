@@ -9,10 +9,11 @@ class DrawList
 {
 	friend class UI;
 public:
-	DrawList(int dx, int dy = 1);
+	DrawList();
 public:
 	void Add(Object2D& obj);
 	void Draw(Graphics& gfx);
+	void Translate(const pos2d& dpos);
 public:
 	Object2D* operator[](const std::string& key)
 	{
@@ -20,7 +21,4 @@ public:
 	};
 private:
 	std::unordered_map<std::string, Object2D> dList;  // Список объектов для отрисовки
-private:
-	float viewPortX;  // Отступ от боковой панели
-	float viewPortY;  // Высота меню
 };

@@ -15,19 +15,18 @@ App::App(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	ui(this),
-	dList(wnd.GetWidth())
+	dList(),
+	grid(50, Colors::MakeRGB(25, 25, 25), wnd.GetWidth(), wnd.GetHeight())
 {
-	r = 25;
-	g = 25;
-	b = 25;
-	gridColor = Colors::MakeRGB(r, g, b);
+
 }
 
 void App::Go()
 {
 	gfx.BeginFrame();	
 	
-	ui.Render();
+	const float dt = ft.Mark();
+	ui.Render(dt);
 
 	UpdateModel();
 	ComposeFrame();
@@ -37,34 +36,17 @@ void App::Go()
 
 void App::UpdateModel()
 {
-	const float dt = ft.Mark();
+	//const float dt = ft.Mark();
 
-	gridColor = Colors::MakeRGB(r, g, b);
+	if (wnd.kbd.KeyIsPressed('W'))
+	{
+		dList.Translate({0, 1});
+	}
+
 }
 
 void App::ComposeFrame()
 {
-	// Grid
-	/*for (size_t i = viewPortX; i < wnd.GetWidth(); i++)
-	{
-		for (size_t j = viewPortY + gridPadding; j < wnd.GetHeight(); j += gridPadding)
-		{
-			gfx.PutPixel(i, j, gridColor);
-		}
-	}
-
-	for (size_t i = viewPortY; i < wnd.GetHeight(); i++)
-	{
-		for (size_t j = viewPortX + gridPadding; j < wnd.GetWidth(); j += gridPadding)
-		{
-			gfx.PutPixel(j, i, gridColor);
-		}
-	}
-
-	for (auto& obj : objects)
-	{
-		obj.Draw(gfx);
-	}*/
-
+	grid.Draw(gfx);
 	dList.Draw(gfx);
 }

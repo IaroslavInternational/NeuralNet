@@ -28,8 +28,29 @@ UI::UI(App* app)
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.05f, 0.07f, 0.09f, 1.00f);
 }
 
-void UI::Render()
+void UI::Render(float dt)
 {
+	if (ImGui::Begin("slider viewport", NULL, ImGuiWindowFlags_NoCollapse  |
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
+	{
+		ImGui::PushID("vp_slider");
+		if (ImGui::VSliderFloat("", { 18, 160 }, &appScale, 1.0f, 10.0f))
+		{
+			// set viewport dimensions
+			D3D11_VIEWPORT vp;
+			vp.Width = float(pApp->wnd.ScreenWidth) * appScale;
+			vp.Height = float(pApp->wnd.ScreenHeight) * appScale;
+			vp.MinDepth = 0.0f;
+			vp.MaxDepth = 1.0f;
+			vp.TopLeftX = float(pApp->wnd.ScreenWidth) * pApp->gfx.pK;
+			vp.TopLeftY = pApp->gfx.menuH;
+
+			pApp->gfx.pImmediateContext->RSSetViewports(1, &vp);
+		}
+		ImGui::PopID();
+	}
+	ImGui::End();
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Τΰιλ"))
@@ -60,8 +81,8 @@ void UI::Render()
 			{
 				for (auto& obj : pApp->dList.dList)
 				{
-					ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.position.x, pApp->dList.viewPortX, 700);
-					ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.position.y, pApp->dList.viewPortY, 700);
+					ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.position.x, 0, 700);
+					ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.position.y, 0, 700);
 					ImGui::Separator();
 				}
 
@@ -75,10 +96,7 @@ void UI::Render()
 					pApp->dList.Add(Object2D(0, 0, pApp->rManager["item2.bmp"]));
 				}
 
-				ImGui::SliderInt("Grid Color R", &pApp->r, 0, 255);
-				ImGui::SliderInt("Grid Color G", &pApp->g, 0, 255);
-				ImGui::SliderInt("Grid Color B", &pApp->b, 0, 255);
-				ImGui::SliderInt("Grid Size", &pApp->gridPadding, 1, 200);
+				ImGui::SliderInt("Grid Size", (int*)&pApp->grid.padding, 1, 200);
 
 				ImGui::EndTabItem();
 			}

@@ -158,6 +158,7 @@
     <ClCompile Include="libs\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="libs\imgui\imgui_tables.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Source\Objects\Grid.cpp" />
     <ClCompile Include="src\Source\Objects\Object2D.cpp" />
     <ClCompile Include="src\Source\Objects\ResourceManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -179,6 +180,7 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\Objects\Grid.hpp" />
     <ClInclude Include="src\Include\Objects\DrawList.hpp" />
     <ClInclude Include="libs\imgui\imconfig.h" />
     <ClInclude Include="libs\imgui\imgui.h" />

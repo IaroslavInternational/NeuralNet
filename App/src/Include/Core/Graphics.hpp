@@ -45,4 +45,6 @@ private:
 	int ScreenWidth;
 	int ScreenHeight;
 	int ClearColor = 17;
+	float pK = 0.2f;
+	float menuH = 24.0f;
 };

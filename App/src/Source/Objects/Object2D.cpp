@@ -41,12 +41,12 @@ std::string& Object2D::GetId()
 
 void Object2D::Translate(int dx, int dy)
 {
-	position.x = dx;
-	position.y = dy;
+	position.x += dx;
+	position.y += dy;
 }
 
 void Object2D::Translate(const pos2d& dpos)
 {
-	position.x = dpos.x;
-	position.y = dpos.y;
+	position.x += dpos.x;
+	position.y += dpos.y;
 }

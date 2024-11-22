@@ -16,7 +16,7 @@
 #include "Core/Graphics.hpp"
 #include "Core/FrameTimer.hpp"
 #include "Objects/ResourceManager.hpp"
-#include "Objects/Object2D.hpp"
+#include "Objects/Grid.hpp"
 #include "Objects/DrawList.hpp"
 
 #include "UI.hpp"
@@ -43,8 +43,5 @@ private:
 	std::vector<std::future<void>> workers;  // Потоки
 	ResourceManager rManager;				 // Менеджер ресурсов
 	DrawList dList;							 // Список объектов для отрисовки
-
-	int r, g, b;
-	int gridPadding = 40;
-	Color gridColor;
+	Grid grid;								 // Сетка
 };

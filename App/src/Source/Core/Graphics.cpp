@@ -93,8 +93,8 @@ Graphics::Graphics(HWNDKey& key, int width, int height)
 	vp.Height = float(ScreenHeight);
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0.0f;
-	vp.TopLeftY = 0.0f;
+	vp.TopLeftX = float(ScreenWidth) * pK;
+	vp.TopLeftY = menuH;
 	pImmediateContext->RSSetViewports(1, &vp);
 
 
