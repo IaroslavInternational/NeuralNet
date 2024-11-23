@@ -150,6 +150,7 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Source\Objects\Camera.cpp" />
     <ClCompile Include="src\Source\Objects\DrawList.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
@@ -174,12 +175,15 @@
     <ClCompile Include="src\Source\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\rManager.json" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="src\shaders\FramebufferVS.shh" />
     <None Include="XAudio\XAudio2_7_32.dll" />
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\Objects\Camera.hpp" />
+    <ClInclude Include="libs\json.hpp" />
     <ClInclude Include="src\Include\Objects\Grid.hpp" />
     <ClInclude Include="src\Include\Objects\DrawList.hpp" />
     <ClInclude Include="libs\imgui\imconfig.h" />

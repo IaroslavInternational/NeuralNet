@@ -1,30 +1,46 @@
 #include "../../Include/Objects/Grid.hpp"
 
+#include "../../Include/Objects/Camera.hpp"
+
 Grid::Grid(unsigned padding, const Color& c, int wLimit, int hLimit)
 	:
 	padding(padding),
 	color(c),
 	wLimit(wLimit),
-	hLimit(hLimit)
+	hLimit(hLimit),
+	x(0),
+	y(0)
 {
 
 }
 
 void Grid::Draw(Graphics& gfx)
 {
-	for (size_t i = 0; i < wLimit; i++)
+	for (int i = -x; i < wLimit; i++)
 	{
-		for (size_t j = padding; j < hLimit; j += padding)
+		for (int j = -padding; j < hLimit; j += padding)
 		{
-			gfx.PutPixel(i, j, color);
+			if (x + i >= 0 && y + j >= 0 && x + i < gfx.GetWidth() && y + j < gfx.GetHeight())
+			{
+				gfx.PutPixel(x + i, y + j, color);
+			}
 		}
 	}
 
-	for (size_t i = 0; i < hLimit; i++)
+	for (int i = -y; i < hLimit; i++)
 	{
-		for (size_t j = padding; j < wLimit; j += padding)
+		for (int j = -padding; j < wLimit; j += padding)
 		{
-			gfx.PutPixel(j, i, color);
+			if (x + j >= 0 && y + i >= 0 && x + j < gfx.GetWidth() && y + i < gfx.GetHeight())
+			{
+				gfx.PutPixel(x + j, y + i, color);
+			}
 		}
 	}
+}
+
+void Grid::Translate(int dx, int dy)
+{
+	x += dx;
+	y += dy;
 }

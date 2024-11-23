@@ -1,4 +1,4 @@
-#include "../Include/Sound.hpp"
+#include "../../Include/Sound/Sound.hpp"
 
 #include <assert.h>
 #include <algorithm>
@@ -6,8 +6,8 @@
 #include <array>
 #include <functional>
 
-#include "../../XAudio/XAudio2.h"
-#include "../Include/DXErr.hpp"
+#include "../../../XAudio/XAudio2.h"
+#include "../../Include/Core/DXErr.hpp"
 
 SoundSystem& SoundSystem::Get()
 {
@@ -514,8 +514,8 @@ Sound::Sound( const std::wstring& fileName,LoopType loopType,
 				assert( loopEnd > loopStart && loopEnd < nFrames );
 
 				// just in case ;)
-				loopStart = std::min( loopStart,nFrames - 1u );
-				loopEnd = std::min( loopEnd,nFrames - 1u );
+				//loopStart = std::min( loopStart,nFrames - 1u );
+				//loopEnd = std::min( loopEnd,nFrames - 1u );
 			}
 			break;
 		case LoopType::ManualSample:
@@ -531,8 +531,8 @@ Sound::Sound( const std::wstring& fileName,LoopType loopType,
 				loopEnd = loopEndSample;
 
 				// just in case ;)
-				loopStart = std::min( loopStart,nFrames - 1u );
-				loopEnd = std::min( loopEnd,nFrames - 1u );
+				//loopStart = std::min( loopStart,nFrames - 1u );
+				//loopEnd = std::min( loopEnd,nFrames - 1u );
 			}
 			break;
 		case LoopType::AutoFullSound:

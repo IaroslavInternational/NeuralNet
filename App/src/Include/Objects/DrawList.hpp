@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object2D.hpp"
+#include "Grid.hpp"
 
 #include <unordered_map>
 
@@ -11,8 +12,9 @@ class DrawList
 public:
 	DrawList();
 public:
-	void Add(Object2D& obj);
+	void Add(Object2D& obj, const pos2d& dpos);
 	void Draw(Graphics& gfx);
+	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
 public:
 	Object2D* operator[](const std::string& key)
@@ -21,4 +23,5 @@ public:
 	};
 private:
 	std::unordered_map<std::string, Object2D> dList;  // Список объектов для отрисовки
+	Grid grid;										  // Сетка
 };

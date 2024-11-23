@@ -84,7 +84,10 @@ void Texture::Draw(int x, int y, Graphics& gfx) const
 		{
 			if (chromakey != GetPixel(i, j))
 			{
-				gfx.PutPixel(x + j, y + i, GetPixel(i, j));
+				if (x + j >= 0 && y + i >= 0 && x + j < gfx.GetWidth() && y + i < gfx.GetHeight())
+				{
+					gfx.PutPixel(x + j, y + i, GetPixel(i, j));
+				}
 			}
 		}
 	}

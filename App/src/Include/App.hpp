@@ -7,6 +7,8 @@
 *	- Адрес окна
 *	- Класс Graphics
 *	- UI
+*	- Список объектов отрисовки
+*	- Камера
 ============================================================ */
 
 #pragma once
@@ -16,8 +18,8 @@
 #include "Core/Graphics.hpp"
 #include "Core/FrameTimer.hpp"
 #include "Objects/ResourceManager.hpp"
-#include "Objects/Grid.hpp"
 #include "Objects/DrawList.hpp"
+#include "Objects/Camera.hpp"
 
 #include "UI.hpp"
 
@@ -43,5 +45,5 @@ private:
 	std::vector<std::future<void>> workers;  // Потоки
 	ResourceManager rManager;				 // Менеджер ресурсов
 	DrawList dList;							 // Список объектов для отрисовки
-	Grid grid;								 // Сетка
+	Camera camera;							 // Камера
 };

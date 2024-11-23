@@ -95,12 +95,16 @@
     <ClCompile Include="src\Source\Objects\Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Source\Objects\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\FramebufferVS.shh" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="XAudio\XAudio2_7_32.dll" />
     <None Include="XAudio\XAudio2_7_64.dll" />
+    <None Include="data\rManager.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Include\Core\AppWin.hpp">
@@ -194,6 +198,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Include\Objects\Grid.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Include\Objects\Camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

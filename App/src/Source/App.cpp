@@ -16,7 +16,7 @@ App::App(MainWindow& wnd)
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	ui(this),
 	dList(),
-	grid(50, Colors::MakeRGB(25, 25, 25), wnd.GetWidth(), wnd.GetHeight())
+	camera(0, 0, dList)
 {
 
 }
@@ -25,8 +25,7 @@ void App::Go()
 {
 	gfx.BeginFrame();	
 	
-	const float dt = ft.Mark();
-	ui.Render(dt);
+	ui.Render();
 
 	UpdateModel();
 	ComposeFrame();
@@ -36,17 +35,27 @@ void App::Go()
 
 void App::UpdateModel()
 {
-	//const float dt = ft.Mark();
+	const float dt = ft.Mark();
 
 	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		dList.Translate({0, 1});
+		camera.Translate(0, 1);
 	}
-
+	if (wnd.kbd.KeyIsPressed('A'))
+	{
+		camera.Translate(-1, 0);
+	}
+	if (wnd.kbd.KeyIsPressed('S'))
+	{
+		camera.Translate(0, -1);
+	}
+	if (wnd.kbd.KeyIsPressed('D'))
+	{
+		camera.Translate(1, 0);
+	}
 }
 
 void App::ComposeFrame()
 {
-	grid.Draw(gfx);
 	dList.Draw(gfx);
 }

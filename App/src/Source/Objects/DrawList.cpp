@@ -1,26 +1,38 @@
 #include "../../Include/Objects/DrawList.hpp"
 
 DrawList::DrawList()
+	:
+	grid(50, Colors::MakeRGB(25, 25, 25), 1300, 700)
 {
 }
 
-void DrawList::Add(Object2D& obj)
+void DrawList::Add(Object2D& obj, const pos2d& dpos)
 {
+	obj.Translate(dpos);
 	dList.insert({ obj.GetId(), obj });
 }
 
 void DrawList::Draw(Graphics& gfx)
 {
+	grid.Draw(gfx);
+
 	for (auto& obj : dList)
 	{
 		obj.second.Draw(gfx);
 	}
 }
 
-void DrawList::Translate(const pos2d& dpos)
+void DrawList::Translate(int dx, int dy)
 {
+	grid.Translate(dx, dy);
+
 	for (auto& obj : dList)
 	{
-		obj.second.Translate(dpos);
+		obj.second.Translate(dx, dy);
 	}
+}
+
+void DrawList::Translate(const pos2d& dpos)
+{
+	Translate(dpos.x, dpos.y);
 }

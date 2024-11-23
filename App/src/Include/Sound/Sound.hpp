@@ -1,6 +1,7 @@
 #pragma once
 
-#include "AppWin.hpp"
+#include "../App.hpp"
+
 #include <memory>
 #include <vector>
 #include <mutex>

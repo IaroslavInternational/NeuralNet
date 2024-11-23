@@ -23,7 +23,8 @@ using Microsoft::WRL::ComPtr;
 Graphics::Graphics(HWNDKey& key, int width, int height)
 	:
 	ScreenWidth(width),
-	ScreenHeight(height)
+	ScreenHeight(height),
+	mappedSysBufferTexture()
 {
 	assert(key.hWnd != nullptr);
 	
@@ -315,8 +316,18 @@ void Graphics::BeginFrame()
 void Graphics::PutPixel(int x, int y, Color c)
 {
 	assert(x >= 0);
-	assert(x < int(ScreenWidth));
+	assert(x < ScreenWidth);
 	assert(y >= 0);
-	assert(y < int(ScreenHeight));
+	assert(y < ScreenHeight);
 	pSysBuffer[ScreenWidth * y + x] = c;
+}
+
+int Graphics::GetWidth() const
+{
+	return ScreenWidth;
+}
+
+int Graphics::GetHeight() const
+{
+	return ScreenHeight;
 }

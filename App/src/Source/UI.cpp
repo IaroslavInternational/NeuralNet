@@ -28,84 +28,15 @@ UI::UI(App* app)
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.05f, 0.07f, 0.09f, 1.00f);
 }
 
-void UI::Render(float dt)
+void UI::Render()
 {
-	if (ImGui::Begin("slider viewport", NULL, ImGuiWindowFlags_NoCollapse  |
-		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
-	{
-		ImGui::PushID("vp_slider");
-		if (ImGui::VSliderFloat("", { 18, 160 }, &appScale, 1.0f, 10.0f))
-		{
-			// set viewport dimensions
-			D3D11_VIEWPORT vp;
-			vp.Width = float(pApp->wnd.ScreenWidth) * appScale;
-			vp.Height = float(pApp->wnd.ScreenHeight) * appScale;
-			vp.MinDepth = 0.0f;
-			vp.MaxDepth = 1.0f;
-			vp.TopLeftX = float(pApp->wnd.ScreenWidth) * pApp->gfx.pK;
-			vp.TopLeftY = pApp->gfx.menuH;
-
-			pApp->gfx.pImmediateContext->RSSetViewports(1, &vp);
-		}
-		ImGui::PopID();
-	}
-	ImGui::End();
-
-	if (ImGui::BeginMainMenuBar())
-	{
-		if (ImGui::BeginMenu("Файл"))
-		{
-			if (ImGui::MenuItem("Сохранить"))
-			{
-			}
-
-			ImGui::EndMenu();
-		}
-
-		ImGui::SetCursorPos({ 1300 - 24, 0 });
-		if (ImGui::Button("X", { 24, 24 }))
-		{
-			exit(0);
-		}
-
-		ImGui::EndMainMenuBar();
-	};
+	ShowMenu();
 
 	SetPanelSizeAndPosition(0, 0.2f, 1.0f, 0.0f, 0.0f);
-	if (ImGui::Begin("MainBar", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | 
-		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
-	{
-		if (ImGui::BeginTabBar("Main bar"))
-		{
-			if (ImGui::BeginTabItem("Проекты"))
-			{
-				for (auto& obj : pApp->dList.dList)
-				{
-					ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.position.x, 0, 700);
-					ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.position.y, 0, 700);
-					ImGui::Separator();
-				}
+	ShowPanel();
 
-				ImGui::EndTabItem();
-			}
-
-			if (ImGui::BeginTabItem("Test"))
-			{
-				if (ImGui::Button("Spawn"))
-				{
-					pApp->dList.Add(Object2D(0, 0, pApp->rManager["item2.bmp"]));
-				}
-
-				ImGui::SliderInt("Grid Size", (int*)&pApp->grid.padding, 1, 200);
-
-				ImGui::EndTabItem();
-			}
-		}
-
-		ImGui::EndTabBar();
-	}
-
-	ImGui::End();
+	SetPanelSizeAndPosition(3, 0.025, 0.22, -0.015f, -0.05f);
+	ShowViewPort();
 
 	ImGui::ShowDemoWindow();
 }
@@ -115,7 +46,7 @@ void UI::SetPanelSizeAndPosition(int corner, float width, float height, float x_
 {
 	ImGuiIO& io = ImGui::GetIO();
 
-	float MenuHeight = 24.0f;
+	float MenuHeight = pApp->gfx.menuH;
 	ImVec2 DispSize = io.DisplaySize;
 
 	float PanelW = round(DispSize.x * width);
@@ -138,4 +69,93 @@ void UI::SetPanelSizeAndPosition(int corner, float width, float height, float x_
 
 	ImGui::SetNextWindowPos(PanelPos, ImGuiCond_Always, PanelPivot);
 	ImGui::SetNextWindowSize(PanelSize);
+}
+
+void UI::ShowMenu()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Файл"))
+		{
+			if (ImGui::MenuItem("Сохранить"))
+			{
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::SetCursorPos({ pApp->wnd.ScreenWidth - pApp->gfx.menuH, 0 });
+		if (ImGui::Button("X", { pApp->gfx.menuH, pApp->gfx.menuH }))
+		{
+			exit(0);
+		}
+
+		ImGui::EndMainMenuBar();
+	};
+}
+
+void UI::ShowPanel()
+{
+	if (ImGui::Begin("MainBar", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
+	{
+		if (ImGui::BeginTabBar("Main bar"))
+		{
+			if (ImGui::BeginTabItem("Проекты"))
+			{
+				for (auto& obj : pApp->dList.dList)
+				{
+					ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.position.x, 0, 700);
+					ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.position.y, 0, 700);
+					ImGui::Separator();
+				}
+
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Test"))
+			{
+				if (ImGui::Button("Spawn"))
+				{
+					pApp->dList.Add(Object2D(0, 0, pApp->rManager["item2.bmp"]), pApp->camera.dpos);
+				}
+
+				ImGui::SliderInt("Grid Size", (int*)&pApp->dList.grid.padding, 1, 200);
+				ImGui::SliderInt("Camera x", &pApp->camera.dpos.x, 0, 1300);
+				ImGui::SliderInt("Camera y", &pApp->camera.dpos.y, 0, 700);
+
+				ImGui::EndTabItem();
+			}
+		}
+
+		ImGui::EndTabBar();
+	}
+
+	ImGui::End();
+}
+
+void UI::ShowViewPort()
+{
+	if (ImGui::Begin("slider viewport", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | 
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
+	{
+		ImGui::PushID("vp_slider");
+		if (ImGui::VSliderFloat("", { 18, 160 }, &appScale, 1.0f, 10.0f))
+		{
+			// set viewport dimensions
+			D3D11_VIEWPORT vp;
+			vp.Width = float(pApp->wnd.ScreenWidth) * appScale;
+			vp.Height = float(pApp->wnd.ScreenHeight) * appScale;
+			vp.MinDepth = 0.0f;
+			vp.MaxDepth = 1.0f;
+			vp.TopLeftX = float(pApp->wnd.ScreenWidth) * pApp->gfx.pK;
+			vp.TopLeftY = pApp->gfx.menuH;
+
+			pApp->gfx.pImmediateContext->RSSetViewports(1, &vp);
+		}
+		ImGui::PopID();
+	}
+	if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay))
+		ImGui::SetTooltip("Размер поля", ImGui::GetStyle().HoverDelayShort);
+	ImGui::End();
 }

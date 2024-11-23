@@ -1,4 +1,4 @@
-#include "../Include/Keyboard.hpp"
+#include "../../Include/Device/Keyboard.hpp"
 
 bool Keyboard::KeyIsPressed( unsigned char keycode ) const
 {

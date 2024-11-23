@@ -34,6 +34,8 @@ public:
 			type(Invalid),
 			leftIsPressed(false),
 			rightIsPressed(false),
+			wheelUp(false),
+			wheelDown(false),
 			x(0),
 			y(0)
 		{}
@@ -42,6 +44,8 @@ public:
 			type(type),
 			leftIsPressed(parent.leftIsPressed),
 			rightIsPressed(parent.rightIsPressed),
+			wheelUp(parent.wheelUp),
+			wheelDown(parent.wheelDown),
 			x(parent.x),
 			y(parent.y)
 		{}
