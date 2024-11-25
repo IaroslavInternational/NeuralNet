@@ -1,10 +1,10 @@
 #include "../../Include/Objects/Object2D.hpp"
 
 #include <random>
+#include <cassert>
 
-Object2D::Object2D(int x, int y, Texture* tex, const std::string& id)
+Object2D::Object2D(Texture* tex, const std::string& id)
 	:
-	position(x, y),
 	pTex(tex),
 	id(id)
 {
@@ -23,7 +23,7 @@ Object2D::Object2D(int x, int y, Texture* tex, const std::string& id)
 
 Object2D::Object2D(const Object2D& obj)
 	:
-	position(obj.position),
+	cell(obj.cell),
 	pTex(obj.pTex),
 	id(obj.id)
 {
@@ -31,7 +31,19 @@ Object2D::Object2D(const Object2D& obj)
 
 void Object2D::Draw(Graphics& gfx) 
 {
-	pTex->Draw(position.x, position.y, gfx);
+	assert(cell != nullptr);
+
+	pTex->Draw(cell->Get().x, cell->Get().y, gfx);
+}
+
+void Object2D::Translate(int dx, int dy)
+{
+	cell->Translate(dx, dy);
+}
+
+void Object2D::Translate(const pos2d& dpos)
+{
+	Translate(dpos.x, dpos.y);
 }
 
 std::string& Object2D::GetId()
@@ -39,14 +51,7 @@ std::string& Object2D::GetId()
 	return id;
 }
 
-void Object2D::Translate(int dx, int dy)
+void Object2D::SetCell(Cell* cell)
 {
-	position.x += dx;
-	position.y += dy;
-}
-
-void Object2D::Translate(const pos2d& dpos)
-{
-	position.x += dpos.x;
-	position.y += dpos.y;
+	this->cell = cell;
 }

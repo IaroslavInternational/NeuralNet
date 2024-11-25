@@ -13,6 +13,7 @@ UI::UI(App* app)
 	:
 	pApp(app)
 {
+	inputs.resize(1);
 	ImGui::GetStyle().WindowBorderSize = 0.0f;
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
@@ -103,11 +104,31 @@ void UI::ShowPanel()
 		{
 			if (ImGui::BeginTabItem("Проекты"))
 			{
+				size_t counter = 0;
 				for (auto& obj : pApp->dList.dList)
 				{
-					ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.position.x, 0, 700);
-					ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.position.y, 0, 700);
+					if (ImGui::InputInt((std::string("x ") + obj.first).c_str(), &inputs[counter].x))
+					{
+						obj.second.cell->SetX(inputs[counter].x);
+					}
+
+					if (ImGui::InputInt((std::string("y ") + obj.first).c_str(), &inputs[counter].y))
+					{
+						obj.second.cell->SetY(inputs[counter].y);
+					}
+
+					/*if (ImGui::SliderInt((std::string("x ") + obj.first).c_str(), &obj.second.cell->x, 0, 6))
+					{
+						
+					}
+
+					if (ImGui::SliderInt((std::string("y ") + obj.first).c_str(), &obj.second.cell->y, 0, 6))
+					{
+						obj.second.cell->Set(0, 1);  // Костыль
+					}*/
+
 					ImGui::Separator();
+					counter++;
 				}
 
 				ImGui::EndTabItem();
@@ -117,7 +138,8 @@ void UI::ShowPanel()
 			{
 				if (ImGui::Button("Spawn"))
 				{
-					pApp->dList.Add(Object2D(0, 0, pApp->rManager["item2.bmp"]), pApp->camera.dpos);
+					pApp->dList.Add(Object2D(pApp->rManager["item2.bmp"]), pApp->camera.dpos);
+					inputs.resize(inputs.size() + 1);
 				}
 
 				ImGui::SliderInt("Grid Size", (int*)&pApp->dList.grid.padding, 1, 200);

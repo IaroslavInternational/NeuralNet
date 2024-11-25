@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Source\Objects\Camera.cpp" />
+    <ClCompile Include="src\Source\Objects\Cell.cpp" />
     <ClCompile Include="src\Source\Objects\DrawList.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_demo.cpp" />
@@ -182,6 +183,8 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Include\Core\var.hpp" />
+    <ClInclude Include="src\Include\Objects\Cell.hpp" />
     <ClInclude Include="src\Include\Objects\Camera.hpp" />
     <ClInclude Include="libs\json.hpp" />
     <ClInclude Include="src\Include\Objects\Grid.hpp" />

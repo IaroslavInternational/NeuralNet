@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include "Core/var.hpp"
+
 class App;
 
 class UI
@@ -16,5 +19,6 @@ private:
 private:
 	App* pApp;
 	float appScale = 1.0f;
+	std::vector<pos2d> inputs;
 };
 
