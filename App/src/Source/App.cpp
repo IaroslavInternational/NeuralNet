@@ -15,7 +15,7 @@ App::App(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	ui(this),
-	dList(),
+	dList("data/sample.json", rManager),
 	camera(0, 0, dList)
 {
 
@@ -61,6 +61,8 @@ void App::UpdateModel()
 
 		dList.CheckHover(x, y);
 	}
+
+	ui.Update();
 }
 
 void App::ComposeFrame()

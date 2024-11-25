@@ -13,7 +13,7 @@ Grid::Grid()
 	std::ifstream dataFile("data/grid.json");
 	if (!dataFile.is_open())
 	{
-		throw ("Не удаётся открыть файл с данными о ресурасах");
+		throw ("Не удаётся открыть файл с данными о сетке");
 	}
 
 	json j;
@@ -33,6 +33,15 @@ Grid::Grid()
 		y = j.at("pos-y");
 		wLimit = int(1300.0f - 1300.0f * 0.2f);
 		hLimit = 800 - 24;
+	}
+
+	// Тест на заполнение ячейками
+	for (size_t i = 0; i < wLimit / padding; i++)
+	{
+		for (size_t j = 0; j < hLimit / padding; j++)
+		{
+			cells.emplace_back(i, j);
+		}
 	}
 }
 
@@ -65,4 +74,31 @@ void Grid::Translate(int dx, int dy)
 {
 	x += dx;
 	y += dy;
+
+	for (auto& c : cells)
+	{
+		c.Translate(dx, dy);
+	}
+}
+
+Cell* Grid::GetCellByPos(int x, int y)
+{
+	for (auto& c : cells)
+	{
+		if (c.GetIdx().x == x && c.GetIdx().y == y)
+		{
+			return &c;
+		}
+	}
+}
+
+Cell* Grid::GetCellByHover(int x, int y)
+{
+	for (auto& c : cells)
+	{
+		if (c.IsHovered(x, y))
+		{
+			return &c;
+		}
+	}
 }

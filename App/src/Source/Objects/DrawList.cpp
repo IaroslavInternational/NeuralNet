@@ -9,24 +9,57 @@
 
 #include "../../Include/Objects/DrawList.hpp"
 
-DrawList::DrawList()
+#include "../../../libs/json.hpp"
+
+#include <fstream>
+#include <sstream>
+
+DrawList::DrawList(const std::string& path, ResourceManager& rManager)
 	:
-	grid()
+	rManager(rManager)
 {
-	// Тест на заполнение ячейками
-	for (size_t i = 0; i < 6; i++)
+	using json = nlohmann::json;
+	using namespace std::string_literals;
+
+	std::ifstream dataFile(path);
+	if (!dataFile.is_open())
 	{
-		for (size_t j = 0; j < 6; j++)
+		throw ("Не удаётся открыть файл с данными о проекте");
+	}
+
+	json j;
+	dataFile >> j;
+
+	size_t obj_counter = 0;
+	std::ostringstream oss;
+
+	for (json::iterator m = j.begin(); m != j.end(); ++m)
+	{
+		auto& d = m.key();
+
+		for (const auto& obj : j.at(d))
 		{
-			cells.emplace_back(i, j);
+			auto scene_name = obj.at("name");
+
+			for (const auto& objs : obj.at("objects"))
+			{
+				for (auto c_obj = objs.begin(); c_obj != objs.end(); c_obj++)
+				{
+					auto& k = c_obj.key();
+
+					for (const auto& data : objs.at(k))
+					{
+						Add(Object2D(rManager[data.at("resource")], grid.GetCellByPos(data.at("c-x"), data.at("c-y"))));
+					}					
+				}
+			}
 		}
 	}
+
 }
 
-void DrawList::Add(Object2D& obj, const pos2d& dpos)
+void DrawList::Add(Object2D& obj)
 {
-	obj.SetCell(&cells[dList.size()]);
-	obj.Translate(dpos);
 	dList.insert({ obj.GetId(), obj });
 }
 
@@ -48,16 +81,6 @@ void DrawList::Draw(Graphics& gfx)
 void DrawList::Translate(int dx, int dy)
 {
 	grid.Translate(dx, dy);
-	
-	for (auto& obj : dList)
-	{
-		obj.second.Translate(dx, dy);
-	}
-
-	for (auto& c : cells)
-	{
-		c.Translate(dx, dy);
-	}
 }
 
 void DrawList::Translate(const pos2d& dpos)
@@ -67,23 +90,5 @@ void DrawList::Translate(const pos2d& dpos)
 
 void DrawList::CheckHover(int x, int y)
 {
-	for (auto& c : cells)
-	{
-		if (c.IsHovered(x, y))
-		{
-			hoveredCell = &c;
-			break;
-		}
-	}
-}
-
-Cell* DrawList::GetCell(int x, int y)
-{
-	for (auto& c : cells)
-	{
-		if (c.GetIdx().x == x && c.GetIdx().y == y)
-		{
-			return &c;
-		}
-	}
+	hoveredCell = grid.GetCellByHover(x, y);
 }

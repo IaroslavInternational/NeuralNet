@@ -17,5 +17,15 @@
       "ch-key-g": 255,
       "ch-key-b": 255
     }
+  ],
+
+  "res-3": [
+    {
+      "path": "neuron.bmp",
+      "ch-key-a": 255,
+      "ch-key-r": 255,
+      "ch-key-g": 255,
+      "ch-key-b": 255
+    }
   ]
 }

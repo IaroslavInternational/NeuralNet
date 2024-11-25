@@ -3,6 +3,8 @@
 #include "../Core/Graphics.hpp"
 #include "../Core/MainWindow.hpp"
 
+#include "Cell.hpp"
+
 // Сетка поля
 class Grid
 {
@@ -12,6 +14,9 @@ public:
 public:
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);
+public:
+	Cell* GetCellByPos(int x, int y);
+	Cell* GetCellByHover(int x, int y);
 private:
 	unsigned padding;
 	Color color;
@@ -19,4 +24,5 @@ private:
 	int hLimit;
 	int x;
 	int y;
+	std::vector<Cell> cells;
 };

@@ -10,7 +10,7 @@ class Object2D
 {
 	friend class UI;
 public:
-	Object2D(Texture* tex, const std::string& id = "-1");
+	Object2D(Texture* tex, Cell* cell = nullptr, const std::string& id = "-1");
 	Object2D(const Object2D& obj);
 public:
 	void Draw(Graphics& gfx);
@@ -20,7 +20,7 @@ public:
 	void SetCell(Cell* cell);
 private:
 	Cell* cell = nullptr; // Ячейка
-	Texture* pTex;   // Текстура
-	std::string id;  // id
+	Texture* pTex;        // Текстура
+	std::string id;       // id
 };
 

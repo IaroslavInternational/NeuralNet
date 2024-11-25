@@ -3,10 +3,11 @@
 #include <random>
 #include <cassert>
 
-Object2D::Object2D(Texture* tex, const std::string& id)
+Object2D::Object2D(Texture* tex, Cell* cell, const std::string& id)
 	:
 	pTex(tex),
-	id(id)
+	id(id),
+	cell(cell)
 {
 	if (id == "-1")
 	{
@@ -34,16 +35,6 @@ void Object2D::Draw(Graphics& gfx)
 	assert(cell != nullptr);
 
 	pTex->Draw(cell->Get().x, cell->Get().y, gfx);
-}
-
-void Object2D::Translate(int dx, int dy)
-{
-	//cell->Translate(dx, dy);
-}
-
-void Object2D::Translate(const pos2d& dpos)
-{
-	Translate(dpos.x, dpos.y);
 }
 
 std::string& Object2D::GetId()

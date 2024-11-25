@@ -12,6 +12,7 @@
 
 #include "Object2D.hpp"
 #include "Grid.hpp"
+#include "ResourceManager.hpp"
 
 #include <unordered_map>
 
@@ -20,9 +21,9 @@ class DrawList
 {
 	friend class UI;
 public:
-	DrawList();
+	DrawList(const std::string& path, ResourceManager& rManager);
 public:
-	void Add(Object2D& obj, const pos2d& dpos);
+	void Add(Object2D& obj);
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
@@ -34,10 +35,8 @@ public:
 		return &dList.at(key);
 	};
 private:
-	Cell* GetCell(int x, int y);
-private:
+	ResourceManager& rManager;
 	std::unordered_map<std::string, Object2D> dList;  // Список объектов для отрисовки
 	Grid grid;										  // Сетка
-	std::vector<Cell> cells;
 	Cell* hoveredCell = nullptr;
 };

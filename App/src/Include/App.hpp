@@ -39,11 +39,11 @@ private:
 private:
 	MainWindow& wnd;  // Адрес окна отрисовки
 	Graphics gfx;	  // Графический API
-	UI ui;			  // Интерфейс
 	FrameTimer ft;	  // Таймер
 private:
 	std::vector<std::future<void>> workers;  // Потоки
 	ResourceManager rManager;				 // Менеджер ресурсов
 	DrawList dList;							 // Список объектов для отрисовки
 	Camera camera;							 // Камера
+	UI ui;			  // Интерфейс
 };

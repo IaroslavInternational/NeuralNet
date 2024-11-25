@@ -15,7 +15,7 @@ UI::UI(App* app)
 	:
 	pApp(app)
 {
-	F_DEBUG(inputs.resize(1));
+	F_DEBUG(inputs.resize(pApp->dList.dList.size()));
 	ImGui::GetStyle().WindowBorderSize = 0.0f;
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
@@ -29,6 +29,17 @@ UI::UI(App* app)
 	colors[ImGuiCol_Tab] = ImVec4(0.02f, 0.02f, 0.02f, 0.86f);
 	colors[ImGuiCol_Button] = ImVec4(0.55f, 0.47f, 0.03f, 0.91f);
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.05f, 0.07f, 0.09f, 1.00f);
+}
+
+void UI::Update()
+{
+	// Открыть контекстное меню
+	if (pApp->wnd.mouse.RightIsPressed())
+	{
+		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
+		cMenu.pos.y = pApp->wnd.mouse.GetPosY();
+		cMenu.show = true;
+	}
 }
 
 void UI::Render()
@@ -155,12 +166,12 @@ void UI::Debug()
 			{
 				std::ostringstream oss;
 				oss << "Mouse pos: x = " << pApp->wnd.mouse.GetPosX() << ", y = " << pApp->wnd.mouse.GetPosY();
-				
+
 				ImGui::Text(oss.str().c_str());
 
 				if (ImGui::Button("Spawn"))
 				{
-					pApp->dList.Add(Object2D(pApp->rManager["item2.bmp"]), pApp->camera.dpos);
+					//pApp->dList.Add(Object2D(pApp->rManager["neuron.bmp"]), pApp->camera.dpos);
 					inputs.resize(inputs.size() + 1);
 				}
 
@@ -175,12 +186,12 @@ void UI::Debug()
 				{
 					if (ImGui::InputInt((std::string("x ") + obj.first).c_str(), &inputs[counter].x))
 					{
-						obj.second.SetCell(pApp->dList.GetCell(inputs[counter].x, inputs[counter].y));
+						obj.second.SetCell(pApp->dList.grid.GetCellByPos(inputs[counter].x, inputs[counter].y));
 					}
 
 					if (ImGui::InputInt((std::string("y ") + obj.first).c_str(), &inputs[counter].y))
 					{
-						obj.second.SetCell(pApp->dList.GetCell(inputs[counter].x, inputs[counter].y));
+						obj.second.SetCell(pApp->dList.grid.GetCellByPos(inputs[counter].x, inputs[counter].y));
 					}
 
 					ImGui::Separator();
@@ -195,4 +206,27 @@ void UI::Debug()
 	}
 
 	ImGui::End();
+
+	if (cMenu.show)
+	{
+		ImGui::SetNextWindowPos(ImVec2(cMenu.pos.x + 75, cMenu.pos.y));
+		if (ImGui::Begin("Тест о", &cMenu.show))
+		{
+			auto cell = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
+			cell->Draw(pApp->gfx);
+
+			std::ostringstream oss;
+			oss << "Ячейка (" << cell->x << ", " << cell->y << ")";
+			ImGui::Text(oss.str().c_str());
+
+			if (ImGui::Button("Добавить объект"))
+			{
+				pApp->dList.Add(Object2D(pApp->rManager["neuron.bmp"], cell));
+				F_DEBUG(inputs.resize(pApp->dList.dList.size()));
+				cMenu.show = false;
+			}
+		}
+
+		ImGui::End();
+	}
 }

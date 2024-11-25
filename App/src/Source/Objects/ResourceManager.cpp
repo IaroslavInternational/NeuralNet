@@ -12,7 +12,7 @@ ResourceManager::ResourceManager()
 	std::ifstream dataFile("data/rManager.json");
 	if (!dataFile.is_open())
 	{
-		throw ("Не удаётся открыть файл с данными о ресурасах");
+		throw ("Не удаётся открыть файл с данными о ресурсах");
 	}
 
 	json j;

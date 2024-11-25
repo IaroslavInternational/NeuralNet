@@ -1,0 +1,25 @@
+{
+  "sample_scene": [
+    {
+      "name": "Scene 1",
+      "objects": [
+        {
+          "object 0": [
+            {
+              "resource": "item1.bmp",
+              "c-x": 0,
+              "c-y": 0
+            }
+          ],
+          "object 1": [
+            {
+              "resource": "item2.bmp",
+              "c-x": 2,
+              "c-y": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

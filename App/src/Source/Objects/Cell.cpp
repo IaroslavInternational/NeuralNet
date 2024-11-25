@@ -65,7 +65,10 @@ void Cell::Draw(Graphics& gfx)
 	{
 		for (int j = pos.y; j < pos.y + size; j++)
 		{
-			gfx.PutPixel(i, j, Colors::MakeRGB(25, 25, 25));
+			if (i >= 0 && j >= 0 && i < gfx.GetWidth() && j < gfx.GetHeight())
+			{
+				gfx.PutPixel(i, j, Colors::MakeRGB(25, 25, 25));
+			}
 		}
 	}
 }
