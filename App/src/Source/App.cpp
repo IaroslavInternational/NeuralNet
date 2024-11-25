@@ -53,6 +53,14 @@ void App::UpdateModel()
 	{
 		camera.Translate(1, 0);
 	}
+
+	if (wnd.mouse.LeftIsPressed())
+	{
+		int x = wnd.mouse.GetPosX();
+		int y = wnd.mouse.GetPosY();
+
+		dList.CheckHover(x, y);
+	}
 }
 
 void App::ComposeFrame()

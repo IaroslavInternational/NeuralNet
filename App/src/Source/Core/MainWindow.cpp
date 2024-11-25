@@ -143,7 +143,7 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 		if (x > 0 && x < ScreenWidth && y > 0 && y < ScreenHeight)
 		{
-			mouse.OnMouseMove(x, y);
+			mouse.OnMouseMove(x - int(ScreenWidth * 0.2f), y - 24);
 			if (!mouse.IsInWindow())
 			{
 				SetCapture(hWnd);
@@ -158,14 +158,14 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				x = std::min(int(ScreenWidth) - 1, x);
 				y = std::max(0, y);
 				y = std::min(int(ScreenHeight) - 1, y);
-				mouse.OnMouseMove(x, y);
+				mouse.OnMouseMove(x - int(ScreenWidth * 0.2f), y - 24);
 			}
 			else
 			{
 				ReleaseCapture();
 				mouse.OnMouseLeave();
-				mouse.OnLeftReleased(x, y);
-				mouse.OnRightReleased(x, y);
+				mouse.OnLeftReleased(x - int(ScreenWidth * 0.2f), y - 24);
+				mouse.OnRightReleased(x - int(ScreenWidth * 0.2f), y - 24);
 			}
 		}
 		break;
@@ -174,9 +174,9 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnLeftPressed(x, y);
+		mouse.OnLeftPressed(x - int(ScreenWidth * 0.2f), y - 24);
 
-		if (x > 100 && x < ScreenWidth - 25 && y < 23)
+		if (x > 100 && x < ScreenWidth - 24 && y < 23)
 		{
 			ReleaseCapture();
 			SendMessage(hWnd, WM_SYSCOMMAND, 0xF012, 0);
@@ -188,21 +188,21 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnRightPressed(x, y);
+		mouse.OnRightPressed(x - int(ScreenWidth * 0.2f), y - 24);
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnLeftReleased(x, y);
+		mouse.OnLeftReleased(x - int(ScreenWidth * 0.2f), y - 24);
 		break;
 	}
 	case WM_RBUTTONUP:
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnRightReleased(x, y);
+		mouse.OnRightReleased(x - int(ScreenWidth * 0.2f), y - 24);
 		break;
 	}
 	case WM_MOUSEWHEEL:

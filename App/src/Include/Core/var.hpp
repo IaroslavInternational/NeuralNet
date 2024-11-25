@@ -1,5 +1,7 @@
 #pragma once
 
+#define F_DEBUG(act) act;
+
 // Позиция в 2-х мерном пространстве
 struct pos2d
 {

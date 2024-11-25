@@ -11,7 +11,7 @@
 
 DrawList::DrawList()
 	:
-	grid(50, Colors::MakeRGB(25, 25, 25), 1300, 800)
+	grid()
 {
 	// Тест на заполнение ячейками
 	for (size_t i = 0; i < 6; i++)
@@ -33,7 +33,12 @@ void DrawList::Add(Object2D& obj, const pos2d& dpos)
 void DrawList::Draw(Graphics& gfx)
 {
 	grid.Draw(gfx);
-
+	if (hoveredCell != nullptr)
+	{
+		hoveredCell->Draw(gfx);
+		hoveredCell = nullptr;
+	}
+	
 	for (auto& obj : dList)
 	{
 		obj.second.Draw(gfx);
@@ -43,14 +48,42 @@ void DrawList::Draw(Graphics& gfx)
 void DrawList::Translate(int dx, int dy)
 {
 	grid.Translate(dx, dy);
-
+	
 	for (auto& obj : dList)
 	{
 		obj.second.Translate(dx, dy);
+	}
+
+	for (auto& c : cells)
+	{
+		c.Translate(dx, dy);
 	}
 }
 
 void DrawList::Translate(const pos2d& dpos)
 {
 	Translate(dpos.x, dpos.y);
+}
+
+void DrawList::CheckHover(int x, int y)
+{
+	for (auto& c : cells)
+	{
+		if (c.IsHovered(x, y))
+		{
+			hoveredCell = &c;
+			break;
+		}
+	}
+}
+
+Cell* DrawList::GetCell(int x, int y)
+{
+	for (auto& c : cells)
+	{
+		if (c.GetIdx().x == x && c.GetIdx().y == y)
+		{
+			return &c;
+		}
+	}
 }

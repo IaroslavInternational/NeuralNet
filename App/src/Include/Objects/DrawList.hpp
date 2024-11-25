@@ -27,12 +27,17 @@ public:
 	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
 public:
+	void CheckHover(int x, int y);
+public:
 	Object2D* operator[](const std::string& key)
 	{
 		return &dList.at(key);
 	};
 private:
+	Cell* GetCell(int x, int y);
+private:
 	std::unordered_map<std::string, Object2D> dList;  // Список объектов для отрисовки
 	Grid grid;										  // Сетка
 	std::vector<Cell> cells;
+	Cell* hoveredCell = nullptr;
 };

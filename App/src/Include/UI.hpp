@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+
 #include "Core/var.hpp"
 
 class App;
@@ -16,9 +17,10 @@ private:
 	void ShowMenu();
 	void ShowPanel();
 	void ShowViewPort();
+	F_DEBUG(void Debug());
 private:
 	App* pApp;
 	float appScale = 1.0f;
-	std::vector<pos2d> inputs;
+	F_DEBUG(std::vector<pos2d> inputs);
 };
 

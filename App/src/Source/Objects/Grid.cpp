@@ -1,17 +1,39 @@
 #include "../../Include/Objects/Grid.hpp"
 
 #include "../../Include/Objects/Camera.hpp"
+#include "../../../libs/json.hpp"
 
-Grid::Grid(unsigned padding, const Color& c, int wLimit, int hLimit)
-	:
-	padding(padding),
-	color(c),
-	wLimit(wLimit),
-	hLimit(hLimit),
-	x(0),
-	y(0)
+#include <fstream>
+
+Grid::Grid()
 {
+	using json = nlohmann::json;
+	using namespace std::string_literals;
 
+	std::ifstream dataFile("data/grid.json");
+	if (!dataFile.is_open())
+	{
+		throw ("Не удаётся открыть файл с данными о ресурасах");
+	}
+
+	json j;
+	dataFile >> j;
+
+	int colorRead[4] = {};
+
+	for (json::iterator m = j.begin(); m != j.end(); ++m)
+	{
+		padding = j.at("padding");
+		colorRead[0] = j.at("c-a");
+		colorRead[1] = j.at("c-r");
+		colorRead[2] = j.at("c-g");
+		colorRead[3] = j.at("c-b");
+		color = Color(colorRead[0], colorRead[1], colorRead[2], colorRead[3]);
+		x = j.at("pos-x");
+		y = j.at("pos-y");
+		wLimit = int(1300.0f - 1300.0f * 0.2f);
+		hLimit = 800 - 24;
+	}
 }
 
 void Grid::Draw(Graphics& gfx)

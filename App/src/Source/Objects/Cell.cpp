@@ -1,5 +1,7 @@
 #include "../../Include/Objects/Cell.hpp"
 
+#include "../../Include/Core/Graphics.hpp"
+
 Cell::Cell(int x, int y)
 	:
 	x(x),
@@ -36,6 +38,11 @@ pos2d& Cell::Get()
 	return pos;
 }
 
+pos2d Cell::GetIdx()
+{
+	return pos2d(x, y);
+}
+
 void Cell::Translate(int dx, int dy)
 {
 	pos.x += dx;
@@ -45,4 +52,20 @@ void Cell::Translate(int dx, int dy)
 void Cell::Translate(const pos2d& dpos)
 {
 	Translate(dpos.x, dpos.y);
+}
+
+bool Cell::IsHovered(int x, int y)
+{
+	return (pos.x <= x && x <= pos.x + size) && (pos.y <= y && y <= pos.y + size);
+}
+
+void Cell::Draw(Graphics& gfx)
+{
+	for (int i = pos.x; i < pos.x + size; i++)
+	{
+		for (int j = pos.y; j < pos.y + size; j++)
+		{
+			gfx.PutPixel(i, j, Colors::MakeRGB(25, 25, 25));
+		}
+	}
 }

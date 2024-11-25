@@ -8,7 +8,7 @@ class Grid
 {
 	friend class UI;
 public:
-	Grid(unsigned padding, const Color& c, int wLimit, int hLimit);
+	Grid();
 public:
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);
