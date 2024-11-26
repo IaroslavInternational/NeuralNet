@@ -42,6 +42,11 @@ std::string& Object2D::GetId()
 	return id;
 }
 
+pos2d& Object2D::GetPos()
+{
+	return cell->Get();
+}
+
 void Object2D::SetCell(Cell* cell)
 {
 	this->cell = cell;

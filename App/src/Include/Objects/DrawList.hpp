@@ -28,6 +28,9 @@ public:
 	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
 public:
+	void DrawLine(pos2d& p1, pos2d& p2, Color c, Graphics& gfx);
+	void DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gfx);
+	void DrawSynapse(const std::string& id1, const std::string& id2, Color c, Graphics& gfx);
 	void CheckHover(int x, int y);
 public:
 	Object2D* operator[](const std::string& key)

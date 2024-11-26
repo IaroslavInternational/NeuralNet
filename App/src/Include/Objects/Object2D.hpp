@@ -17,6 +17,7 @@ public:
 	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
 	std::string& GetId();
+	pos2d& GetPos();
 	void SetCell(Cell* cell);
 private:
 	Cell* cell = nullptr; // ίχεικΰ

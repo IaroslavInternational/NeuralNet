@@ -7,15 +7,25 @@
           "object 0": [
             {
               "resource": "item1.bmp",
-              "c-x": 0,
-              "c-y": 0
+              "id": "N_0",
+              "c-x": 2,
+              "c-y": 6
             }
           ],
           "object 1": [
             {
               "resource": "item2.bmp",
-              "c-x": 2,
-              "c-y": 0
+              "id": "N_1",
+              "c-x": 5,
+              "c-y": 5
+            }
+          ],
+          "object 2": [
+            {
+              "resource": "item2.bmp",
+              "id": "N_2",
+              "c-x": 5,
+              "c-y": 7
             }
           ]
         }
