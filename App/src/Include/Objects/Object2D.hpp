@@ -19,6 +19,7 @@ public:
 	std::string& GetId();
 	pos2d& GetPos();
 	void SetCell(Cell* cell);
+	Cell* GetCell();
 private:
 	Cell* cell = nullptr; // Ячейка
 	Texture* pTex;        // Текстура

@@ -102,3 +102,13 @@ Cell* Grid::GetCellByHover(int x, int y)
 		}
 	}
 }
+
+Cell* Grid::GetUpperCell(Cell* cell)
+{
+	return GetCellByPos(cell->GetIdx().x, cell->GetIdx().y - 1);
+}
+
+Cell* Grid::GetLowerCell(Cell* cell)
+{
+	return GetCellByPos(cell->GetIdx().x, cell->GetIdx().y + 1);
+}

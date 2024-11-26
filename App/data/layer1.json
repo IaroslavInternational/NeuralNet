@@ -1,0 +1,27 @@
+{
+  "sample_scene": [
+    {
+      "name": "Layer 1",
+      "objects": [
+        {
+          "object 0": [
+            {
+              "resource": "item2.bmp",
+              "id": "N_1_0",
+              "c-x": 7,
+              "c-y": 6
+            }
+          ],
+          "object 1": [
+            {
+              "resource": "item2.bmp",
+              "id": "N_1_1",
+              "c-x": 7,
+              "c-y": 8
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

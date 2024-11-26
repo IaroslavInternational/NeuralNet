@@ -15,8 +15,6 @@
 #include <sstream>
 
 DrawList::DrawList(const std::string& path, ResourceManager& rManager)
-	:
-	rManager(rManager)
 {
 	using json = nlohmann::json;
 	using namespace std::string_literals;
@@ -39,29 +37,14 @@ DrawList::DrawList(const std::string& path, ResourceManager& rManager)
 
 		for (const auto& obj : j.at(d))
 		{
-			auto scene_name = obj.at("name");
-
-			for (const auto& objs : obj.at("objects"))
-			{
-				for (auto c_obj = objs.begin(); c_obj != objs.end(); c_obj++)
-				{
-					auto& k = c_obj.key();
-
-					for (const auto& data : objs.at(k))
-					{
-						Add(Object2D(rManager[data.at("resource")], 
-							grid.GetCellByPos(data.at("c-x"), data.at("c-y")),
-							data.at("id")));
-					}					
-				}
-			}
+			Add(DrawLayer(std::string(obj), rManager, grid));
 		}
 	}
 }
 
-void DrawList::Add(Object2D& obj)
+void DrawList::Add(DrawLayer& dLayer)
 {
-	dList.insert({ obj.GetId(), obj });
+	dLayers.push_back(dLayer);
 }
 
 void DrawList::Draw(Graphics& gfx)
@@ -73,13 +56,12 @@ void DrawList::Draw(Graphics& gfx)
 		hoveredCell = nullptr;
 	}
 	
-	for (auto& obj : dList)
+	for (auto& l : dLayers)
 	{
-		obj.second.Draw(gfx);
+		l.Draw(gfx);
 	}
 
-	DrawSynapse("N_0", "N_1", Colors::MakeRGB(122, 45, 56), gfx);
-	DrawSynapse("N_0", "N_2", Colors::MakeRGB(122, 45, 56), gfx);
+	DrawSynapses(dLayers[0], dLayers[1], Colors::MakeRGB(122, 45, 56), gfx);
 }
 
 void DrawList::Translate(int dx, int dy)
@@ -119,7 +101,10 @@ void DrawList::DrawLine(pos2d& p0, pos2d& p1, Color c, Graphics& gfx)
 		{
 			const float y = m * (float)x + b;
 
-			gfx.PutPixel(x, (int)y, c);
+			if (x >= 0 && y >= 0 && x < gfx.GetWidth() && y < gfx.GetHeight())
+			{
+				gfx.PutPixel(x, (int)y, c);
+			}
 		}
 	}
 	else
@@ -136,7 +121,10 @@ void DrawList::DrawLine(pos2d& p0, pos2d& p1, Color c, Graphics& gfx)
 		{
 			const float x = w * (float)y + p;
 
-			gfx.PutPixel((int)x, y, c);
+			if (x >= 0 && y >= 0 && x < gfx.GetWidth() && y < gfx.GetHeight())
+			{
+				gfx.PutPixel((int)x, y, c);
+			}
 		}
 	}
 }
@@ -157,7 +145,13 @@ void DrawList::DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gf
 	DrawLine(_p1, _p2, c, gfx);
 }
 
-void DrawList::DrawSynapse(const std::string& id1, const std::string& id2, Color c, Graphics& gfx)
+void DrawList::DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx)
 {
-	DrawSynapse(dList.at(id1), dList.at(id2), c, gfx);
+	for (size_t i = 0; i < l1.GetSize(); i++)
+	{
+		for (size_t j = 0; j < l2.GetSize(); j++)
+		{
+			DrawSynapse(l1[i], l2[j], c, gfx);
+		}
+	}
 }

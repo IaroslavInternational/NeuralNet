@@ -15,7 +15,7 @@ UI::UI(App* app)
 	:
 	pApp(app)
 {
-	F_DEBUG(inputs.resize(pApp->dList.dList.size()));
+	//F_DEBUG(inputs.resize(pApp->dList.dList.size()));
 	ImGui::GetStyle().WindowBorderSize = 0.0f;
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
@@ -155,7 +155,6 @@ void UI::ShowViewPort()
 	ImGui::End();
 }
 
-
 void UI::Debug()
 {
 	if (ImGui::Begin("Debug", NULL, ImGuiWindowFlags_NoCollapse))
@@ -169,34 +168,26 @@ void UI::Debug()
 
 				ImGui::Text(oss.str().c_str());
 
-				if (ImGui::Button("Spawn"))
+				for (auto& l : pApp->dList.dLayers)
 				{
-					//pApp->dList.Add(Object2D(pApp->rManager["neuron.bmp"]), pApp->camera.dpos);
-					inputs.resize(inputs.size() + 1);
+					if (ImGui::TreeNode(l.name.c_str()))
+					{
+						for (size_t i = 0; i < l.GetSize(); i++)
+						{
+							ImGui::Text(l[i].id.c_str());
+						}				
+
+						if (ImGui::Button("Spawn"))
+						{
+							l.Insert(Object2D(pApp->rManager["item2.bmp"]));
+						}
+
+						ImGui::TreePop();
+					}
 				}
 
-				ImGui::SliderInt("Grid Size", (int*)&pApp->dList.grid.padding, 1, 200);
 				ImGui::SliderInt("Camera x", &pApp->camera.dpos.x, -1000, 1000);
 				ImGui::SliderInt("Camera y", &pApp->camera.dpos.y, -1000, 1000);
-
-				ImGui::Separator();
-
-				size_t counter = 0;
-				for (auto& obj : pApp->dList.dList)
-				{
-					if (ImGui::InputInt((std::string("x ") + obj.first).c_str(), &inputs[counter].x))
-					{
-						obj.second.SetCell(pApp->dList.grid.GetCellByPos(inputs[counter].x, inputs[counter].y));
-					}
-
-					if (ImGui::InputInt((std::string("y ") + obj.first).c_str(), &inputs[counter].y))
-					{
-						obj.second.SetCell(pApp->dList.grid.GetCellByPos(inputs[counter].x, inputs[counter].y));
-					}
-
-					ImGui::Separator();
-					counter++;
-				}
 
 				ImGui::EndTabItem();
 			}
@@ -210,7 +201,7 @@ void UI::Debug()
 	if (cMenu.show)
 	{
 		ImGui::SetNextWindowPos(ImVec2(cMenu.pos.x + 75, cMenu.pos.y));
-		if (ImGui::Begin("Тест о", &cMenu.show))
+		if (ImGui::Begin("Меню", &cMenu.show))
 		{
 			auto cell = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
 			cell->Draw(pApp->gfx);
@@ -219,12 +210,12 @@ void UI::Debug()
 			oss << "Ячейка (" << cell->x << ", " << cell->y << ")";
 			ImGui::Text(oss.str().c_str());
 
-			if (ImGui::Button("Добавить объект"))
+			/*if (ImGui::Button("Добавить объект"))
 			{
 				pApp->dList.Add(Object2D(pApp->rManager["neuron.bmp"], cell));
 				F_DEBUG(inputs.resize(pApp->dList.dList.size()));
 				cMenu.show = false;
-			}
+			}*/
 		}
 
 		ImGui::End();

@@ -10,9 +10,7 @@
 
 #pragma once
 
-#include "Object2D.hpp"
-#include "Grid.hpp"
-#include "ResourceManager.hpp"
+#include "DrawLayer.hpp"
 
 #include <unordered_map>
 
@@ -23,23 +21,18 @@ class DrawList
 public:
 	DrawList(const std::string& path, ResourceManager& rManager);
 public:
-	void Add(Object2D& obj);
+	void Add(DrawLayer& dLayer);
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
 public:
+	void DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx);
+	void CheckHover(int x, int y);
+private:
 	void DrawLine(pos2d& p1, pos2d& p2, Color c, Graphics& gfx);
 	void DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gfx);
-	void DrawSynapse(const std::string& id1, const std::string& id2, Color c, Graphics& gfx);
-	void CheckHover(int x, int y);
-public:
-	Object2D* operator[](const std::string& key)
-	{
-		return &dList.at(key);
-	};
 private:
-	ResourceManager& rManager;
-	std::unordered_map<std::string, Object2D> dList;  // Список объектов для отрисовки
-	Grid grid;										  // Сетка
+	Grid grid;					   // Сетка
+	std::vector<DrawLayer> dLayers;
 	Cell* hoveredCell = nullptr;
 };

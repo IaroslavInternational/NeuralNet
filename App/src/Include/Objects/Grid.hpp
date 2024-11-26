@@ -17,6 +17,8 @@ public:
 public:
 	Cell* GetCellByPos(int x, int y);
 	Cell* GetCellByHover(int x, int y);
+	Cell* GetUpperCell(Cell* cell);
+	Cell* GetLowerCell(Cell* cell);
 private:
 	unsigned padding;
 	Color color;

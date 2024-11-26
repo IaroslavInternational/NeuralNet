@@ -15,7 +15,7 @@ App::App(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	ui(this),
-	dList("data/sample.json", rManager),
+	dList("data/layers.json", rManager),
 	camera(0, 0, dList)
 {
 

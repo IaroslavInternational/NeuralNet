@@ -51,3 +51,13 @@ void Object2D::SetCell(Cell* cell)
 {
 	this->cell = cell;
 }
+
+Cell* Object2D::GetCell()
+{
+	return cell;
+}
+
+void Object2D::Translate(int dx, int dy)
+{
+	cell->Translate(dx, dy);
+}
