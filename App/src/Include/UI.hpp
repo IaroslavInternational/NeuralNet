@@ -4,6 +4,8 @@
 
 #include "Core/var.hpp"
 
+#include <string>
+
 class App;
 
 struct ContextMenu
@@ -24,6 +26,7 @@ private:
 	void ShowMenu();
 	void ShowPanel();
 	void ShowViewPort();
+	void ShowTopPanel();
 	F_DEBUG(void Debug());
 private:
 	App* pApp;
@@ -31,5 +34,6 @@ private:
 	ContextMenu cMenu;
 	bool Shit = true;
 	F_DEBUG(std::vector<pos2d> inputs);
+	char buffer[6];
 };
 

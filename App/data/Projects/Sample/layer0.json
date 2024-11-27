@@ -6,7 +6,7 @@
         {
           "object 0": [
             {
-              "resource": "item1.bmp",
+              "resource": "res-1",
               "id": "N_0_0",
               "c-x": 2,
               "c-y": 6
@@ -14,7 +14,7 @@
           ],
           "object 1": [
             {
-              "resource": "item1.bmp",
+              "resource": "res-1",
               "id": "N_0_1",
               "c-x": 2,
               "c-y": 8

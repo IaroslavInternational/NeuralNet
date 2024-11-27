@@ -15,6 +15,8 @@ UI::UI(App* app)
 	:
 	pApp(app)
 {
+	memset(buffer, '\0', 6*sizeof(char));
+
 	//F_DEBUG(inputs.resize(pApp->dList.dList.size()));
 	ImGui::GetStyle().WindowBorderSize = 0.0f;
 
@@ -51,6 +53,9 @@ void UI::Render()
 
 	SetPanelSizeAndPosition(3, 0.025, 0.22, -0.015f, -0.05f);
 	ShowViewPort();
+
+	SetPanelSizeAndPosition(0, 0.8f, 0.05f, 0.2f, 0.0f);
+	ShowTopPanel();
 
 	F_DEBUG(Debug());
 
@@ -155,6 +160,31 @@ void UI::ShowViewPort()
 	ImGui::End();
 }
 
+void UI::ShowTopPanel()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.7f);
+	if (ImGui::Begin("Top panel", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoScrollbar))
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
+		if (ImGui::Button("+", {26.0f, 26.0f}))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("-", { 26.0f, 26.0f }))
+		{
+
+		}
+		ImGui::PopStyleVar();
+	}
+
+	ImGui::End();
+	ImGui::PopStyleVar();
+}
+
 void UI::Debug()
 {
 	if (ImGui::Begin("Debug", NULL, ImGuiWindowFlags_NoCollapse))
@@ -168,18 +198,24 @@ void UI::Debug()
 
 				ImGui::Text(oss.str().c_str());
 
-				for (auto& l : pApp->dList.dLayers)
+				auto& layers = pApp->dList.dLayers;
+				for (size_t i = 0; i < layers.size(); i++)
 				{
-					if (ImGui::TreeNode(l.name.c_str()))
+					if (ImGui::TreeNode(layers[i].name.c_str()))
 					{
-						for (size_t i = 0; i < l.GetSize(); i++)
+						for (size_t j = 0; j < layers[i].GetSize(); j++)
 						{
-							ImGui::Text(l[i].id.c_str());
-						}				
+							ImGui::Text(layers[i][j].id.c_str());
+						}
+
+						ImGui::InputText("Resource", buffer, 6);
 
 						if (ImGui::Button("Spawn"))
 						{
-							l.Insert(Object2D(pApp->rManager["item2.bmp"]));
+							std::ostringstream nId;
+							nId << "N_" << i << "_" << layers[i].GetSize();
+
+							layers[i].Insert(Object2D(pApp->rManager[std::string(buffer)], nullptr, nId.str()));
 						}
 
 						ImGui::TreePop();

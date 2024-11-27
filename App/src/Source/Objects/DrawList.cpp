@@ -62,6 +62,7 @@ void DrawList::Draw(Graphics& gfx)
 	}
 
 	DrawSynapses(dLayers[0], dLayers[1], Colors::MakeRGB(122, 45, 56), gfx);
+	DrawSynapses(dLayers[1], dLayers[2], Colors::MakeRGB(122, 45, 56), gfx);
 }
 
 void DrawList::Translate(int dx, int dy)

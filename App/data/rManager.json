@@ -1,31 +1,31 @@
 {
   "res-1": [
     {
-      "path": "item1.bmp",
+      "path": "input_n.bmp",
       "ch-key-a": 255,
-      "ch-key-r": 255,
-      "ch-key-g": 255,
-      "ch-key-b": 255
+      "ch-key-r": 17,
+      "ch-key-g": 17,
+      "ch-key-b": 17
     }
   ],
 
   "res-2": [
     {
-      "path": "item2.bmp",
+      "path": "hidden_n.bmp",
       "ch-key-a": 255,
-      "ch-key-r": 255,
-      "ch-key-g": 255,
-      "ch-key-b": 255
+      "ch-key-r": 17,
+      "ch-key-g": 17,
+      "ch-key-b": 17
     }
   ],
 
   "res-3": [
     {
-      "path": "neuron.bmp",
+      "path": "output_n.bmp",
       "ch-key-a": 255,
-      "ch-key-r": 255,
-      "ch-key-g": 255,
-      "ch-key-b": 255
+      "ch-key-r": 17,
+      "ch-key-g": 17,
+      "ch-key-b": 17
     }
   ]
 }

@@ -45,5 +45,5 @@ private:
 	ResourceManager rManager;				 // Менеджер ресурсов
 	DrawList dList;							 // Список объектов для отрисовки
 	Camera camera;							 // Камера
-	UI ui;			  // Интерфейс
+	UI ui;									 // Интерфейс
 };

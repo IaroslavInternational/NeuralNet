@@ -23,9 +23,9 @@ ResourceManager::ResourceManager()
 
 	for (json::iterator m = j.begin(); m != j.end(); ++m)
 	{
-		auto& d = m.key();
+		auto& resource = m.key();
 
-		for (const auto& obj : j.at(d))
+		for (const auto& obj : j.at(resource))
 		{
 			currentStr = obj.at("path");
 			currentColor[0] = obj.at("ch-key-a");
@@ -33,12 +33,12 @@ ResourceManager::ResourceManager()
 			currentColor[2] = obj.at("ch-key-g");
 			currentColor[3] = obj.at("ch-key-b");
 
-			Add(Texture(currentStr, Color(currentColor[0], currentColor[1], currentColor[2], currentColor[3])));
+			Add(resource, Texture(currentStr, Color(currentColor[0], currentColor[1], currentColor[2], currentColor[3])));
 		}
 	}
 }
 
-void ResourceManager::Add(Texture& tex)
+void ResourceManager::Add(const std::string& id, Texture& tex)
 {
-	textures.insert({ tex.GetPath(), tex });
+	textures.insert({ id, tex });
 }
