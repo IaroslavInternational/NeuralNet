@@ -1,5 +1,6 @@
 {
-   "layer-0": "data/Projects/Sample/layer0.json",
-   "layer-1": "data/Projects/Sample/layer1.json",
-   "layer-2": "data/Projects/Sample/layer2.json"
+  "project":  "Empty",
+  "layer-0": "data/Projects/Sample/layer0.json",
+  "layer-1": "data/Projects/Sample/layer1.json",
+  "layer-2": "data/Projects/Sample/layer2.json"
 }

@@ -35,4 +35,5 @@ private:
 	Grid grid;					   // Сетка
 	std::vector<DrawLayer> dLayers;
 	Cell* hoveredCell = nullptr;
+	std::string projectName;
 };

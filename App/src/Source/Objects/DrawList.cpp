@@ -35,6 +35,12 @@ DrawList::DrawList(const std::string& path, ResourceManager& rManager)
 	{
 		auto& d = m.key();
 
+		if (d == "project")
+		{
+			projectName = j.at(d);
+			continue;
+		}
+
 		for (const auto& obj : j.at(d))
 		{
 			Add(DrawLayer(std::string(obj), rManager, grid));
@@ -53,7 +59,6 @@ void DrawList::Draw(Graphics& gfx)
 	if (hoveredCell != nullptr)
 	{
 		hoveredCell->Draw(gfx);
-		hoveredCell = nullptr;
 	}
 	
 	for (auto& l : dLayers)

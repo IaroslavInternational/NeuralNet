@@ -71,6 +71,7 @@ public:
 	int GetPosX() const;
 	int GetPosY() const;
 	bool LeftIsPressed() const;
+	bool LeftIsReleased() const;
 	bool RightIsPressed() const;
 	bool IsWheelUp() const;
 	bool IsWheelDown() const;
@@ -97,6 +98,7 @@ private:
 	int x;
 	int y;
 	bool leftIsPressed = false;
+	bool leftIsReleased = false;
 	bool rightIsPressed = false;
 	bool wheelUp = false;
 	bool wheelDown = false;

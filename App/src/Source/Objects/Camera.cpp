@@ -9,10 +9,13 @@ Camera::Camera(int init_x, int init_y, DrawList& dList)
 
 void Camera::Translate(int dx, int dy)
 {
-	dpos.x += dx * speed;
-	dpos.y += dy * speed;
+	if (isActive)
+	{
+		dpos.x += dx * speed;
+		dpos.y += dy * speed;
 
-	dList.Translate(dx * speed, dy * speed);
+		dList.Translate(dx * speed, dy * speed);
+	}
 }
 
 pos2d& Camera::GetPos()

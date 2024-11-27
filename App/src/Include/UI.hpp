@@ -7,11 +7,16 @@
 #include <string>
 
 class App;
+class Cell;
 
 struct ContextMenu
 {
-	bool show = false;
 	pos2d pos;
+	bool flag_pressed = false;
+	bool flag_released = false;
+	float counter = 0.0f;
+	Cell* first_ptr = nullptr;
+	Cell* second_ptr = nullptr;
 };
 
 class UI
@@ -19,7 +24,7 @@ class UI
 public:
 	UI(App* app);
 public:
-	void Update();
+	void Update(float dt);
 	void Render();
 private:
 	void SetPanelSizeAndPosition(int corner, float width, float height, float x_offset, float y_offset);
@@ -31,9 +36,7 @@ private:
 private:
 	App* pApp;
 	float appScale = 1.0f;
-	ContextMenu cMenu;
-	bool Shit = true;
-	F_DEBUG(std::vector<pos2d> inputs);
 	char buffer[6];
+	ContextMenu cMenu;
 };
 

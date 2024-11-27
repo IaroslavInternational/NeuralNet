@@ -90,6 +90,8 @@ Cell* Grid::GetCellByPos(int x, int y)
 			return &c;
 		}
 	}
+
+	return nullptr;
 }
 
 Cell* Grid::GetCellByHover(int x, int y)
@@ -101,6 +103,8 @@ Cell* Grid::GetCellByHover(int x, int y)
 			return &c;
 		}
 	}
+
+	return nullptr;
 }
 
 Cell* Grid::GetUpperCell(Cell* cell)

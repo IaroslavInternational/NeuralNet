@@ -33,14 +33,83 @@ UI::UI(App* app)
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.05f, 0.07f, 0.09f, 1.00f);
 }
 
-void UI::Update()
+void UI::Update(float dt)
 {
-	// Открыть контекстное меню
-	if (pApp->wnd.mouse.RightIsPressed())
+	if (pApp->wnd.mouse.LeftIsPressed())
 	{
 		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
 		cMenu.pos.y = pApp->wnd.mouse.GetPosY();
-		cMenu.show = true;
+
+		if (!cMenu.flag_pressed)
+		{
+			if (cMenu.counter > 0.2f)
+			{
+				cMenu.flag_pressed = true;
+				cMenu.first_ptr = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
+			}
+			else
+			{
+				cMenu.counter += dt;
+			}
+		}
+	}
+
+	if (pApp->wnd.mouse.LeftIsReleased())
+	{
+		if (cMenu.flag_pressed)
+		{
+			cMenu.pos.x = pApp->wnd.mouse.GetPosX();
+			cMenu.pos.y = pApp->wnd.mouse.GetPosY();
+			
+			cMenu.flag_pressed = false;
+			cMenu.flag_released = true;
+		
+			cMenu.second_ptr = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
+		}
+
+		cMenu.counter = 0.0f;
+	}
+
+	// Dragging objects
+	if (!cMenu.flag_pressed && cMenu.flag_released && cMenu.first_ptr != nullptr && cMenu.second_ptr != nullptr)
+	{
+		if (cMenu.first_ptr != cMenu.second_ptr)
+		{
+			bool valid = false;
+			for (auto& layer : pApp->dList.dLayers)
+			{
+				for (auto& obj : layer.dLayer)
+				{
+					if (obj.GetCell() == cMenu.first_ptr)
+					{
+						valid = true;
+						break;
+					}
+				}
+			}
+
+			if (valid)
+			{
+				auto pos1 = cMenu.first_ptr->GetIdx();
+				auto pos2 = cMenu.second_ptr->GetIdx();
+
+				pos2d res;
+				res.x = pos2.x - pos1.x;
+				res.y = pos2.y - pos1.y;
+
+				for (auto& layer : pApp->dList.dLayers)
+				{
+					for (auto& obj : layer.dLayer)
+					{
+						obj.SetCell(pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y));
+					}
+				}
+
+				cMenu.first_ptr = nullptr;
+				cMenu.second_ptr = nullptr;
+				cMenu.flag_released = false;
+			}
+		}
 	}
 }
 
@@ -62,7 +131,9 @@ void UI::Render()
 	ImGui::ShowDemoWindow();
 }
 
+// Windows
 
+// Установить размер окна
 void UI::SetPanelSizeAndPosition(int corner, float width, float height, float x_offset, float y_offset)
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -92,6 +163,7 @@ void UI::SetPanelSizeAndPosition(int corner, float width, float height, float x_
 	ImGui::SetNextWindowSize(PanelSize);
 }
 
+// Показать меню
 void UI::ShowMenu()
 {
 	if (ImGui::BeginMainMenuBar())
@@ -115,6 +187,7 @@ void UI::ShowMenu()
 	};
 }
 
+// Показать левую панель
 void UI::ShowPanel()
 {
 	if (ImGui::Begin("MainBar", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
@@ -124,6 +197,32 @@ void UI::ShowPanel()
 		{
 			if (ImGui::BeginTabItem("Проекты"))
 			{
+				ImGui::Text(pApp->dList.projectName.c_str());
+
+				auto& layers = pApp->dList.dLayers;
+				for (size_t i = 0; i < layers.size(); i++)
+				{
+					if (ImGui::TreeNode(layers[i].name.c_str()))
+					{
+						ImGui::InputText("Resource", buffer, 6);
+
+						if (ImGui::Button("Spawn"))
+						{
+							std::ostringstream nId;
+							nId << "N_" << i << "_" << layers[i].GetSize();
+
+							layers[i].Insert(Object2D(pApp->rManager[std::string(buffer)], nullptr, nId.str()));
+						}
+
+						for (size_t j = 0; j < layers[i].GetSize(); j++)
+						{
+							ImGui::Text(layers[i][j].id.c_str());
+						}
+
+						ImGui::TreePop();
+					}
+				}
+
 				ImGui::EndTabItem();
 			}
 		}
@@ -134,13 +233,14 @@ void UI::ShowPanel()
 	ImGui::End();
 }
 
+// Показать меню ViewPort
 void UI::ShowViewPort()
 {
 	if (ImGui::Begin("slider viewport", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | 
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
 	{
 		ImGui::PushID("vp_slider");
-		if (ImGui::VSliderFloat("", { 18, 160 }, &appScale, 1.0f, 10.0f))
+		if (ImGui::VSliderFloat("", { 18, 160 }, &appScale, 1.0f, 5.0f))
 		{
 			// set viewport dimensions
 			D3D11_VIEWPORT vp;
@@ -160,6 +260,7 @@ void UI::ShowViewPort()
 	ImGui::End();
 }
 
+// Показать верхнюю панель
 void UI::ShowTopPanel()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.7f);
@@ -191,37 +292,20 @@ void UI::Debug()
 	{
 		if (ImGui::BeginTabBar("Debug bar"))
 		{
-			if (ImGui::BeginTabItem("Item"))
+			if (ImGui::BeginTabItem("Device"))
 			{
-				std::ostringstream oss;
+				std::ostringstream oss, oss_cell;
 				oss << "Mouse pos: x = " << pApp->wnd.mouse.GetPosX() << ", y = " << pApp->wnd.mouse.GetPosY();
-
+				oss << "\n" << "Mouse Holded: " << cMenu.counter;
 				ImGui::Text(oss.str().c_str());
 
-				auto& layers = pApp->dList.dLayers;
-				for (size_t i = 0; i < layers.size(); i++)
+				if (pApp->dList.hoveredCell != nullptr)
 				{
-					if (ImGui::TreeNode(layers[i].name.c_str()))
-					{
-						for (size_t j = 0; j < layers[i].GetSize(); j++)
-						{
-							ImGui::Text(layers[i][j].id.c_str());
-						}
-
-						ImGui::InputText("Resource", buffer, 6);
-
-						if (ImGui::Button("Spawn"))
-						{
-							std::ostringstream nId;
-							nId << "N_" << i << "_" << layers[i].GetSize();
-
-							layers[i].Insert(Object2D(pApp->rManager[std::string(buffer)], nullptr, nId.str()));
-						}
-
-						ImGui::TreePop();
-					}
+					oss_cell << "Cell: (" << pApp->dList.hoveredCell->x << ", " << pApp->dList.hoveredCell->y << ")";
+					ImGui::Text(oss_cell.str().c_str());
 				}
 
+				ImGui::Checkbox("Camera move", &pApp->camera.isActive);
 				ImGui::SliderInt("Camera x", &pApp->camera.dpos.x, -1000, 1000);
 				ImGui::SliderInt("Camera y", &pApp->camera.dpos.y, -1000, 1000);
 
@@ -234,7 +318,7 @@ void UI::Debug()
 
 	ImGui::End();
 
-	if (cMenu.show)
+	/*if (cMenu.show)
 	{
 		ImGui::SetNextWindowPos(ImVec2(cMenu.pos.x + 75, cMenu.pos.y));
 		if (ImGui::Begin("Меню", &cMenu.show))
@@ -246,14 +330,14 @@ void UI::Debug()
 			oss << "Ячейка (" << cell->x << ", " << cell->y << ")";
 			ImGui::Text(oss.str().c_str());
 
-			/*if (ImGui::Button("Добавить объект"))
+			if (ImGui::Button("Добавить объект"))
 			{
 				pApp->dList.Add(Object2D(pApp->rManager["neuron.bmp"], cell));
 				F_DEBUG(inputs.resize(pApp->dList.dList.size()));
 				cMenu.show = false;
-			}*/
+			}
 		}
 
 		ImGui::End();
-	}
+	}*/
 }

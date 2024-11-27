@@ -34,8 +34,8 @@ public:
 public:
 	void Go();  // Метод запуска приложения (в цикле)
 private:
-	void UpdateModel();	  // Обновление параметров объектов
-	void ComposeFrame();  // Отрисовка объектов 
+	void UpdateModel(float dt);	  // Обновление параметров объектов
+	void ComposeFrame(float dt);  // Отрисовка объектов 
 private:
 	MainWindow& wnd;  // Адрес окна отрисовки
 	Graphics gfx;	  // Графический API

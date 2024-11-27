@@ -23,20 +23,20 @@ App::App(MainWindow& wnd)
 
 void App::Go()
 {
+	const float dt = ft.Mark();
+
 	gfx.BeginFrame();	
 	
 	ui.Render();
 
-	UpdateModel();
-	ComposeFrame();
+	UpdateModel(dt);
+	ComposeFrame(dt);
 
 	gfx.EndFrame();
 }
 
-void App::UpdateModel()
+void App::UpdateModel(float dt)
 {
-	const float dt = ft.Mark();
-
 	if (wnd.kbd.KeyIsPressed('W'))
 	{
 		camera.Translate(0, 1);
@@ -54,18 +54,11 @@ void App::UpdateModel()
 		camera.Translate(1, 0);
 	}
 
-	if (wnd.mouse.LeftIsPressed())
-	{
-		int x = wnd.mouse.GetPosX();
-		int y = wnd.mouse.GetPosY();
-
-		dList.CheckHover(x, y);
-	}
-
-	ui.Update();
+	dList.CheckHover(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+	ui.Update(dt);
 }
 
-void App::ComposeFrame()
+void App::ComposeFrame(float dt)
 {
 	dList.Draw(gfx);
 }

@@ -14,4 +14,5 @@ private:
 	pos2d dpos;
 	unsigned speed = 2;
 	DrawList& dList;
+	bool isActive = true;
 };
