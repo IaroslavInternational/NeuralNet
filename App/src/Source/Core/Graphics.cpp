@@ -322,6 +322,23 @@ void Graphics::PutPixel(int x, int y, Color c)
 	pSysBuffer[ScreenWidth * y + x] = c;
 }
 
+void Graphics::PutPixelBlended(int x, int y, Color c)
+{
+	c.SetR((c.GetR() + GetPixel(x, y).GetR()) / 2);
+	c.SetG((c.GetG() + GetPixel(x, y).GetG()) / 2);
+	c.SetB((c.GetB() + GetPixel(x, y).GetB()) / 2);
+	pSysBuffer[ScreenWidth * y + x] = c;
+}
+
+Color& Graphics::GetPixel(int x, int y)
+{
+	assert(x >= 0);
+	assert(x < ScreenWidth);
+	assert(y >= 0);
+	assert(y < ScreenHeight);
+	return pSysBuffer[ScreenWidth * y + x];
+}
+
 int Graphics::GetWidth() const
 {
 	return ScreenWidth;

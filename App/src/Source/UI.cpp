@@ -42,7 +42,7 @@ void UI::Update(float dt)
 
 		if (!cMenu.flag_pressed)
 		{
-			if (cMenu.counter > 0.2f)
+			if (cMenu.counter > 0.065f)
 			{
 				cMenu.flag_pressed = true;
 				cMenu.first_ptr = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
@@ -56,22 +56,19 @@ void UI::Update(float dt)
 
 	if (pApp->wnd.mouse.LeftIsReleased())
 	{
-		if (cMenu.flag_pressed)
-		{
-			cMenu.pos.x = pApp->wnd.mouse.GetPosX();
-			cMenu.pos.y = pApp->wnd.mouse.GetPosY();
-			
-			cMenu.flag_pressed = false;
-			cMenu.flag_released = true;
-		
-			cMenu.second_ptr = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
-		}
+		cMenu.flag_pressed = false;
+	}
+	
+	if (cMenu.flag_pressed)
+	{
+		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
+		cMenu.pos.y = pApp->wnd.mouse.GetPosY();
 
-		cMenu.counter = 0.0f;
+		cMenu.second_ptr = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
 	}
 
 	// Dragging objects
-	if (!cMenu.flag_pressed && cMenu.flag_released && cMenu.first_ptr != nullptr && cMenu.second_ptr != nullptr)
+	if (cMenu.flag_pressed && cMenu.first_ptr != nullptr && cMenu.second_ptr != nullptr)
 	{
 		if (cMenu.first_ptr != cMenu.second_ptr)
 		{
@@ -105,11 +102,11 @@ void UI::Update(float dt)
 					}
 				}
 
-				cMenu.first_ptr = nullptr;
+				cMenu.first_ptr = cMenu.second_ptr;
 				cMenu.second_ptr = nullptr;
-				cMenu.flag_released = false;
+				cMenu.counter = 0.0f;
 			}
-		}
+		}	
 	}
 }
 
@@ -308,6 +305,28 @@ void UI::Debug()
 				ImGui::Checkbox("Camera move", &pApp->camera.isActive);
 				ImGui::SliderInt("Camera x", &pApp->camera.dpos.x, -1000, 1000);
 				ImGui::SliderInt("Camera y", &pApp->camera.dpos.y, -1000, 1000);
+
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Gfx"))
+			{	
+				if (ImGui::Checkbox("Msaa x1", &pApp->dList.msaa[0]))
+				{
+					pApp->dList.msaa[1] = false;
+					pApp->dList.msaa[2] = false;
+				}
+				
+				if (ImGui::Checkbox("Msaa x2", &pApp->dList.msaa[1]))
+				{
+					pApp->dList.msaa[0] = true;
+				}
+
+				if (ImGui::Checkbox("Msaa x3", &pApp->dList.msaa[2]))
+				{
+					pApp->dList.msaa[0] = true;
+					pApp->dList.msaa[1] = true;
+				}
 
 				ImGui::EndTabItem();
 			}

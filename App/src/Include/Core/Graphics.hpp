@@ -27,6 +27,8 @@ public:
 		PutPixel(x, y, { unsigned char(r),unsigned char(g),unsigned char(b) });
 	}
 	void PutPixel(int x, int y, Color c);
+	void PutPixelBlended(int x, int y, Color c);
+	Color& GetPixel(int x, int y);
 	int  GetWidth() const;
 	int  GetHeight() const;
 private:
@@ -43,6 +45,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState>			pSamplerState;
 	D3D11_MAPPED_SUBRESOURCE							mappedSysBufferTexture;
 	Color* pSysBuffer = nullptr;
+
+	ID3D11RasterizerState* WireFrame;
+	ID3D11RasterizerState* Solid;
 private:
 	int ScreenWidth;
 	int ScreenHeight;
