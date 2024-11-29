@@ -5,10 +5,13 @@
 #include "Core/var.hpp"
 
 #include <string>
+#include <memory>
 
 class App;
 class Cell;
+class DrawLayer;
 
+// Структура работы с контекстными действиями
 struct ContextMenu
 {
 	pos2d pos;
@@ -34,9 +37,11 @@ private:
 	void ShowTopPanel();
 	F_DEBUG(void Debug());
 private:
-	App* pApp;
-	float appScale = 1.0f;
-	char buffer[6];
-	ContextMenu cMenu;
+	App* pApp;			          // Указатель на приложение
+	float appScale = 1.0f;        // Множитель ViewPort
+	char buffer[6];				
+	ContextMenu cMenu;		      // Структура работы с контекстными действиями
+	DrawLayer* pLayer = nullptr;  // Указатель на тек. слой
+	std::vector<bool> selected_layers;
 };
 

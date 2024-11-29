@@ -15,10 +15,15 @@ UI::UI(App* app)
 	:
 	pApp(app)
 {
+	selected_layers.resize(pApp->dList.dLayers.size());
+
 	memset(buffer, '\0', 6*sizeof(char));
 
-	//F_DEBUG(inputs.resize(pApp->dList.dList.size()));
 	ImGui::GetStyle().WindowBorderSize = 0.0f;
+	ImGui::GetStyle().TabBorderSize = 1.0f;
+	ImGui::GetStyle().TabBarBorderSize = 1.0f;
+	ImGui::GetStyle().FrameRounding = 8.0f;
+	ImGui::GetStyle().GrabRounding = 5.0f;
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
@@ -31,6 +36,11 @@ UI::UI(App* app)
 	colors[ImGuiCol_Tab] = ImVec4(0.02f, 0.02f, 0.02f, 0.86f);
 	colors[ImGuiCol_Button] = ImVec4(0.55f, 0.47f, 0.03f, 0.91f);
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.05f, 0.07f, 0.09f, 1.00f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.17f, 0.18f, 0.19f, 0.40f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.24f, 0.26f, 0.29f, 0.40f);
+	colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	colors[ImGuiCol_Button] = ImVec4(0.34f, 0.06f, 0.06f, 0.91f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.09f, 0.11f, 0.13f, 1.00f);
 }
 
 void UI::Update(float dt)
@@ -194,30 +204,52 @@ void UI::ShowPanel()
 		{
 			if (ImGui::BeginTabItem("Проекты"))
 			{
-				ImGui::Text(pApp->dList.projectName.c_str());
-
-				auto& layers = pApp->dList.dLayers;
-				for (size_t i = 0; i < layers.size(); i++)
+				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))
 				{
-					if (ImGui::TreeNode(layers[i].name.c_str()))
+					auto& layers = pApp->dList.dLayers;
+					for (size_t i = 0; i < layers.size(); i++)
 					{
-						ImGui::InputText("Resource", buffer, 6);
-
-						if (ImGui::Button("Spawn"))
+						bool curr = selected_layers[i];
+						if (ImGui::Selectable(layers[i].name.c_str(), curr))
 						{
-							std::ostringstream nId;
-							nId << "N_" << i << "_" << layers[i].GetSize();
+							pLayer = &layers[i];  // Указатель на тек. слой
 
-							layers[i].Insert(Object2D(pApp->rManager[std::string(buffer)], nullptr, nId.str()));
+							if (!ImGui::GetIO().KeyCtrl)
+							{
+								for (auto& s : selected_layers)
+								{
+									s = false;
+								}
+							}
+
+							selected_layers[i] = true;
 						}
 
-						for (size_t j = 0; j < layers[i].GetSize(); j++)
+						if (selected_layers[i])
 						{
-							ImGui::Text(layers[i][j].id.c_str());
-						}
+							ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+							ImGui::PushID(123);
+							ImGui::InputTextWithHint("", "Resource", buffer, 6);
+							ImGui::PopID();
 
-						ImGui::TreePop();
+							ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+							if (ImGui::Button("Spawn"))
+							{
+								std::ostringstream nId;
+								nId << "N_" << i << "_" << layers[i].GetSize();
+
+								layers[i].Insert(Object2D(pApp->rManager[std::string(buffer)], nullptr, nId.str()));
+							}
+
+							for (size_t j = 0; j < layers[i].GetSize(); j++)
+							{
+								ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+								ImGui::Text(layers[i][j].id.c_str());
+							}
+						}
 					}
+
+					ImGui::TreePop();
 				}
 
 				ImGui::EndTabItem();
@@ -230,9 +262,13 @@ void UI::ShowPanel()
 	ImGui::End();
 }
 
+
+
+
 // Показать меню ViewPort
 void UI::ShowViewPort()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12);
 	if (ImGui::Begin("slider viewport", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | 
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
 	{
@@ -255,6 +291,7 @@ void UI::ShowViewPort()
 	if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay))
 		ImGui::SetTooltip("Размер поля", ImGui::GetStyle().HoverDelayShort);
 	ImGui::End();
+	ImGui::PopStyleVar();
 }
 
 // Показать верхнюю панель
@@ -300,6 +337,11 @@ void UI::Debug()
 				{
 					oss_cell << "Cell: (" << pApp->dList.hoveredCell->x << ", " << pApp->dList.hoveredCell->y << ")";
 					ImGui::Text(oss_cell.str().c_str());
+				}
+
+				if (pLayer != nullptr)
+				{
+					ImGui::Text((std::string("Layer name: ") + pLayer->name).c_str());
 				}
 
 				ImGui::Checkbox("Camera move", &pApp->camera.isActive);
