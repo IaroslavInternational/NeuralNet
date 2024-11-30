@@ -227,20 +227,6 @@ void UI::ShowPanel()
 
 						if (selected_layers[i])
 						{
-							ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
-							ImGui::PushID(123);
-							ImGui::InputTextWithHint("", "Resource", buffer, 6);
-							ImGui::PopID();
-
-							ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
-							if (ImGui::Button("Spawn"))
-							{
-								std::ostringstream nId;
-								nId << "N_" << i << "_" << layers[i].GetSize();
-
-								layers[i].Insert(Object2D(pApp->rManager[std::string(buffer)], nullptr, nId.str()));
-							}
-
 							for (size_t j = 0; j < layers[i].GetSize(); j++)
 							{
 								ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
@@ -261,9 +247,6 @@ void UI::ShowPanel()
 
 	ImGui::End();
 }
-
-
-
 
 // Показать меню ViewPort
 void UI::ShowViewPort()
@@ -301,19 +284,49 @@ void UI::ShowTopPanel()
 	if (ImGui::Begin("Top panel", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoScrollbar))
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
-		if (ImGui::Button("+", {26.0f, 26.0f}))
+		if (pLayer != nullptr)
 		{
+			ImGui::Text(pLayer->name.c_str());
+			ImGui::SameLine();
 
+			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
+			if (ImGui::Button("+", { 26.0f, 26.0f }))
+			{
+				std::string res;
+				std::ostringstream nId;
+
+				// TEST !!!
+				if (pLayer->name == "Layer 0")
+				{
+					res = "res-1";
+					nId << "N_0_" << pLayer->dLayer.size();
+				}
+				else if (pLayer->name == "Layer 1")
+				{
+					res = "res-2";
+					nId << "N_1_" << pLayer->dLayer.size();
+				}
+				else if (pLayer->name == "Layer 2")
+				{
+					res = "res-3";
+					nId << "N_2_" << pLayer->dLayer.size();
+				}
+				pLayer->Insert(Object2D(pApp->rManager[res], nullptr, nId.str()));
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("-", { 26.0f, 26.0f }))
+			{
+				pLayer->dLayer.erase(pLayer->dLayer.begin() + pLayer->dLayer.size() - 1);
+
+				for (auto& o : pLayer->dLayer)
+				{
+					o.SetCell(pApp->dList.grid.GetLowerCell(o.GetCell()));
+				}
+			}
+			ImGui::PopStyleVar();
 		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("-", { 26.0f, 26.0f }))
-		{
-
-		}
-		ImGui::PopStyleVar();
 	}
 
 	ImGui::End();
