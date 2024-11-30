@@ -22,11 +22,13 @@ public:
 	DrawList(const std::string& path, ResourceManager& rManager);
 public:
 	void Add(DrawLayer& dLayer);
+	void Delete(DrawLayer* dLayer);
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);
 	void Translate(const pos2d& dpos);
 public:
 	void DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx);
+	void DrawSelectedLayer(DrawLayer* l, Graphics& gfx);
 	void CheckHover(int x, int y);
 private:
 	void DrawLine(pos2d& p1, pos2d& p2, Color c, Graphics& gfx, bool isBlended = false);
@@ -35,6 +37,7 @@ private:
 	Grid grid;					   // Сетка
 	std::vector<DrawLayer> dLayers;
 	Cell* hoveredCell = nullptr;
+	DrawLayer* selected = nullptr;
 	std::string projectName;
 
 	bool msaa[3] = {};

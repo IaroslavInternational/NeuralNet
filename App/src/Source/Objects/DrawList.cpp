@@ -53,6 +53,12 @@ void DrawList::Add(DrawLayer& dLayer)
 	dLayers.push_back(dLayer);
 }
 
+void DrawList::Delete(DrawLayer* dLayer)
+{
+	auto iter = std::find(dLayers.begin(), dLayers.end(), *dLayer);
+	dLayers.erase(iter);
+}
+
 void DrawList::Draw(Graphics& gfx)
 {
 	grid.Draw(gfx);
@@ -60,6 +66,8 @@ void DrawList::Draw(Graphics& gfx)
 	{
 		hoveredCell->Draw(gfx);
 	}
+
+	DrawSelectedLayer(selected, gfx);
 
 	for (size_t i = 0; i < dLayers.size(); i++)
 	{
@@ -199,6 +207,37 @@ void DrawList::DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx
 		for (size_t j = 0; j < l2.GetSize(); j++)
 		{
 			DrawSynapse(l1[i], l2[j], c, gfx);
+		}
+	}
+}
+
+void DrawList::DrawSelectedLayer(DrawLayer* l, Graphics& gfx)
+{
+	if (l == nullptr)
+	{
+		return;
+	}
+
+	pos2d TopLeft = l->Get()[0].GetPos();
+	pos2d BotRight = l->Get().back().GetPos();
+
+	TopLeft.x -= 50;
+	TopLeft.y -= 50;
+
+	BotRight.x += 100;
+	BotRight.y += 100;
+
+	int w = BotRight.x - TopLeft.x;
+	int h = BotRight.y - TopLeft.y;
+
+	for (int i = TopLeft.x; i < TopLeft.x + w; i++)
+	{
+		for (int j = TopLeft.y; j < TopLeft.y + h; j++)
+		{
+			if (i >= 0 && j >= 0 && i < gfx.GetWidth() && j < gfx.GetHeight())
+			{
+				gfx.PutPixelBlended(i, j, Colors::MakeRGB(25, 25, 25));
+			}
 		}
 	}
 }

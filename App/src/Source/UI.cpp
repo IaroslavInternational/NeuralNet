@@ -43,6 +43,18 @@ UI::UI(App* app)
 
 void UI::Update(float dt)
 {
+	// Подсветка ячеек
+	
+	if (pApp->wnd.mouse.GetPosX() >= 0 &&
+		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH)
+	{
+		pApp->dList.CheckHover(pApp->wnd.mouse.GetPosX(), pApp->wnd.mouse.GetPosY());
+	}
+	else
+	{
+		pApp->dList.hoveredCell = nullptr;
+	}
+
 	if (pApp->wnd.mouse.LeftIsPressed())
 	{
 		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
@@ -65,6 +77,7 @@ void UI::Update(float dt)
 	if (pApp->wnd.mouse.LeftIsReleased())
 	{
 		cMenu.flag_pressed = false;
+		cMenu.counter = 0.0f;
 	}
 	
 	if (cMenu.flag_pressed)
@@ -202,15 +215,16 @@ void UI::ShowPanel()
 		{
 			if (ImGui::BeginTabItem("Проекты"))
 			{
-				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))
+				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))  // Имя проекта
 				{
-					auto& layers = pApp->dList.dLayers;
-					for (size_t i = 0; i < layers.size(); i++)
+					auto& layers = pApp->dList.dLayers;  // Указатель на текущий слой
+					for (size_t i = 0; i < layers.size(); i++)  // Цикл по слоям 
 					{
 						bool curr = selected_layers[i];
-						if (ImGui::Selectable(layers[i].name.c_str(), curr))
+						if (ImGui::Selectable(layers[i].name.c_str(), curr))  // Выбранные слои
 						{
 							pLayer = &layers[i];  // Указатель на тек. слой
+							pApp->dList.selected = pLayer;
 
 							if (!ImGui::GetIO().KeyCtrl)
 							{
@@ -223,6 +237,7 @@ void UI::ShowPanel()
 							selected_layers[i] = true;
 						}
 
+						// Для выбранного слоя показываем содержимое
 						if (selected_layers[i])
 						{
 							for (size_t j = 0; j < layers[i].GetSize(); j++)
@@ -234,6 +249,11 @@ void UI::ShowPanel()
 					}
 
 					ImGui::TreePop();
+				}
+				else
+				{
+					pLayer = nullptr;
+					pApp->dList.selected = nullptr;
 				}
 
 				ImGui::EndTabItem();
@@ -284,9 +304,11 @@ void UI::ShowTopPanel()
 	{
 		if (pLayer != nullptr)
 		{
+			// Имя выбранного слоя
 			ImGui::Text(pLayer->name.c_str());
 			ImGui::SameLine();
 
+			// Добавить нейрон
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
 			if (ImGui::Button("+", { 26.0f, 26.0f }))
 			{
@@ -314,21 +336,23 @@ void UI::ShowTopPanel()
 
 				nId << pLayer->dLayer.size();
 
+				// Вставить нейрон
 				pLayer->Insert(Object2D(pApp->rManager[res], nullptr, nId.str()));
 			}
 
 			ImGui::SameLine();
 
+			// Убрать нейрон / слой
 			if (ImGui::Button("-", { 26.0f, 26.0f }))
 			{
+				// Убрать нейрон
 				if (pLayer->dLayer.size() - 1 != 0)
 				{
 					pLayer->Erase();
 				}
-				else
+				else // Удалить слой, если больше нет нейронов
 				{
-					auto iter = std::find(pApp->dList.dLayers.begin(), pApp->dList.dLayers.end(), *pLayer);
-					pApp->dList.dLayers.erase(iter);
+					pApp->dList.Delete(pLayer);
 				}
 			}
 	

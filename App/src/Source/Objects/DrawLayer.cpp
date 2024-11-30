@@ -109,3 +109,8 @@ size_t DrawLayer::GetSize() const
 {
 	return dLayer.size();
 }
+
+std::vector<Object2D>& DrawLayer::Get()
+{
+	return dLayer;
+}

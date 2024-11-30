@@ -27,6 +27,7 @@ public:
 	void Translate(const pos2d& dpos);
 public:
 	size_t GetSize() const;
+	std::vector<Object2D>& Get();
 private:
 	void Add(Object2D& obj);
 public:

@@ -54,7 +54,6 @@ void App::UpdateModel(float dt)
 		camera.Translate(1, 0);
 	}
 
-	dList.CheckHover(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
 	ui.Update(dt);
 }
 
