@@ -1,13 +1,14 @@
 {
   "sample_scene": [
     {
-      "name": "Layer 0",
+      "name": "Входной слой",
+      "type": 0,
       "objects": [
         {
           "object 0": [
             {
               "resource": "res-1",
-              "id": "N_0_0",
+              "id": "Neuron_0_0",
               "c-x": 2,
               "c-y": 6
             }
@@ -15,7 +16,7 @@
           "object 1": [
             {
               "resource": "res-1",
-              "id": "N_0_1",
+              "id": "Neuron_0_1",
               "c-x": 2,
               "c-y": 8
             }

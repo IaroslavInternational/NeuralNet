@@ -61,9 +61,14 @@ void DrawList::Draw(Graphics& gfx)
 		hoveredCell->Draw(gfx);
 	}
 
-	DrawSynapses(dLayers[0], dLayers[1], Colors::MakeRGB(122, 45, 56), gfx);
-	DrawSynapses(dLayers[1], dLayers[2], Colors::MakeRGB(122, 45, 56), gfx);
-
+	for (size_t i = 0; i < dLayers.size(); i++)
+	{
+		if (i + 1 < dLayers.size())
+		{
+			DrawSynapses(dLayers[i], dLayers[i + 1], Colors::MakeRGB(122, 45, 56), gfx);
+		}
+	}
+	
 	for (auto& l : dLayers)
 	{
 		l.Draw(gfx);

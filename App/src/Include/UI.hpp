@@ -37,11 +37,10 @@ private:
 	void ShowTopPanel();
 	F_DEBUG(void Debug());
 private:
-	App* pApp;			          // Указатель на приложение
-	float appScale = 1.0f;        // Множитель ViewPort
-	char buffer[6];				
-	ContextMenu cMenu;		      // Структура работы с контекстными действиями
-	DrawLayer* pLayer = nullptr;  // Указатель на тек. слой
-	std::vector<bool> selected_layers;
+	App* pApp;							// Указатель на приложение
+	float appScale = 1.0f;				// Множитель ViewPort			
+	ContextMenu cMenu;					// Структура работы с контекстными действиями
+	DrawLayer* pLayer = nullptr;		// Указатель на тек. слой
+	std::vector<bool> selected_layers;  // Выбранные слои
 };
 

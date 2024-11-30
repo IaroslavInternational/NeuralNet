@@ -17,8 +17,6 @@ UI::UI(App* app)
 {
 	selected_layers.resize(pApp->dList.dLayers.size());
 
-	memset(buffer, '\0', 6*sizeof(char));
-
 	ImGui::GetStyle().WindowBorderSize = 0.0f;
 	ImGui::GetStyle().TabBorderSize = 1.0f;
 	ImGui::GetStyle().TabBarBorderSize = 1.0f;
@@ -295,22 +293,27 @@ void UI::ShowTopPanel()
 				std::string res;
 				std::ostringstream nId;
 
-				// TEST !!!
-				if (pLayer->name == "Layer 0")
+				switch (pLayer->type)
 				{
+				case LayerType::Input:
 					res = "res-1";
-					nId << "N_0_" << pLayer->dLayer.size();
-				}
-				else if (pLayer->name == "Layer 1")
-				{
+					nId << "Neuron_0_";
+					break;
+				case LayerType::Hidden:
 					res = "res-2";
-					nId << "N_1_" << pLayer->dLayer.size();
-				}
-				else if (pLayer->name == "Layer 2")
-				{
+					nId << "Neuron_1_";
+					break;
+				case LayerType::Output:
 					res = "res-3";
-					nId << "N_2_" << pLayer->dLayer.size();
+					nId << "Neuron_2_";
+					break;
+				default:
+					throw std::exception("Error layer type");
+					break;
 				}
+
+				nId << pLayer->dLayer.size();
+
 				pLayer->Insert(Object2D(pApp->rManager[res], nullptr, nId.str()));
 			}
 
@@ -318,13 +321,17 @@ void UI::ShowTopPanel()
 
 			if (ImGui::Button("-", { 26.0f, 26.0f }))
 			{
-				pLayer->dLayer.erase(pLayer->dLayer.begin() + pLayer->dLayer.size() - 1);
-
-				for (auto& o : pLayer->dLayer)
+				if (pLayer->dLayer.size() - 1 != 0)
 				{
-					o.SetCell(pApp->dList.grid.GetLowerCell(o.GetCell()));
+					pLayer->Erase();
+				}
+				else
+				{
+					auto iter = std::find(pApp->dList.dLayers.begin(), pApp->dList.dLayers.end(), *pLayer);
+					pApp->dList.dLayers.erase(iter);
 				}
 			}
+	
 			ImGui::PopStyleVar();
 		}
 	}

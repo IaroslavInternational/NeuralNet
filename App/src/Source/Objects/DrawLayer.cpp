@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <winbase.h>
 
 DrawLayer::DrawLayer(const std::string& path, ResourceManager& rManager, Grid& grid)
 	:
@@ -31,6 +32,7 @@ DrawLayer::DrawLayer(const std::string& path, ResourceManager& rManager, Grid& g
 		for (const auto& obj : j.at(d))
 		{
 			name = obj.at("name");
+			type = (LayerType)obj.at("type");
 
 			for (const auto& objs : obj.at("objects"))
 			{
@@ -70,6 +72,16 @@ void DrawLayer::Insert(Object2D& obj)
 
 	obj.SetCell(grid.GetCellByPos(pos.x, pos.y));
 	dLayer.push_back(obj);
+}
+
+void DrawLayer::Erase()
+{
+	dLayer.erase(dLayer.begin() + dLayer.size() - 1);
+
+	for (auto& o : dLayer)
+	{
+		o.SetCell(grid.GetLowerCell(o.GetCell()));
+	}
 }
 
 void DrawLayer::Draw(Graphics& gfx)
