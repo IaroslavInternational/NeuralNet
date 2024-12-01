@@ -75,7 +75,11 @@ void DrawList::Draw(Graphics& gfx)
 	{
 		if (i + 1 < dLayers.size())
 		{
-			DrawSynapses(dLayers[i], dLayers[i + 1], Colors::MakeRGB(122, 45, 56), gfx);
+			// Между входным и выходном слоем не рисуем синапсы
+			if (!(dLayers[i].GetType() == LayerType::Input && dLayers[i + 1].GetType() == LayerType::Output))
+			{
+				DrawSynapses(dLayers[i], dLayers[i + 1], Colors::Syn, gfx);
+			}
 		}
 	}
 	

@@ -18,6 +18,12 @@ class DrawLayer
 {
 	friend class UI;
 public:
+	DrawLayer()
+		:
+		grid(*(Grid*)0)
+	{
+	};
+	DrawLayer(ResourceManager& rManager, Grid& grid);
 	DrawLayer(const std::string& path, ResourceManager& rManager, Grid& grid);
 public:
 	void Insert(Object2D& obj);
@@ -28,6 +34,7 @@ public:
 public:
 	size_t GetSize() const;
 	std::vector<Object2D>& Get();
+	LayerType& GetType();
 private:
 	void Add(Object2D& obj);
 public:

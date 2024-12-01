@@ -111,6 +111,7 @@
     <None Include="XAudio\XAudio2_7_32.dll" />
     <None Include="XAudio\XAudio2_7_64.dll" />
     <None Include="data\rManager.json" />
+    <None Include="data\grid.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Include\Core\AppWin.hpp">

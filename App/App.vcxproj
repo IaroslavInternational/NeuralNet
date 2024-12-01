@@ -188,6 +188,7 @@
     <ClCompile Include="src\Source\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\grid.json" />
     <None Include="data\rManager.json" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="src\shaders\FramebufferVS.shh" />

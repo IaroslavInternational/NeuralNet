@@ -42,5 +42,6 @@ private:
 	ContextMenu cMenu;					// Структура работы с контекстными действиями
 	DrawLayer* pLayer = nullptr;		// Указатель на тек. слой
 	std::vector<bool> selected_layers;  // Выбранные слои
+	bool isDeleteLayer = false;
 };
 

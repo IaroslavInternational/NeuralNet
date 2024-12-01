@@ -39,22 +39,25 @@ UI::UI(App* app)
 	colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_Button] = ImVec4(0.34f, 0.06f, 0.06f, 0.91f);
 	colors[ImGuiCol_ButtonActive] = ImVec4(0.09f, 0.11f, 0.13f, 1.00f);
+	colors[ImGuiCol_Header] = ImVec4(0.42f, 0.13f, 0.13f, 0.31f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.22f, 0.05f, 0.05f, 0.80f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 }
 
 void UI::Update(float dt)
-{
-	// Подсветка ячеек
-	
+{	
+	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
 		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH)
 	{
-		pApp->dList.CheckHover(pApp->wnd.mouse.GetPosX(), pApp->wnd.mouse.GetPosY());
+		pApp->dList.CheckHover(pApp->wnd.mouse.GetPosX(), pApp->wnd.mouse.GetPosY());  // Подсветка ячеек
 	}
 	else
 	{
 		pApp->dList.hoveredCell = nullptr;
 	}
 
+	// Если нажали ЛКМ
 	if (pApp->wnd.mouse.LeftIsPressed())
 	{
 		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
@@ -62,6 +65,7 @@ void UI::Update(float dt)
 
 		if (!cMenu.flag_pressed)
 		{
+			// Начисляем время удержания
 			if (cMenu.counter > 0.065f)
 			{
 				cMenu.flag_pressed = true;
@@ -74,12 +78,15 @@ void UI::Update(float dt)
 		}
 	}
 
+	// Если отпустили ЛКМ
 	if (pApp->wnd.mouse.LeftIsReleased())
 	{
 		cMenu.flag_pressed = false;
 		cMenu.counter = 0.0f;
+		pApp->dList.selected = pLayer;
 	}
 	
+	// Если зажата ЛКМ
 	if (cMenu.flag_pressed)
 	{
 		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
@@ -91,6 +98,7 @@ void UI::Update(float dt)
 	// Dragging objects
 	if (cMenu.flag_pressed && cMenu.first_ptr != nullptr && cMenu.second_ptr != nullptr)
 	{
+		// Если ячейка, в которую идёт перетаскивание не равна исходной
 		if (cMenu.first_ptr != cMenu.second_ptr)
 		{
 			bool valid = false;
@@ -106,11 +114,13 @@ void UI::Update(float dt)
 				}
 			}
 
+			// Если исходная ячейка содержит в себе объект
 			if (valid)
-			{
+			{	
 				auto pos1 = cMenu.first_ptr->GetIdx();
 				auto pos2 = cMenu.second_ptr->GetIdx();
 
+				// Дельта
 				pos2d res;
 				res.x = pos2.x - pos1.x;
 				res.y = pos2.y - pos1.y;
@@ -126,6 +136,13 @@ void UI::Update(float dt)
 				cMenu.first_ptr = cMenu.second_ptr;
 				cMenu.second_ptr = nullptr;
 				cMenu.counter = 0.0f;
+
+				// Если был подсвечен слой
+				if (pApp->dList.selected != nullptr)
+				{
+					// Убоать подсветку во время перемещения объекта
+					pApp->dList.selected = nullptr;
+				}
 			}
 		}	
 	}
@@ -144,8 +161,38 @@ void UI::Render()
 	SetPanelSizeAndPosition(0, 0.8f, 0.05f, 0.2f, 0.0f);
 	ShowTopPanel();
 
-	F_DEBUG(Debug());
+	// Popups
+	/* ==== Окно подтверждения удаления слоя ==== */
+	if (isDeleteLayer)
+	{
+		ImGui::OpenPopup("delete_layer");
 
+
+		if (ImGui::BeginPopup("delete_layer"))
+		{
+			ImGui::Text("Это последний нейрон в слое.");
+			ImGui::Text("Удалить слой?");
+
+			if (ImGui::Button("Да", { 100.0f, 25.0f }))
+			{
+				isDeleteLayer = false;
+				pApp->dList.Delete(pLayer);
+				pLayer = nullptr;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Нет", { 100.0f, 25.0f }))
+			{
+				isDeleteLayer = false;
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+	/**********************************************/
+
+	F_DEBUG(Debug());
 	F_DEBUG(ImGui::ShowDemoWindow());
 }
 
@@ -217,6 +264,56 @@ void UI::ShowPanel()
 			{
 				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))  // Имя проекта
 				{
+					if (ImGui::BeginPopupContextItem())
+					{
+						ImGui::Text("Добавить слой:");
+
+						if (ImGui::Button("Добавить"))
+						{
+							DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
+							newLayer.name = "New Layer";
+							newLayer.type = LayerType::Hidden;
+							newLayer.Add(Object2D(pApp->rManager["res-2"]));
+							newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
+
+							pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
+
+							// Поменять местами последний и предпоследний слои
+							std::swap(pApp->dList.dLayers[pApp->dList.dLayers.size() - 2],
+									  pApp->dList.dLayers[pApp->dList.dLayers.size() - 1]);
+							
+							// Сдвигаем последний слой вправо
+							pos2d curPos;
+							for (auto& l : pApp->dList.dLayers.back().dLayer)
+							{
+								curPos = l.cell->GetIdx();
+								curPos.x += 5;
+
+								l.SetCell(pApp->dList.grid.GetCellByPos(curPos.x, curPos.y));
+							}
+
+							// Если в последнем слое чётное кол-во нейронов
+							if (pApp->dList.dLayers.back().dLayer.size() % 2 == 0)
+							{
+								DrawLayer* pCurLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 2];
+								DrawLayer* pNextLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 1];
+								size_t idx = int(pNextLayer->dLayer.size() / 2) - 1;
+								Cell* CellToSet = pApp->dList.grid.GetLowerCell(pNextLayer->dLayer[idx].cell);
+								pos2d posSet = CellToSet->GetIdx();
+								posSet.x -= 5;
+
+								CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+								pCurLayer->dLayer[0].SetCell(CellToSet);
+							}
+
+							selected_layers.resize(pApp->dList.dLayers.size());
+
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndPopup();
+					}
+
 					auto& layers = pApp->dList.dLayers;  // Указатель на текущий слой
 					for (size_t i = 0; i < layers.size(); i++)  // Цикл по слоям 
 					{
@@ -352,7 +449,7 @@ void UI::ShowTopPanel()
 				}
 				else // Удалить слой, если больше нет нейронов
 				{
-					pApp->dList.Delete(pLayer);
+					isDeleteLayer = true;
 				}
 			}
 	

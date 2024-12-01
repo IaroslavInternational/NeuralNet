@@ -6,6 +6,12 @@
 #include <sstream>
 #include <winbase.h>
 
+DrawLayer::DrawLayer(ResourceManager& rManager, Grid& grid)
+	:
+	grid(grid)
+{
+}
+
 DrawLayer::DrawLayer(const std::string& path, ResourceManager& rManager, Grid& grid)
 	:
 	grid(grid)
@@ -113,4 +119,9 @@ size_t DrawLayer::GetSize() const
 std::vector<Object2D>& DrawLayer::Get()
 {
 	return dLayer;
+}
+
+LayerType& DrawLayer::GetType()
+{
+	return type;
 }
