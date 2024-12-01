@@ -14,7 +14,9 @@
 #include <fstream>
 #include <sstream>
 
-DrawList::DrawList(const std::string& path, ResourceManager& rManager)
+DrawList::DrawList(const std::string& path, ResourceManager& rManager, Graphics& gfx)
+	:
+	grid(gfx)
 {
 	using json = nlohmann::json;
 	using namespace std::string_literals;

@@ -10,7 +10,7 @@ class Grid
 {
 	friend class UI;
 public:
-	Grid();
+	Grid(Graphics& gfx);
 public:
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);

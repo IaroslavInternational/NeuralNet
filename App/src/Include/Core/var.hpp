@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef NDEBUG
+#define F_DEBUG(act);
+#else
 #define F_DEBUG(act) act;
+#endif
 
 // Позиция в 2-х мерном пространстве
 struct pos2d

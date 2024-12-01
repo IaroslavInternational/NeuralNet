@@ -9,13 +9,18 @@
 
 #include <assert.h>
 
-MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs, int width, int height)
+MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 	:
 	args(pArgs),
-	hInst(hInst),
-	ScreenWidth(width),
-	ScreenHeight(height)
+	hInst(hInst)
 {
+
+	int WholeScreenWidth = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
+	int WholeScreenHeight = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), VERTRES);
+
+	ScreenWidth = int(WholeScreenWidth * 0.677f);
+	ScreenHeight = int(WholeScreenHeight * 0.740f);
+
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX),CS_CLASSDC,_HandleMsgSetup,0,0,
 		hInst,nullptr,nullptr,nullptr,nullptr,
 		wndClassName,nullptr };
@@ -24,10 +29,10 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs, int width, int height)
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	RegisterClassEx(&wc);
 
-	RECT wr;
-	wr.left = 350;
+	RECT wr; // set center
+	wr.left = (WholeScreenWidth - ScreenWidth) / 2;
 	wr.right = ScreenWidth + wr.left;
-	wr.top = 100;
+	wr.top = (WholeScreenHeight - ScreenHeight) / 2;
 	wr.bottom = ScreenHeight + wr.top;
 	AdjustWindowRect(&wr, WS_POPUP | WS_OVERLAPPED, FALSE);
 	hWnd = CreateWindow(wndClassName, L"Neuro", WS_POPUP | WS_OVERLAPPED,

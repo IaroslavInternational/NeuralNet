@@ -146,7 +146,7 @@ void UI::Render()
 
 	F_DEBUG(Debug());
 
-	ImGui::ShowDemoWindow();
+	F_DEBUG(ImGui::ShowDemoWindow());
 }
 
 // Windows
@@ -274,7 +274,7 @@ void UI::ShowViewPort()
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
 	{
 		ImGui::PushID("vp_slider");
-		if (ImGui::VSliderFloat("", { 18, 160 }, &appScale, 1.0f, 5.0f))
+		if (ImGui::VSliderFloat("", { 18, pApp->gfx.GetHeight() * 0.2f}, &appScale, 1.0f, 5.0f))
 		{
 			// set viewport dimensions
 			D3D11_VIEWPORT vp;
@@ -364,6 +364,8 @@ void UI::ShowTopPanel()
 	ImGui::PopStyleVar();
 }
 
+#ifndef NDEBUG
+
 void UI::Debug()
 {
 	if (ImGui::Begin("Debug", NULL, ImGuiWindowFlags_NoCollapse))
@@ -446,3 +448,5 @@ void UI::Debug()
 		ImGui::End();
 	}*/
 }
+
+#endif // NDEBUG

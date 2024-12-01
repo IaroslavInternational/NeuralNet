@@ -3,7 +3,7 @@
 
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
-	MainWindow wnd(hInst, pArgs, 1300, 800);
+	MainWindow wnd(hInst, pArgs);
 	App app(wnd);
 
 	while (wnd.ProcessMessage())

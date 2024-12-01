@@ -19,7 +19,7 @@ class DrawList
 {
 	friend class UI;
 public:
-	DrawList(const std::string& path, ResourceManager& rManager);
+	DrawList(const std::string& path, ResourceManager& rManager, Graphics& gfx);
 public:
 	void Add(DrawLayer& dLayer);
 	void Delete(DrawLayer* dLayer);

@@ -24,7 +24,7 @@ class MainWindow : public HWNDKey
 {
 	friend class UI;
 public:
-	MainWindow(HINSTANCE hInst, wchar_t* pArgs, int width, int height);
+	MainWindow(HINSTANCE hInst, wchar_t* pArgs);
 	MainWindow(const MainWindow&) = delete;
 	MainWindow& operator=(const MainWindow&) = delete;
 	~MainWindow();

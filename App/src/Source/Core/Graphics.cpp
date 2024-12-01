@@ -344,7 +344,18 @@ int Graphics::GetWidth() const
 	return ScreenWidth;
 }
 
+int Graphics::GetPanelWidth() const
+{
+	return ScreenWidth * pK;
+}
+
 int Graphics::GetHeight() const
 {
 	return ScreenHeight;
+}
+
+
+int Graphics::GetMenuHeight() const
+{
+	return menuH;
 }

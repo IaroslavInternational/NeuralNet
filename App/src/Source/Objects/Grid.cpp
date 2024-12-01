@@ -5,7 +5,7 @@
 
 #include <fstream>
 
-Grid::Grid()
+Grid::Grid(Graphics& gfx)
 {
 	using json = nlohmann::json;
 	using namespace std::string_literals;
@@ -31,8 +31,8 @@ Grid::Grid()
 		color = Color(colorRead[0], colorRead[1], colorRead[2], colorRead[3]);
 		x = j.at("pos-x");
 		y = j.at("pos-y");
-		wLimit = int(1300.0f - 1300.0f * 0.2f);
-		hLimit = 800 - 24;
+		wLimit = gfx.GetWidth() - gfx.GetPanelWidth();
+		hLimit = gfx.GetHeight() - gfx.GetMenuHeight();
 	}
 
 	// Тест на заполнение ячейками

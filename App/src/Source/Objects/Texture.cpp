@@ -8,7 +8,8 @@ Texture::Texture(const std::string& path, Color chromakey)
 	path(path),
 	chromakey(chromakey)
 {
-	std::ifstream file(path, std::ios::binary);
+	std::string filepath = "assets/" + path;
+	std::ifstream file(filepath, std::ios::binary);
 	assert(file);
 
 	BITMAPFILEHEADER bmFileHeader;

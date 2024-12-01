@@ -30,7 +30,9 @@ public:
 	void PutPixelBlended(int x, int y, Color c);
 	Color& GetPixel(int x, int y);
 	int  GetWidth() const;
+	int  GetPanelWidth() const;
 	int  GetHeight() const;
+	int  GetMenuHeight() const;
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11Device>				pDevice;
