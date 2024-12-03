@@ -7,22 +7,21 @@
 
 Grid::Grid(Graphics& gfx)
 {
-	using json = nlohmann::json;
-	using namespace std::string_literals;
-
-	std::ifstream dataFile("data/grid.json");
-	if (!dataFile.is_open())
 	{
-		throw ("Не удаётся открыть файл с данными о сетке");
-	}
+		using json = nlohmann::json;
+		using namespace std::string_literals;
 
-	json j;
-	dataFile >> j;
+		std::ifstream dataFile("data/grid.json");
+		if (!dataFile.is_open())
+		{
+			throw ("Не удаётся открыть файл с данными о сетке");
+		}
 
-	int colorRead[4] = {};
+		json j;
+		dataFile >> j;
 
-	for (json::iterator m = j.begin(); m != j.end(); ++m)
-	{
+		int colorRead[4] = {};
+
 		padding = j.at("padding");
 		colorRead[0] = j.at("c-a");
 		colorRead[1] = j.at("c-r");
@@ -31,14 +30,14 @@ Grid::Grid(Graphics& gfx)
 		color = Color(colorRead[0], colorRead[1], colorRead[2], colorRead[3]);
 		x = j.at("pos-x");
 		y = j.at("pos-y");
-		wLimit = gfx.GetWidth() - gfx.GetPanelWidth();
-		hLimit = gfx.GetHeight() - gfx.GetMenuHeight();
+		wLimit = R100(gfx.GetWidth() - gfx.GetPanelWidth());
+		hLimit = R100(gfx.GetHeight() - gfx.GetMenuHeight());
 	}
-
+	
 	// Тест на заполнение ячейками
-	for (size_t i = 0; i < wLimit / padding; i++)
+	for (int i = -wLimit / padding; i < 2 * (wLimit / padding); i++)
 	{
-		for (size_t j = 0; j < hLimit / padding; j++)
+		for (int j = -hLimit / padding; j < 2 * (hLimit / padding); j++)
 		{
 			cells.emplace_back(i, j);
 		}
@@ -47,9 +46,9 @@ Grid::Grid(Graphics& gfx)
 
 void Grid::Draw(Graphics& gfx)
 {
-	for (int i = -x; i < wLimit; i++)
+	for (int i = -wLimit; i < 2 * wLimit; i++)
 	{
-		for (int j = -padding; j < hLimit; j += padding)
+		for (int j = -hLimit; j < 2 * hLimit; j += padding)
 		{
 			if (x + i >= 0 && y + j >= 0 && x + i < gfx.GetWidth() && y + j < gfx.GetHeight())
 			{
@@ -58,9 +57,9 @@ void Grid::Draw(Graphics& gfx)
 		}
 	}
 
-	for (int i = -y; i < hLimit; i++)
+	for (int i = -hLimit; i < 2 * hLimit; i++)
 	{
-		for (int j = -padding; j < wLimit; j += padding)
+		for (int j = -wLimit; j < 2 * wLimit; j += padding)
 		{
 			if (x + j >= 0 && y + i >= 0 && x + j < gfx.GetWidth() && y + i < gfx.GetHeight())
 			{

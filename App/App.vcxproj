@@ -236,8 +236,6 @@
   <ItemGroup>
     <Image Include="ico-16.ico" />
     <Image Include="ico-32.ico" />
-    <Image Include="item1.bmp" />
-    <Image Include="item2.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

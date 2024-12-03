@@ -46,6 +46,9 @@ UI::UI(App* app)
 
 void UI::Update(float dt)
 {	
+	// Если нажат Ctrl
+	cMenu.ctrl_pressed = pApp->wnd.kbd.KeyIsPressed(0x11);
+
 	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
 		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH)
@@ -102,12 +105,14 @@ void UI::Update(float dt)
 		if (cMenu.first_ptr != cMenu.second_ptr)
 		{
 			bool valid = false;
+			DrawLayer* currentLayer = nullptr;
 			for (auto& layer : pApp->dList.dLayers)
 			{
 				for (auto& obj : layer.dLayer)
 				{
 					if (obj.GetCell() == cMenu.first_ptr)
 					{
+						currentLayer = &layer;
 						valid = true;
 						break;
 					}
@@ -125,11 +130,21 @@ void UI::Update(float dt)
 				res.x = pos2.x - pos1.x;
 				res.y = pos2.y - pos1.y;
 
-				for (auto& layer : pApp->dList.dLayers)
+				if (cMenu.ctrl_pressed)
 				{
-					for (auto& obj : layer.dLayer)
+					for (auto& obj : currentLayer->dLayer)
 					{
 						obj.SetCell(pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y));
+					}
+				}
+				else
+				{
+					for (auto& layer : pApp->dList.dLayers)
+					{
+						for (auto& obj : layer.dLayer)
+						{
+							obj.SetCell(pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y));
+						}
 					}
 				}
 
@@ -169,10 +184,10 @@ void UI::Render()
 
 		if (ImGui::BeginPopup("delete_layer"))
 		{
-			ImGui::Text("Это последний нейрон в слое.");
+			//ImGui::Text("Это последний нейрон в слое.");
 			ImGui::Text("Удалить слой?");
 
-			if (ImGui::Button("Да", { 100.0f, 25.0f }))
+			if (ImGui::Button("Да", { 100, 0 }))
 			{
 				isDeleteLayer = false;
 				pApp->dList.Delete(pLayer);
@@ -181,7 +196,7 @@ void UI::Render()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Нет", { 100.0f, 25.0f }))
+			if (ImGui::Button("Нет", { 100, 0 }))
 			{
 				isDeleteLayer = false;
 			}
@@ -253,6 +268,15 @@ void UI::Render()
 				Cell*	   CellToSet  = nullptr;
 				/***********************************/
 
+				// Считаем кол-во скрытых слоёв
+				for (auto& l : pApp->dList.dLayers)
+				{
+					if (l.type == LayerType::Hidden)
+					{
+						hiddenLayersCounter++;
+					}
+				}
+
 				DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
 				newLayer.type = type;
 
@@ -261,22 +285,14 @@ void UI::Render()
 				{
 				case LayerType::Input:  // Если входной слой
 					newLayer.name = "Входной слой";
-					newLayer.Add(Object2D(pApp->rManager["res-1"]));
+					newLayer.Add(Object2D(pApp->rManager["res-1"], nullptr, "Neuron_0_0"));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
 					break;
 				case LayerType::Hidden: // Если скрытый слой
-					// Считаем кол-во скрытых слоёв
-					for (auto& l : pApp->dList.dLayers)
-					{
-						if (l.type == type) 
-						{
-							hiddenLayersCounter++;
-						}
-					}
 					newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter);
-					newLayer.Add(Object2D(pApp->rManager["res-2"]));
+					newLayer.Add(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter) + std::string("_0")));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
@@ -341,12 +357,41 @@ void UI::Render()
 						pNextLayer->dLayer[0].SetCell(CellToSet);
 					}
 
-					selected_layers.resize(pApp->dList.dLayers.size());
 					break;
 				case LayerType::Output:
+					newLayer.name = "Выходной слой";
+					newLayer.Add(Object2D(pApp->rManager["res-3"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0")));
+					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
+
+					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
+
+					// Получаем текущий и предыдущий слои
+					pCurLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 2];
+					pNextLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 1];
+
+					// Если в последнем слое чётное кол-во нейронов
+					if (pCurLayer->dLayer.size() % 2 == 0)
+					{
+						size_t idx = int(pCurLayer->dLayer.size() / 2) - 1;
+						CellToSet = pApp->dList.grid.GetLowerCell(pCurLayer->dLayer[idx].cell);
+					}
+					else // Иначе
+					{
+						size_t idx = int(std::round(pCurLayer->dLayer.size() / 2));
+						CellToSet = pCurLayer->dLayer[idx].cell;
+					}
+
+					// Сдвигаем нейрон на 5 ячеек вправо
+					posSet = CellToSet->GetIdx();
+					posSet.x += 5;
+
+					CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+					pNextLayer->dLayer[0].SetCell(CellToSet);
+
 					break;
 				}
 				
+				selected_layers.resize(pApp->dList.dLayers.size());
 				pLayer = nullptr;
 				isAddLayer = false;
 				ImGui::CloseCurrentPopup();
@@ -416,11 +461,13 @@ void UI::ShowMenu()
 			ImGui::EndMenu();
 		}
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 		ImGui::SetCursorPos({ pApp->wnd.ScreenWidth - pApp->gfx.menuH, 0 });
 		if (ImGui::Button("X", { pApp->gfx.menuH, pApp->gfx.menuH }))
 		{
 			exit(0);
 		}
+		ImGui::PopStyleVar();
 
 		ImGui::EndMainMenuBar();
 	};
@@ -468,6 +515,30 @@ void UI::ShowPanel()
 							}
 
 							selected_layers[i] = true;
+						}
+
+						if (ImGui::BeginPopupContextItem())
+						{
+							if (!ImGui::GetIO().KeyCtrl)
+							{
+								for (auto& s : selected_layers)
+								{
+									s = false;
+								}
+							}
+
+							pLayer = &layers[i];
+							selected_layers[i] = true;
+							pApp->dList.selected = pLayer;
+
+							ImGui::Text("Удалить слой?");
+
+							if (ImGui::Button("OK"))
+							{
+								isDeleteLayer = true;
+							}
+
+							ImGui::EndPopup();
 						}
 
 						// Для выбранного слоя показываем содержимое
@@ -657,29 +728,6 @@ void UI::Debug()
 	}
 
 	ImGui::End();
-
-	/*if (cMenu.show)
-	{
-		ImGui::SetNextWindowPos(ImVec2(cMenu.pos.x + 75, cMenu.pos.y));
-		if (ImGui::Begin("Меню", &cMenu.show))
-		{
-			auto cell = pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y);
-			cell->Draw(pApp->gfx);
-
-			std::ostringstream oss;
-			oss << "Ячейка (" << cell->x << ", " << cell->y << ")";
-			ImGui::Text(oss.str().c_str());
-
-			if (ImGui::Button("Добавить объект"))
-			{
-				pApp->dList.Add(Object2D(pApp->rManager["neuron.bmp"], cell));
-				F_DEBUG(inputs.resize(pApp->dList.dList.size()));
-				cMenu.show = false;
-			}
-		}
-
-		ImGui::End();
-	}*/
 }
 
 #endif // NDEBUG

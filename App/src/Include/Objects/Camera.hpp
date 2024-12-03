@@ -12,7 +12,7 @@ public:
 	pos2d& GetPos();
 private:
 	pos2d dpos;
-	unsigned speed = 2;
+	unsigned speed = 10;
 	DrawList& dList;
 	bool isActive = true;
 };

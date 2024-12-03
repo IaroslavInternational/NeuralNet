@@ -21,7 +21,7 @@ public:
 	bool IsHovered(int x, int y);
 	void Draw(Graphics& gfx);
 private:
-	unsigned size;
+	int size;
 	int x;
 	int y;
 	pos2d pos;

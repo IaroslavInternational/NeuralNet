@@ -18,9 +18,11 @@ struct ContextMenu
 	pos2d pos;
 	bool flag_pressed = false;
 	bool flag_released = false;
+	bool ctrl_pressed = false;
 	float counter = 0.0f;
 	Cell* first_ptr = nullptr;
 	Cell* second_ptr = nullptr;
+
 };
 
 class UI

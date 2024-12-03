@@ -230,11 +230,5 @@
     <Image Include="ico-32.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="item2.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="item1.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>

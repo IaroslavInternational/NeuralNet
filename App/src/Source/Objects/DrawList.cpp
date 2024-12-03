@@ -57,6 +57,8 @@ void DrawList::Add(DrawLayer& dLayer)
 
 void DrawList::Delete(DrawLayer* dLayer)
 {
+	assert(dLayer != nullptr);
+
 	auto iter = std::find(dLayers.begin(), dLayers.end(), *dLayer);
 	dLayers.erase(iter);
 }

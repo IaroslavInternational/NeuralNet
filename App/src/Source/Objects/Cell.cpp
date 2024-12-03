@@ -56,6 +56,8 @@ void Cell::Translate(const pos2d& dpos)
 
 bool Cell::IsHovered(int x, int y)
 {
+	bool test1 = (pos.x <= x && x <= pos.x + size);
+	bool test2 = (pos.y <= y && y <= pos.y + size);
 	return (pos.x <= x && x <= pos.x + size) && (pos.y <= y && y <= pos.y + size);
 }
 

@@ -20,7 +20,7 @@ public:
 	Cell* GetUpperCell(Cell* cell);
 	Cell* GetLowerCell(Cell* cell);
 private:
-	unsigned padding;
+	int padding;
 	Color color;
 	int wLimit;
 	int hLimit;

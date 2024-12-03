@@ -6,6 +6,9 @@
 #define F_DEBUG(act) act;
 #endif
 
+// Округление до сотен
+#define R100(x) int(float(x)*0.01f + 0.5f) * 100
+
 // Позиция в 2-х мерном пространстве
 struct pos2d
 {
