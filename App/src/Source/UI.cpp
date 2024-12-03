@@ -167,7 +167,6 @@ void UI::Render()
 	{
 		ImGui::OpenPopup("delete_layer");
 
-
 		if (ImGui::BeginPopup("delete_layer"))
 		{
 			ImGui::Text("Это последний нейрон в слое.");
@@ -191,6 +190,181 @@ void UI::Render()
 		}
 	}
 	/**********************************************/
+
+	/* ==== Окно подтверждения добавления слоя ==== */
+	if (isAddLayer)
+	{
+		ImGui::OpenPopup("Добавление слоя");
+
+		if (ImGui::BeginPopupModal("Добавление слоя", NULL, ImGuiWindowFlags_Modal | ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Выберите тип слоя:");
+
+			static bool selected_type[3] = {};
+			std::string names[3] = { "Входной слой", "Скрытый слой", "Выходной слой" };
+			for (int i = 0; i < (int)LayerType::All; i++)
+			{
+				if (ImGui::Checkbox(names[i].c_str(), &selected_type[i]))
+				{
+					memset(selected_type, 0, 3 * sizeof(bool));
+					selected_type[i] = true;
+				}
+			}
+
+			// Добавить слой
+			if (ImGui::Button("OK", ImVec2(120, 0)))
+			{	
+				// Выбираем тип слоя
+				LayerType type = LayerType::All;
+				for (int i = 0; i < 3; i++)
+				{
+					if (selected_type[i])
+					{
+						type = LayerType(i);
+						break;
+					}
+				}
+
+				// Если не выбран тип, то закрыть окно
+				if (type == LayerType::All)
+				{
+					isAddLayer = false;
+					ImGui::CloseCurrentPopup();
+					ImGui::EndPopup();
+					return;
+				}
+
+				// Если слой не скрытого типа И
+				// Если слой уже существует
+				if (type != LayerType::Hidden && CheckExLayer(type))
+				{
+					isAddLayer = false;
+					ImGui::CloseCurrentPopup();
+					ImGui::EndPopup();
+					return;
+				}
+
+				/* Настройки для перемещения слоёв */
+				pos2d curPos;
+				pos2d posSet;
+				int hiddenLayersCounter = 0;
+				DrawLayer* pCurLayer  = nullptr;
+				DrawLayer* pNextLayer = nullptr;
+				Cell*	   CellToSet  = nullptr;
+				/***********************************/
+
+				DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
+				newLayer.type = type;
+
+				// Добавляем слой по типу
+				switch (type)
+				{
+				case LayerType::Input:  // Если входной слой
+					newLayer.name = "Входной слой";
+					newLayer.Add(Object2D(pApp->rManager["res-1"]));
+					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
+
+					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
+					break;
+				case LayerType::Hidden: // Если скрытый слой
+					// Считаем кол-во скрытых слоёв
+					for (auto& l : pApp->dList.dLayers)
+					{
+						if (l.type == type) 
+						{
+							hiddenLayersCounter++;
+						}
+					}
+					newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter);
+					newLayer.Add(Object2D(pApp->rManager["res-2"]));
+					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
+
+					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
+
+					// Получаем текущий и предыдущий слои
+					pCurLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 2];
+					pNextLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 1];
+
+					if (pCurLayer->type == LayerType::Output)
+					{
+						// Поменять местами последний и предпоследний слои
+						std::swap(pApp->dList.dLayers[pApp->dList.dLayers.size() - 2], 
+								  pApp->dList.dLayers[pApp->dList.dLayers.size() - 1]);
+
+						// Сдвигаем последний слой вправо на 5 ячеек
+						for (auto& l : pNextLayer->dLayer)
+						{
+							curPos = l.cell->GetIdx();
+							curPos.x += 5;
+
+							l.SetCell(pApp->dList.grid.GetCellByPos(curPos.x, curPos.y));
+						}
+
+						// Если в последнем слое чётное кол-во нейронов
+						if (pNextLayer->dLayer.size() % 2 == 0)
+						{
+							size_t idx = int(pNextLayer->dLayer.size() / 2) - 1;
+							CellToSet = pApp->dList.grid.GetLowerCell(pNextLayer->dLayer[idx].cell);
+						}
+						else // Иначе
+						{
+							size_t idx = int(std::round(pNextLayer->dLayer.size() / 2));
+							CellToSet = pNextLayer->dLayer[idx].cell;
+						}
+
+						// Сдвигаем нейрон на 5 ячеек влево
+						posSet = CellToSet->GetIdx();
+						posSet.x -= 5;
+
+						CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+						pCurLayer->dLayer[0].SetCell(CellToSet);
+					}
+					else
+					{
+						// Если в последнем слое чётное кол-во нейронов
+						if (pCurLayer->dLayer.size() % 2 == 0)
+						{
+							size_t idx = int(pCurLayer->dLayer.size() / 2) - 1;
+							CellToSet = pApp->dList.grid.GetLowerCell(pCurLayer->dLayer[idx].cell);
+						}
+						else // Иначе
+						{
+							size_t idx = int(std::round(pCurLayer->dLayer.size() / 2));
+							CellToSet = pCurLayer->dLayer[idx].cell;
+						}
+
+						// Сдвигаем нейрон на 5 ячеек вправо
+						posSet = CellToSet->GetIdx();
+						posSet.x += 5;
+
+						CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+						pNextLayer->dLayer[0].SetCell(CellToSet);
+					}
+
+					selected_layers.resize(pApp->dList.dLayers.size());
+					break;
+				case LayerType::Output:
+					break;
+				}
+				
+				pLayer = nullptr;
+				isAddLayer = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				isAddLayer = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+	/************************************************/
 
 	F_DEBUG(Debug());
 	F_DEBUG(ImGui::ShowDemoWindow());
@@ -266,49 +440,11 @@ void UI::ShowPanel()
 				{
 					if (ImGui::BeginPopupContextItem())
 					{
-						ImGui::Text("Добавить слой:");
+						ImGui::Text("Добавить слой?");
 
-						if (ImGui::Button("Добавить"))
+						if (ImGui::Button("OK"))
 						{
-							DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
-							newLayer.name = "New Layer";
-							newLayer.type = LayerType::Hidden;
-							newLayer.Add(Object2D(pApp->rManager["res-2"]));
-							newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
-
-							pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
-
-							// Поменять местами последний и предпоследний слои
-							std::swap(pApp->dList.dLayers[pApp->dList.dLayers.size() - 2],
-									  pApp->dList.dLayers[pApp->dList.dLayers.size() - 1]);
-							
-							// Сдвигаем последний слой вправо
-							pos2d curPos;
-							for (auto& l : pApp->dList.dLayers.back().dLayer)
-							{
-								curPos = l.cell->GetIdx();
-								curPos.x += 5;
-
-								l.SetCell(pApp->dList.grid.GetCellByPos(curPos.x, curPos.y));
-							}
-
-							// Если в последнем слое чётное кол-во нейронов
-							if (pApp->dList.dLayers.back().dLayer.size() % 2 == 0)
-							{
-								DrawLayer* pCurLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 2];
-								DrawLayer* pNextLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 1];
-								size_t idx = int(pNextLayer->dLayer.size() / 2) - 1;
-								Cell* CellToSet = pApp->dList.grid.GetLowerCell(pNextLayer->dLayer[idx].cell);
-								pos2d posSet = CellToSet->GetIdx();
-								posSet.x -= 5;
-
-								CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
-								pCurLayer->dLayer[0].SetCell(CellToSet);
-							}
-
-							selected_layers.resize(pApp->dList.dLayers.size());
-
-							ImGui::CloseCurrentPopup();
+							isAddLayer = true;							
 						}
 
 						ImGui::EndPopup();
@@ -407,7 +543,7 @@ void UI::ShowTopPanel()
 
 			// Добавить нейрон
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
-			if (ImGui::Button("+", { 26.0f, 26.0f }))
+			if (ImGui::Button("+", { 26, 0 }))
 			{
 				std::string res;
 				std::ostringstream nId;
@@ -440,7 +576,7 @@ void UI::ShowTopPanel()
 			ImGui::SameLine();
 
 			// Убрать нейрон / слой
-			if (ImGui::Button("-", { 26.0f, 26.0f }))
+			if (ImGui::Button("-", { 26, 0 }))
 			{
 				// Убрать нейрон
 				if (pLayer->dLayer.size() - 1 != 0)
@@ -547,3 +683,16 @@ void UI::Debug()
 }
 
 #endif // NDEBUG
+
+bool UI::CheckExLayer(LayerType type)
+{
+	for (auto& l : pApp->dList.dLayers)
+	{
+		if (l.type == type)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

@@ -10,7 +10,8 @@ enum class LayerType
 {
 	Input,
 	Hidden,
-	Output
+	Output,
+	All
 };
 
 // Список объектов для отрисовки

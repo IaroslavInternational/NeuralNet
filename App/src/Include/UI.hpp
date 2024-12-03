@@ -10,6 +10,7 @@
 class App;
 class Cell;
 class DrawLayer;
+enum class LayerType;
 
 // Структура работы с контекстными действиями
 struct ContextMenu
@@ -37,11 +38,14 @@ private:
 	void ShowTopPanel();
 	F_DEBUG(void Debug());
 private:
+	bool CheckExLayer(LayerType type);
+private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			
 	ContextMenu cMenu;					// Структура работы с контекстными действиями
 	DrawLayer* pLayer = nullptr;		// Указатель на тек. слой
 	std::vector<bool> selected_layers;  // Выбранные слои
 	bool isDeleteLayer = false;
+	bool isAddLayer = false;
 };
 
