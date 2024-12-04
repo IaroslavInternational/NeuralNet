@@ -34,8 +34,8 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 	wr.right = ScreenWidth + wr.left;
 	wr.top = (WholeScreenHeight - ScreenHeight) / 2;
 	wr.bottom = ScreenHeight + wr.top;
-	AdjustWindowRect(&wr, WS_POPUP | WS_OVERLAPPED, FALSE);
-	hWnd = CreateWindow(wndClassName, L"Neuro", WS_POPUP | WS_OVERLAPPED,
+	AdjustWindowRect(&wr, WS_BORDER | WS_POPUP | WS_VISIBLE, FALSE);
+	hWnd = CreateWindow(wndClassName, L"Neuro", WS_BORDER | WS_POPUP| WS_VISIBLE,
 		wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, hInst, this);
 
