@@ -22,7 +22,6 @@ struct ContextMenu
 	float counter = 0.0f;
 	Cell* first_ptr = nullptr;
 	Cell* second_ptr = nullptr;
-
 };
 
 class UI
@@ -46,6 +45,7 @@ private:
 	float appScale = 1.0f;				// Множитель ViewPort			
 	ContextMenu cMenu;					// Структура работы с контекстными действиями
 	DrawLayer* pLayer = nullptr;		// Указатель на тек. слой
+	DrawLayer* dragLayer = nullptr;		// Указатель на тек. слой для Drag
 	std::vector<bool> selected_layers;  // Выбранные слои
 	bool isDeleteLayer = false;
 	bool isAddLayer = false;

@@ -87,6 +87,7 @@ void UI::Update(float dt)
 		cMenu.flag_pressed = false;
 		cMenu.counter = 0.0f;
 		pApp->dList.selected = pLayer;
+		dragLayer = nullptr;
 	}
 	
 	// Если зажата ЛКМ
@@ -105,14 +106,15 @@ void UI::Update(float dt)
 		if (cMenu.first_ptr != cMenu.second_ptr)
 		{
 			bool valid = false;
-			DrawLayer* currentLayer = nullptr;
+
 			for (auto& layer : pApp->dList.dLayers)
 			{
 				for (auto& obj : layer.dLayer)
 				{
 					if (obj.GetCell() == cMenu.first_ptr)
 					{
-						currentLayer = &layer;
+						if (dragLayer == nullptr)
+							dragLayer = &layer;
 						valid = true;
 						break;
 					}
@@ -132,7 +134,7 @@ void UI::Update(float dt)
 
 				if (cMenu.ctrl_pressed)
 				{
-					for (auto& obj : currentLayer->dLayer)
+					for (auto& obj : dragLayer->dLayer)
 					{
 						obj.SetCell(pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y));
 					}
@@ -219,19 +221,24 @@ void UI::Render()
 			std::string names[3] = { "Входной слой", "Скрытый слой", "Выходной слой" };
 			for (int i = 0; i < (int)LayerType::All; i++)
 			{
-				if (ImGui::Checkbox(names[i].c_str(), &selected_type[i]))
+				// Если слой скрытого типа ИЛИ
+				// Если слой не существует
+				if (LayerType(i) == LayerType::Hidden || !CheckExLayer(LayerType(i)))
 				{
-					memset(selected_type, 0, 3 * sizeof(bool));
-					selected_type[i] = true;
+					if (ImGui::Checkbox(names[i].c_str(), &selected_type[i]))
+					{
+						memset(selected_type, 0, 3 * sizeof(bool));
+						selected_type[i] = true;
+					}
 				}
 			}
 
 			// Добавить слой
-			if (ImGui::Button("OK", ImVec2(120, 0)))
+			if (ImGui::Button("Добавить", ImVec2(120, 0)))
 			{	
 				// Выбираем тип слоя
 				LayerType type = LayerType::All;
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < int(LayerType::All); i++)
 				{
 					if (selected_type[i])
 					{
@@ -242,16 +249,6 @@ void UI::Render()
 
 				// Если не выбран тип, то закрыть окно
 				if (type == LayerType::All)
-				{
-					isAddLayer = false;
-					ImGui::CloseCurrentPopup();
-					ImGui::EndPopup();
-					return;
-				}
-
-				// Если слой не скрытого типа И
-				// Если слой уже существует
-				if (type != LayerType::Hidden && CheckExLayer(type))
 				{
 					isAddLayer = false;
 					ImGui::CloseCurrentPopup();
@@ -288,7 +285,7 @@ void UI::Render()
 					newLayer.Add(Object2D(pApp->rManager["res-1"], nullptr, "Neuron_0_0"));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
-					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
+					pApp->dList.Insert(std::move(newLayer), 0);
 					break;
 				case LayerType::Hidden: // Если скрытый слой
 					newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter);
@@ -400,7 +397,7 @@ void UI::Render()
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
 
-			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			if (ImGui::Button("Закрыть", ImVec2(120, 0)))
 			{
 				isAddLayer = false;
 				ImGui::CloseCurrentPopup();
@@ -692,6 +689,11 @@ void UI::Debug()
 				if (pLayer != nullptr)
 				{
 					ImGui::Text((std::string("Layer name: ") + pLayer->name).c_str());
+				}
+
+				if (dragLayer != nullptr)
+				{
+					ImGui::Text((std::string("Layer on drag: ") + dragLayer->name).c_str());
 				}
 
 				ImGui::Checkbox("Camera move", &pApp->camera.isActive);

@@ -22,6 +22,7 @@ public:
 	DrawList(const std::string& path, ResourceManager& rManager, Graphics& gfx);
 public:
 	void Add(DrawLayer& dLayer);
+	void Insert(DrawLayer& obj, size_t pos);
 	void Delete(DrawLayer* dLayer);
 	void Draw(Graphics& gfx);
 	void Translate(int dx, int dy);

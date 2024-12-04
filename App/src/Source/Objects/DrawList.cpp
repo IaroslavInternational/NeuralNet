@@ -55,6 +55,11 @@ void DrawList::Add(DrawLayer& dLayer)
 	dLayers.push_back(dLayer);
 }
 
+void DrawList::Insert(DrawLayer& obj, size_t pos)
+{
+	dLayers.insert(dLayers.begin() + pos, obj);
+}
+
 void DrawList::Delete(DrawLayer* dLayer)
 {
 	assert(dLayer != nullptr);
