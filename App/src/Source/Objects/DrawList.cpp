@@ -189,28 +189,6 @@ void DrawList::DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gf
 	_p2.y = p2.y + 25;
 
 	DrawLine(_p1, _p2, c, gfx);
-
-	// Тест на сглаживание
-	if (msaa[0])
-	{
-		DrawLine(pos2d(_p1.x, _p1.y - 1), pos2d(_p2.x, _p2.y - 1), c, gfx, true);
-		DrawLine(pos2d(_p1.x, _p1.y + 1), pos2d(_p2.x, _p2.y + 1), c, gfx, true);
-	}
-	if (msaa[0] && msaa[1])
-	{
-		DrawLine(pos2d(_p1.x - 1, _p1.y), pos2d(_p2.x - 1, _p2.y), c, gfx, true);
-		DrawLine(pos2d(_p1.x + 1, _p1.y), pos2d(_p2.x + 1, _p2.y), c, gfx, true);
-	}
-	if (msaa[0] && msaa[1] && msaa[2])
-	{
-		Color blended = c;
-		blended.SetR(c.GetR() / 2);
-		blended.SetG(c.GetG() / 2);
-		blended.SetB(c.GetB() / 2);
-
-		DrawLine(pos2d(_p1.x, _p1.y - 2), pos2d(_p2.x, _p2.y - 2), blended, gfx, true);
-		DrawLine(pos2d(_p1.x, _p1.y + 2), pos2d(_p2.x, _p2.y + 2), blended, gfx, true);
-	}
 }
 
 void DrawList::DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx)

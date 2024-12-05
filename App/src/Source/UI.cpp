@@ -46,9 +46,9 @@ UI::UI(App* app)
 
 void UI::Update(float dt)
 {	
-	// Если нажат Ctrl
-	cMenu.ctrl_pressed = pApp->wnd.kbd.KeyIsPressed(0x11);
-
+	cMenu.ctrl_pressed = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
+	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);   // Если нажат Shift
+	
 	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
 		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH)
@@ -88,6 +88,7 @@ void UI::Update(float dt)
 		cMenu.counter = 0.0f;
 		pApp->dList.selected = pLayer;
 		dragLayer = nullptr;
+		invalid_cell = false;
 	}
 	
 	// Если зажата ЛКМ
@@ -105,7 +106,7 @@ void UI::Update(float dt)
 		// Если ячейка, в которую идёт перетаскивание не равна исходной
 		if (cMenu.first_ptr != cMenu.second_ptr)
 		{
-			bool valid = false;
+			bool valid_from = false;
 
 			for (auto& layer : pApp->dList.dLayers)
 			{
@@ -114,15 +115,18 @@ void UI::Update(float dt)
 					if (obj.GetCell() == cMenu.first_ptr)
 					{
 						if (dragLayer == nullptr)
+						{
 							dragLayer = &layer;
-						valid = true;
+						}
+
+						valid_from = true;
 						break;
 					}
 				}
 			}
 
 			// Если исходная ячейка содержит в себе объект
-			if (valid)
+			if (valid_from)
 			{	
 				auto pos1 = cMenu.first_ptr->GetIdx();
 				auto pos2 = cMenu.second_ptr->GetIdx();
@@ -132,11 +136,41 @@ void UI::Update(float dt)
 				res.x = pos2.x - pos1.x;
 				res.y = pos2.y - pos1.y;
 
-				if (cMenu.ctrl_pressed)
+				if (cMenu.shift_pressed)
 				{
+					// Если слои перекрываются
 					for (auto& obj : dragLayer->dLayer)
 					{
-						obj.SetCell(pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y));
+						Cell* c = pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y);
+
+						for (auto& layer : pApp->dList.dLayers)
+						{
+							if (&layer != &(*dragLayer))
+							{
+								for (auto& o : layer.dLayer)
+								{
+									if (o.GetCell() == c)
+									{
+										invalid_cell = true;
+										break;
+									}
+								}
+							}
+
+							if (invalid_cell)
+							{
+								break;
+							}
+						}
+					}
+					
+					// Если нет перекрытия слоёв - двигаем слой
+					if (!invalid_cell)
+					{
+						for (auto& obj : dragLayer->dLayer)
+						{
+							obj.SetCell(pApp->dList.grid.GetCellByPos(obj.cell->x + res.x, obj.cell->y + res.y));
+						}
 					}
 				}
 				else
@@ -157,7 +191,7 @@ void UI::Update(float dt)
 				// Если был подсвечен слой
 				if (pApp->dList.selected != nullptr)
 				{
-					// Убоать подсветку во время перемещения объекта
+					// Убрать подсветку во время перемещения объекта
 					pApp->dList.selected = nullptr;
 				}
 			}
@@ -705,22 +739,6 @@ void UI::Debug()
 
 			if (ImGui::BeginTabItem("Gfx"))
 			{	
-				if (ImGui::Checkbox("Msaa x1", &pApp->dList.msaa[0]))
-				{
-					pApp->dList.msaa[1] = false;
-					pApp->dList.msaa[2] = false;
-				}
-				
-				if (ImGui::Checkbox("Msaa x2", &pApp->dList.msaa[1]))
-				{
-					pApp->dList.msaa[0] = true;
-				}
-
-				if (ImGui::Checkbox("Msaa x3", &pApp->dList.msaa[2]))
-				{
-					pApp->dList.msaa[0] = true;
-					pApp->dList.msaa[1] = true;
-				}
 
 				ImGui::EndTabItem();
 			}

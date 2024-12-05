@@ -35,11 +35,9 @@ private:
 	void DrawLine(pos2d& p1, pos2d& p2, Color c, Graphics& gfx, bool isBlended = false);
 	void DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gfx);
 private:
-	Grid grid;					   // Сетка
-	std::vector<DrawLayer> dLayers;
-	Cell* hoveredCell = nullptr;
-	DrawLayer* selected = nullptr;
-	std::string projectName;
-
-	bool msaa[3] = {};
+	Grid				   grid;				   // Сетка
+	std::vector<DrawLayer> dLayers;				   // Слои
+	Cell*                  hoveredCell = nullptr;  // Подсвеченная ячейка
+	DrawLayer*             selected = nullptr;     // Подсвеченный слой
+	std::string            projectName;		       // Имя проекта
 };

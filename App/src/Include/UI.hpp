@@ -19,6 +19,7 @@ struct ContextMenu
 	bool flag_pressed = false;
 	bool flag_released = false;
 	bool ctrl_pressed = false;
+	bool shift_pressed = false;
 	float counter = 0.0f;
 	Cell* first_ptr = nullptr;
 	Cell* second_ptr = nullptr;
@@ -49,5 +50,6 @@ private:
 	std::vector<bool> selected_layers;  // Выбранные слои
 	bool isDeleteLayer = false;
 	bool isAddLayer = false;
+	bool invalid_cell = false;
 };
 
