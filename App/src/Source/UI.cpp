@@ -49,7 +49,7 @@ void UI::Update(float dt)
 {	
 	cMenu.ctrl_pressed = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
 	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);   // Если нажат Shift
-	
+
 	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
 		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH &&
@@ -175,7 +175,7 @@ void UI::Update(float dt)
 						}
 					}
 				}
-				else
+				else if (cMenu.ctrl_pressed)
 				{
 					for (auto& layer : pApp->dList.dLayers)
 					{

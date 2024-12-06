@@ -7,53 +7,60 @@
 #include "../../../libs/imgui/imgui_impl_win32.h"
 #include "../../../libs/imgui/imgui_impl_dx11.h"
 
-#include <assert.h>
+#include <cassert>
 
 MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 	:
 	args(pArgs),
 	hInst(hInst)
 {
-
-	int WholeScreenWidth = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
+	int WholeScreenWidth  = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
 	int WholeScreenHeight = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), VERTRES);
 
 	ScreenWidth = int(WholeScreenWidth * 0.677f);
 	ScreenHeight = int(WholeScreenHeight * 0.740f);
 
-	WNDCLASSEX wc = { sizeof(WNDCLASSEX),CS_CLASSDC,_HandleMsgSetup,0,0,
-		hInst,nullptr,nullptr,nullptr,nullptr,
-		wndClassName,nullptr };
+	WNDCLASSEX wc = 
+	{
+		sizeof(WNDCLASSEX),CS_CLASSDC, _HandleMsgSetup, 0, 0,
+		hInst, nullptr, nullptr, nullptr, nullptr,
+		wndClassName, nullptr
+	};
+
 	wc.hIconSm = (HICON)LoadImage(hInst, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 16, 16, 0);
-	wc.hIcon = (HICON)LoadImage(hInst, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 32, 32, 0);
+	wc.hIcon   = (HICON)LoadImage(hInst, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 32, 32, 0);
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	RegisterClassEx(&wc);
 
 	RECT wr; // set center
-	wr.left = (WholeScreenWidth - ScreenWidth) / 2;
-	wr.right = ScreenWidth + wr.left;
-	wr.top = (WholeScreenHeight - ScreenHeight) / 2;
+	wr.left   = (WholeScreenWidth - ScreenWidth) / 2;
+	wr.right  = ScreenWidth + wr.left;
+	wr.top    = (WholeScreenHeight - ScreenHeight) / 2;
 	wr.bottom = ScreenHeight + wr.top;
 
 	auto style = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 	AdjustWindowRect(&wr, style, FALSE);
 
-	hWnd = CreateWindow(wndClassName, L"Neural Net Studio 2024", style,
-		wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top,
-		nullptr, nullptr, hInst, this);
-
+	hWnd = CreateWindow(wndClassName, L"Neural Net Studio 2024", style, wr.left, wr.top, 
+		ScreenWidth, ScreenHeight, nullptr, nullptr, hInst, this);
+	
 	if (hWnd == nullptr)
 	{
 		throw (L"Failed to get valid window handle.");
 	}
 
-#define DWMWA_BORDER_COLOR DWORD(34)
-#define DWMWA_CAPTION_COLOR DWORD(35)
+	{
+		#define DWMWA_BORDER_COLOR DWORD(34)
+		#define DWMWA_CAPTION_COLOR DWORD(35)
 
-	auto caption = RGB(36, 36, 36);
-	auto border = RGB(255 / 2, 255 / 2, 255 / 2);
-	DwmSetWindowAttribute(hWnd, DWMWA_CAPTION_COLOR, &caption, sizeof(COLORREF));
-	DwmSetWindowAttribute(hWnd, DWMWA_BORDER_COLOR, &border, sizeof(COLORREF));
+		const auto DWMSBT_MAINWINDOW = 2; // Mica style
+		auto caption = RGB(36, 36, 36);
+		auto border = RGB(255 / 2, 255 / 2, 255 / 2);
+
+		DwmSetWindowAttribute(hWnd, DWMWA_CAPTION_COLOR, &caption, sizeof(COLORREF));
+		DwmSetWindowAttribute(hWnd, DWMWA_BORDER_COLOR, &border, sizeof(COLORREF));
+		DwmSetWindowAttribute(hWnd, DWMWA_SYSTEMBACKDROP_TYPE, &DWMSBT_MAINWINDOW, sizeof(int));
+	}
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);

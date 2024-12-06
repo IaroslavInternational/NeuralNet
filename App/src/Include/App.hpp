@@ -46,4 +46,8 @@ private:
 	DrawList dList;							 // Список объектов для отрисовки
 	Camera camera;							 // Камера
 	UI ui;									 // Интерфейс
+private:  // Атрибуты для перемещения карты
+	pos2d initPos{};		// Начальная позиция
+	bool  onDrag = false;   // Статус перемещения
+	float hTime   = 0.0f;   // Время задержки ЛКМ
 };

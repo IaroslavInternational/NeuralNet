@@ -37,23 +37,53 @@ void App::Go()
 
 void App::UpdateModel(float dt)
 {
-	if (wnd.kbd.KeyIsPressed('W'))
+	// Если зажата ЛКМ И
+	// Если курсор в окне И
+	// Если курсор не покрывает панель И 
+	// Если не нажат ctrl
+	// Если не нажат shift
+	if (wnd.mouse.LeftIsPressed() &&
+		wnd.mouse.IsInWindow()    && 
+		wnd.mouse.GetPosX() >= 0  &&
+		wnd.mouse.GetPosY() >= 0  &&
+		!wnd.kbd.KeyIsPressed(VK_CONTROL) &&
+		!wnd.kbd.KeyIsPressed(VK_SHIFT))
 	{
-		camera.Translate(0, 1);
+		if (hTime > 0.065f && !onDrag)
+		{
+			initPos.x = wnd.mouse.GetPosX();
+			initPos.y = wnd.mouse.GetPosY();
+			
+			onDrag = true;
+		}
+		else
+		{
+			hTime += dt;
+		}
 	}
-	if (wnd.kbd.KeyIsPressed('A'))
+	else
 	{
-		camera.Translate(-1, 0);
-	}
-	if (wnd.kbd.KeyIsPressed('S'))
-	{
-		camera.Translate(0, -1);
-	}
-	if (wnd.kbd.KeyIsPressed('D'))
-	{
-		camera.Translate(1, 0);
+		onDrag = false;
 	}
 
+	// Если отпустили ЛКМ
+	if (wnd.mouse.LeftIsReleased())
+	{
+		onDrag = false;
+		dt = 0.0f;
+	}
+
+	if (onDrag)
+	{
+		int cur_x = wnd.mouse.GetPosX();
+		int cur_y = wnd.mouse.GetPosY();
+
+		camera.Translate(cur_x - initPos.x, cur_y - initPos.y);
+
+		initPos.x = cur_x;
+		initPos.y = cur_y;
+	}
+	
 	ui.Update(dt);
 }
 
