@@ -34,7 +34,6 @@ public:
 	void Render();
 private:
 	void SetPanelSizeAndPosition(int corner, float width, float height, float x_offset, float y_offset);
-	void ShowMenu();
 	void ShowPanel();
 	void ShowViewPort();
 	void ShowTopPanel();

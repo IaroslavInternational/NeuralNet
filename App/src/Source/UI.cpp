@@ -42,6 +42,7 @@ UI::UI(App* app)
 	colors[ImGuiCol_Header] = ImVec4(0.42f, 0.13f, 0.13f, 0.31f);
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.22f, 0.05f, 0.05f, 0.80f);
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
 }
 
 void UI::Update(float dt)
@@ -51,7 +52,8 @@ void UI::Update(float dt)
 	
 	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
-		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH)
+		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH &&
+		pApp->wnd.mouse.IsInWindow())
 	{
 		pApp->dList.CheckHover(pApp->wnd.mouse.GetPosX(), pApp->wnd.mouse.GetPosY());  // Подсветка ячеек
 	}
@@ -201,8 +203,6 @@ void UI::Update(float dt)
 
 void UI::Render()
 {
-	ShowMenu();
-
 	SetPanelSizeAndPosition(0, 0.2f, 1.0f, 0.0f, 0.0f);
 	ShowPanel();
 
@@ -218,9 +218,9 @@ void UI::Render()
 	{
 		ImGui::OpenPopup("delete_layer");
 
+		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));
 		if (ImGui::BeginPopup("delete_layer"))
-		{
-			//ImGui::Text("Это последний нейрон в слое.");
+		{			
 			ImGui::Text("Удалить слой?");
 
 			if (ImGui::Button("Да", { 100, 0 }))
@@ -239,6 +239,7 @@ void UI::Render()
 
 			ImGui::EndPopup();
 		}
+		ImGui::PopStyleColor();
 	}
 	/**********************************************/
 
@@ -478,32 +479,6 @@ void UI::SetPanelSizeAndPosition(int corner, float width, float height, float x_
 	ImGui::SetNextWindowSize(PanelSize);
 }
 
-// Показать меню
-void UI::ShowMenu()
-{
-	if (ImGui::BeginMainMenuBar())
-	{
-		if (ImGui::BeginMenu("Файл"))
-		{
-			if (ImGui::MenuItem("Сохранить"))
-			{
-			}
-
-			ImGui::EndMenu();
-		}
-
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
-		ImGui::SetCursorPos({ pApp->wnd.ScreenWidth - pApp->gfx.menuH, 0 });
-		if (ImGui::Button("X", { pApp->gfx.menuH, pApp->gfx.menuH }))
-		{
-			exit(0);
-		}
-		ImGui::PopStyleVar();
-
-		ImGui::EndMainMenuBar();
-	};
-}
-
 // Показать левую панель
 void UI::ShowPanel()
 {
@@ -516,6 +491,7 @@ void UI::ShowPanel()
 			{
 				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))  // Имя проекта
 				{
+					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));
 					if (ImGui::BeginPopupContextItem())
 					{
 						ImGui::Text("Добавить слой?");
@@ -527,6 +503,7 @@ void UI::ShowPanel()
 
 						ImGui::EndPopup();
 					}
+					ImGui::PopStyleColor();
 
 					auto& layers = pApp->dList.dLayers;  // Указатель на текущий слой
 					for (size_t i = 0; i < layers.size(); i++)  // Цикл по слоям 
@@ -548,6 +525,7 @@ void UI::ShowPanel()
 							selected_layers[i] = true;
 						}
 
+						ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));
 						if (ImGui::BeginPopupContextItem())
 						{
 							if (!ImGui::GetIO().KeyCtrl)
@@ -571,6 +549,7 @@ void UI::ShowPanel()
 
 							ImGui::EndPopup();
 						}
+						ImGui::PopStyleColor();
 
 						// Для выбранного слоя показываем содержимое
 						if (selected_layers[i])
@@ -739,7 +718,6 @@ void UI::Debug()
 
 			if (ImGui::BeginTabItem("Gfx"))
 			{	
-
 				ImGui::EndTabItem();
 			}
 

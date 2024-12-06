@@ -55,5 +55,5 @@ private:
 	int ScreenHeight;
 	int ClearColor = 17;
 	float pK = 0.2f;
-	float menuH = 24.0f;
+	float menuH = 0.0f;
 };

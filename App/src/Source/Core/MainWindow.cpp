@@ -34,8 +34,11 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 	wr.right = ScreenWidth + wr.left;
 	wr.top = (WholeScreenHeight - ScreenHeight) / 2;
 	wr.bottom = ScreenHeight + wr.top;
-	AdjustWindowRect(&wr, WS_BORDER | WS_POPUP | WS_VISIBLE, FALSE);
-	hWnd = CreateWindow(wndClassName, L"Neuro", WS_BORDER | WS_POPUP| WS_VISIBLE,
+
+	auto style = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+	AdjustWindowRect(&wr, style, FALSE);
+
+	hWnd = CreateWindow(wndClassName, L"Neural Net Studio 2024", style,
 		wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, hInst, this);
 
@@ -43,6 +46,14 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 	{
 		throw (L"Failed to get valid window handle.");
 	}
+
+#define DWMWA_BORDER_COLOR DWORD(34)
+#define DWMWA_CAPTION_COLOR DWORD(35)
+
+	auto caption = RGB(36, 36, 36);
+	auto border = RGB(255 / 2, 255 / 2, 255 / 2);
+	DwmSetWindowAttribute(hWnd, DWMWA_CAPTION_COLOR, &caption, sizeof(COLORREF));
+	DwmSetWindowAttribute(hWnd, DWMWA_BORDER_COLOR, &border, sizeof(COLORREF));
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
@@ -148,7 +159,7 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 		if (x > 0 && x < ScreenWidth && y > 0 && y < ScreenHeight)
 		{
-			mouse.OnMouseMove(x - int(ScreenWidth * 0.2f), y - 24);
+			mouse.OnMouseMove(x - int(ScreenWidth * 0.2f), y);
 			if (!mouse.IsInWindow())
 			{
 				SetCapture(hWnd);
@@ -159,18 +170,18 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			if (wParam & (MK_LBUTTON | MK_RBUTTON))
 			{
-				x = std::max(0, x);
-				x = std::min(int(ScreenWidth) - 1, x);
-				y = std::max(0, y);
-				y = std::min(int(ScreenHeight) - 1, y);
-				mouse.OnMouseMove(x - int(ScreenWidth * 0.2f), y - 24);
+				x = max(0, x);
+				x = min(int(ScreenWidth) - 1, x);
+				y = max(0, y);
+				y = min(int(ScreenHeight) - 1, y);
+				mouse.OnMouseMove(x - int(ScreenWidth * 0.2f), y);
 			}
 			else
 			{
 				ReleaseCapture();
 				mouse.OnMouseLeave();
-				mouse.OnLeftReleased(x - int(ScreenWidth * 0.2f), y - 24);
-				mouse.OnRightReleased(x - int(ScreenWidth * 0.2f), y - 24);
+				mouse.OnLeftReleased(x - int(ScreenWidth * 0.2f), y);
+				mouse.OnRightReleased(x - int(ScreenWidth * 0.2f), y);
 			}
 		}
 		break;
@@ -179,35 +190,28 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnLeftPressed(x - int(ScreenWidth * 0.2f), y - 24);
-
-		if (x > 100 && x < ScreenWidth - 24 && y < 23)
-		{
-			ReleaseCapture();
-			SendMessage(hWnd, WM_SYSCOMMAND, 0xF012, 0);
-		}
-
+		mouse.OnLeftPressed(x - int(ScreenWidth * 0.2f), y);
 		break;
 	}
 	case WM_RBUTTONDOWN:
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnRightPressed(x - int(ScreenWidth * 0.2f), y - 24);
+		mouse.OnRightPressed(x - int(ScreenWidth * 0.2f), y);
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnLeftReleased(x - int(ScreenWidth * 0.2f), y - 24);
+		mouse.OnLeftReleased(x - int(ScreenWidth * 0.2f), y);
 		break;
 	}
 	case WM_RBUTTONUP:
 	{
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
-		mouse.OnRightReleased(x - int(ScreenWidth * 0.2f), y - 24);
+		mouse.OnRightReleased(x - int(ScreenWidth * 0.2f), y);
 		break;
 	}
 	case WM_MOUSEWHEEL:
