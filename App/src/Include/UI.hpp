@@ -20,6 +20,8 @@ struct ContextMenu
 	bool flag_released = false;
 	bool ctrl_pressed = false;
 	bool shift_pressed = false;
+	bool a_pressed = false;
+	bool d_pressed = false;
 	float counter = 0.0f;
 	Cell* first_ptr = nullptr;
 	Cell* second_ptr = nullptr;
@@ -40,6 +42,8 @@ private:
 	F_DEBUG(void Debug());
 private:
 	bool CheckExLayer(LayerType type);
+	void AddNeuron();
+	void DeleteNeuron();
 private:
 	App* pApp;							// ”казатель на приложение
 	float appScale = 1.0f;				// ћножитель ViewPort			
@@ -50,5 +54,7 @@ private:
 	bool isDeleteLayer = false;
 	bool isAddLayer = false;
 	bool invalid_cell = false;
+	bool isAddNeuron = false;
+	bool isDeleteNeuron = false;
 };
 

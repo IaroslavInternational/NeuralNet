@@ -42,12 +42,14 @@ void App::UpdateModel(float dt)
 	// Если курсор не покрывает панель И 
 	// Если не нажат ctrl
 	// Если не нажат shift
+	// Если нажат Z
 	if (wnd.mouse.LeftIsPressed() &&
 		wnd.mouse.IsInWindow()    && 
 		wnd.mouse.GetPosX() >= 0  &&
 		wnd.mouse.GetPosY() >= 0  &&
 		!wnd.kbd.KeyIsPressed(VK_CONTROL) &&
-		!wnd.kbd.KeyIsPressed(VK_SHIFT))
+		!wnd.kbd.KeyIsPressed(VK_SHIFT)   &&
+		wnd.kbd.KeyIsPressed('Z'))  // Временно
 	{
 		if (hTime > 0.065f && !onDrag)
 		{
