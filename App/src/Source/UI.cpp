@@ -62,7 +62,12 @@ void UI::Update(float dt)
 			cMenu.a_pressed = false;
 		}
 	}
-    else if (pApp->wnd.kbd.KeyIsPressed('D'))  // Если нажата D
+	else
+	{
+		isAddNeuron = false;
+	}
+    
+	if (pApp->wnd.kbd.KeyIsPressed('D'))  // Если нажата D
 	{
 		if (!isDeleteNeuron)
 		{
@@ -76,7 +81,6 @@ void UI::Update(float dt)
 	else
 	{
 		isDeleteNeuron = false;
-		isAddNeuron = false;
 	}
 
 	// Если курсор в рабочей области
@@ -124,6 +128,22 @@ void UI::Update(float dt)
 		invalid_cell = false;
 	}
 	
+	if (pApp->wnd.mouse.RightIsPressed() && pLayer != nullptr)
+	{
+		cMenu.pos.x = pApp->wnd.mouse.GetPosX();
+		cMenu.pos.y = pApp->wnd.mouse.GetPosY();
+
+		// Если есть объект в слое
+		for (auto& obj : pLayer->dLayer)
+		{
+			if (obj.GetCell() == pApp->dList.hoveredCell)
+			{
+				ShowLayerInfo = true;
+				break;
+			}
+		}
+	}
+
 	// Если зажата ЛКМ
 	if (cMenu.flag_pressed)
 	{
@@ -509,10 +529,68 @@ void UI::Render()
 	}
 	/************************************************/
 
+	/* ==== Окно информации о слоё ==== */
+	if (ShowLayerInfo)
+	{
+		ImGui::OpenPopup(pLayer->name.c_str());
+
+		// Ставим окно рядом с курсором
+		if (!posSet)
+		{
+			ImGui::SetNextWindowPos({ (float)cMenu.pos.x, (float)cMenu.pos.y });
+			posSet = true;
+		}
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1);
+		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.08f, 0.08f, 0.08f, 1.00f));
+		ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.2f, 0.2f, 0.2f, 1.00f));
+		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.2f, 0.2f, 0.2f, 1.00f));
+
+		if (ImGui::Begin(pLayer->name.c_str(), &ShowLayerInfo, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			std::ostringstream oss;
+			oss << "Кол-во нейронов: " << pLayer->dLayer.size();
+
+			ImGui::Text(oss.str().c_str());
+
+			oss.str("");
+			oss.clear();
+
+			if (pLayer->type != LayerType::Input)
+			{
+				oss << "Кол-во входящих синапсов: " << pLayer->GetSize() * (pLayer - 1)->GetSize();
+				ImGui::Text(oss.str().c_str());
+			}
+
+			oss.str("");
+			oss.clear();
+
+			if (pLayer->type != LayerType::Output)
+			{
+				oss << "Кол-во исходящих синапсов: " << pLayer->GetSize() * (pLayer + 1)->GetSize();
+				ImGui::Text(oss.str().c_str());
+			}	
+			
+			ImGui::End();
+		}
+
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+	}
+	else
+	{
+		posSet = false;
+	}
+	/************************************/
+
 	F_DEBUG(Debug());
 	F_DEBUG(ImGui::ShowDemoWindow());
 }
-
 
 bool UI::CheckExLayer(LayerType type)
 {
@@ -529,7 +607,8 @@ bool UI::CheckExLayer(LayerType type)
 
 void UI::AddNeuron()
 {
-	if (pLayer != nullptr) {
+	if (pLayer != nullptr) 
+	{
 		std::ostringstream res;
 		std::ostringstream nId;
 		size_t counter = 0;
@@ -570,14 +649,17 @@ void UI::AddNeuron()
 
 void UI::DeleteNeuron()
 {
-	// Убрать нейрон
-	if (pLayer->dLayer.size() - 1 != 0)
+	if (pLayer != nullptr)
 	{
-		pLayer->Erase();
-	}
-	else // Удалить слой, если больше нет нейронов
-	{
-		isDeleteLayer = true;
+		// Убрать нейрон
+		if (pLayer->dLayer.size() - 1 != 0)
+		{
+			pLayer->Erase();
+		}
+		else // Удалить слой, если больше нет нейронов
+		{
+			isDeleteLayer = true;
+		}
 	}
 }
 
@@ -596,15 +678,16 @@ void UI::FindLayer()
 			{
 				if (pLayer != &layer)
 				{
+					ShowLayerInfo = false; // Убираем окно с информацией о слоё					
 					pLayer = &layer;
 
 					for (auto& s : selected_layers)
 					{
 						s = false;
 					}
-				}
 
-				break;
+					break;
+				}
 			}
 		}
 	}

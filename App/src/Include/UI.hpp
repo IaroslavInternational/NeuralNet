@@ -57,6 +57,9 @@ private:
 	bool invalid_cell = false;
 	bool isAddNeuron = false;
 	bool isDeleteNeuron = false;
+	bool ShowLayerInfo = false;
+
+	bool posSet = false;
 private:
 	std::future<void> worker;
 };
