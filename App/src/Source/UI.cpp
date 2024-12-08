@@ -62,13 +62,7 @@ void UI::Update(float dt)
 			cMenu.a_pressed = false;
 		}
 	}
-	else
-	{
-		isAddNeuron = false;
-	}
-
-	// Если нажата D
-	if (pApp->wnd.kbd.KeyIsPressed('D'))
+    else if (pApp->wnd.kbd.KeyIsPressed('D'))  // Если нажата D
 	{
 		if (!isDeleteNeuron)
 		{
@@ -82,6 +76,7 @@ void UI::Update(float dt)
 	else
 	{
 		isDeleteNeuron = false;
+		isAddNeuron = false;
 	}
 
 	// Если курсор в рабочей области
@@ -115,6 +110,8 @@ void UI::Update(float dt)
 				cMenu.counter += dt;
 			}
 		}
+
+		SpawnThread(&UI::FindLayer);  // Ищем слой в новом потоке
 	}
 
 	// Если отпустили ЛКМ
@@ -231,17 +228,18 @@ void UI::Update(float dt)
 					pApp->dList.selected = nullptr;
 				}
 			}
-		}	
+		}
 	}
 
+	// Добавление убавление объектов
 	if (cMenu.ctrl_pressed)
 	{
-		if (cMenu.a_pressed)
+		if (cMenu.a_pressed)  // Если нажата кнопка A
 		{
 			AddNeuron();
 			isAddNeuron = true;
 		}
-		else if (cMenu.d_pressed)
+		else if (cMenu.d_pressed) // Если нажата кнопка D
 		{
 			DeleteNeuron();
 			isDeleteNeuron = true;
@@ -317,11 +315,8 @@ void UI::Render()
 				}
 				else if (pApp->dList.dLayers.size() == 0)  // Если слоёв нет - можем добавить только входной слой
 				{
-					if (ImGui::Checkbox(names[0].c_str(), &selected_type[0]))
-					{
-						memset(selected_type, 0, 3 * sizeof(bool));
-						selected_type[0] = true;
-					}
+					selected_type[0] = true;
+					ImGui::Checkbox(names[0].c_str(), &selected_type[0]);
 
 					break;
 				}
@@ -330,6 +325,9 @@ void UI::Render()
 			// Добавить слой
 			if (ImGui::Button("Добавить", ImVec2(120, 0)))
 			{	
+				std::string baseName = "Neuron_";
+				std::ostringstream oss;
+
 				// Выбираем тип слоя
 				LayerType type = LayerType::All;
 				for (int i = 0; i < int(LayerType::All); i++)
@@ -383,7 +381,7 @@ void UI::Render()
 					break;
 				case LayerType::Hidden: // Если скрытый слой
 					newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter);
-					newLayer.Add(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter) + std::string("_0")));
+					newLayer.Add(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0")));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
@@ -448,6 +446,15 @@ void UI::Render()
 						pNextLayer->dLayer[0].SetCell(CellToSet);
 					}
 
+					for (size_t i = 0; i < pApp->dList.dLayers.back().dLayer.size(); i++)
+					{
+						oss << baseName << hiddenLayersCounter + 2 << "_" << i;
+						pApp->dList.dLayers.back().dLayer[i].id = oss.str();
+						
+						oss.str("");
+						oss.clear();
+					}
+
 					break;
 				case LayerType::Output:
 					newLayer.name = "Выходной слой";
@@ -504,6 +511,103 @@ void UI::Render()
 
 	F_DEBUG(Debug());
 	F_DEBUG(ImGui::ShowDemoWindow());
+}
+
+
+bool UI::CheckExLayer(LayerType type)
+{
+	for (auto& l : pApp->dList.dLayers)
+	{
+		if (l.type == type)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void UI::AddNeuron()
+{
+	if (pLayer != nullptr) {
+		std::ostringstream res;
+		std::ostringstream nId;
+		size_t counter = 0;
+
+		res << "res-" << (int)pLayer->type + 1;
+		nId << "Neuron_";
+
+		switch (pLayer->type)
+		{
+		case LayerType::Input:
+			nId << "0_";
+			break;
+		case LayerType::Hidden:
+			for (auto& l : pApp->dList.dLayers)
+			{
+				if (l.type == LayerType::Hidden)
+				{
+					counter++;
+				}
+			}
+
+			nId << counter << "_";
+			break;
+		case LayerType::Output:
+			nId << pApp->dList.dLayers.size() - 1 << "_";
+			break;
+		default:
+			throw std::exception("Error layer type");
+			break;
+		}
+
+		nId << pLayer->dLayer.size();
+
+		// Вставить нейрон
+		pLayer->Insert(Object2D(pApp->rManager[res.str()], nullptr, nId.str()));
+	}
+}
+
+void UI::DeleteNeuron()
+{
+	// Убрать нейрон
+	if (pLayer->dLayer.size() - 1 != 0)
+	{
+		pLayer->Erase();
+	}
+	else // Удалить слой, если больше нет нейронов
+	{
+		isDeleteLayer = true;
+	}
+}
+
+void UI::SpawnThread(void (UI::* ptr)())
+{
+	worker = std::async(std::launch::async, ptr, this);
+}
+
+void UI::FindLayer()
+{
+	for (auto& layer : pApp->dList.dLayers)
+	{
+		for (auto& obj : layer.dLayer)
+		{
+			if (obj.GetCell() == pApp->dList.grid.GetCellByHover(cMenu.pos.x, cMenu.pos.y))
+			{
+				if (pLayer != &layer)
+				{
+					pLayer = &layer;
+
+					for (auto& s : selected_layers)
+					{
+						s = false;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 }
 
 // Windows
@@ -564,7 +668,7 @@ void UI::ShowPanel()
 					}
 					ImGui::PopStyleColor();
 
-					auto& layers = pApp->dList.dLayers;  // Указатель на текущий слой
+					auto& layers = pApp->dList.dLayers;			// Указатель на текущий слой
 					for (size_t i = 0; i < layers.size(); i++)  // Цикл по слоям 
 					{
 						bool curr = selected_layers[i];
@@ -611,8 +715,9 @@ void UI::ShowPanel()
 						ImGui::PopStyleColor();
 
 						// Для выбранного слоя показываем содержимое
-						if (selected_layers[i])
+						if (pLayer == &layers[i])
 						{
+							selected_layers[i] = true;
 							if (ImGui::TreeNode("Нейроны"))
 							{
 								for (size_t j = 0; j < layers[i].GetSize(); j++)
@@ -761,60 +866,3 @@ void UI::Debug()
 
 #endif // NDEBUG
 
-bool UI::CheckExLayer(LayerType type)
-{
-	for (auto& l : pApp->dList.dLayers)
-	{
-		if (l.type == type)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void UI::AddNeuron()
-{
-	if (pLayer != nullptr) {
-		std::string res;
-		std::ostringstream nId;
-
-		switch (pLayer->type)
-		{
-		case LayerType::Input:
-			res = "res-1";
-			nId << "Neuron_0_";
-			break;
-		case LayerType::Hidden:
-			res = "res-2";
-			nId << "Neuron_1_";
-			break;
-		case LayerType::Output:
-			res = "res-3";
-			nId << "Neuron_2_";
-			break;
-		default:
-			throw std::exception("Error layer type");
-			break;
-		}
-
-		nId << pLayer->dLayer.size();
-
-		// Вставить нейрон
-		pLayer->Insert(Object2D(pApp->rManager[res], nullptr, nId.str()));
-	}
-}
-
-void UI::DeleteNeuron()
-{
-	// Убрать нейрон
-	if (pLayer->dLayer.size() - 1 != 0)
-	{
-		pLayer->Erase();
-	}
-	else // Удалить слой, если больше нет нейронов
-	{
-		isDeleteLayer = true;
-	}
-}

@@ -1,11 +1,10 @@
 #pragma once
 
-#include <vector>
-
 #include "Core/var.hpp"
 
 #include <string>
-#include <memory>
+#include <future>
+#include <vector>
 
 class App;
 class Cell;
@@ -44,6 +43,8 @@ private:
 	bool CheckExLayer(LayerType type);
 	void AddNeuron();
 	void DeleteNeuron();
+	void SpawnThread(void (UI::*ptr)());
+	void FindLayer();
 private:
 	App* pApp;							// ”казатель на приложение
 	float appScale = 1.0f;				// ћножитель ViewPort			
@@ -56,5 +57,7 @@ private:
 	bool invalid_cell = false;
 	bool isAddNeuron = false;
 	bool isDeleteNeuron = false;
+private:
+	std::future<void> worker;
 };
 
