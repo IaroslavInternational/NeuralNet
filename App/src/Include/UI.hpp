@@ -50,6 +50,7 @@ private:
 	void AddHiddenLayer();
 	void SpawnThread(void (UI::*ptr)());
 	void FindLayer();
+	void ShiftLayer(DrawLayer* l, int offset);
 private:
 	App* pApp;							// ”казатель на приложение
 	float appScale = 1.0f;				// ћножитель ViewPort			

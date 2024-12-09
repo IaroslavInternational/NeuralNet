@@ -57,6 +57,7 @@ void UI::Update(float dt)
 	}
 	else
 	{
+		cMenu.a_pressed = false;
 		isAddNeuron = false;
 	}
     
@@ -67,6 +68,7 @@ void UI::Update(float dt)
 	}
 	else
 	{
+		cMenu.d_pressed = false;
 		isDeleteNeuron = false;
 	}
 
@@ -77,6 +79,7 @@ void UI::Update(float dt)
 	}
 	else
 	{
+		cMenu.h_pressed = false;
 		isAddHiddenLayer = false;
 	}
 
@@ -87,6 +90,7 @@ void UI::Update(float dt)
 	}
 	else
 	{
+		cMenu.g_pressed = false;
 		isDeleteHiddenLayer = false;
 	}
 
@@ -279,7 +283,11 @@ void UI::Update(float dt)
 		else if (cMenu.g_pressed)  // Если нажата кнопка G
 		{
 			pApp->dList.Delete(&pApp->dList.dLayers.back() - 1);
+			ShiftLayer(&pApp->dList.dLayers.back(), -2);
+
+			dragLayer = nullptr;
 			pLayer = nullptr;
+			pApp->dList.selected = nullptr;
 			isDeleteHiddenLayer = true;
 		}
 	}
@@ -724,14 +732,8 @@ void UI::AddHiddenLayer()
 		std::swap(pApp->dList.dLayers[pApp->dList.dLayers.size() - 2],
 			pApp->dList.dLayers[pApp->dList.dLayers.size() - 1]);
 
-		// Сдвигаем последний слой вправо на 5 ячеек
-		for (auto& l : pNextLayer->dLayer)
-		{
-			curPos = l.cell->GetIdx();
-			curPos.x += 5;
-
-			l.SetCell(pApp->dList.grid.GetCellByPos(curPos.x, curPos.y));
-		}
+		// Сдвигаем последний слой вправо на 2 ячейки
+		ShiftLayer(pNextLayer, 2);
 
 		// Если в последнем слое чётное кол-во нейронов
 		if (pNextLayer->dLayer.size() % 2 == 0)
@@ -785,6 +787,8 @@ void UI::AddHiddenLayer()
 
 	selected_layers.resize(pApp->dList.dLayers.size());
 	pLayer = nullptr;
+	dragLayer = nullptr;
+	pApp->dList.selected = nullptr;
 }
 
 void UI::SpawnThread(void (UI::* ptr)())
@@ -814,6 +818,18 @@ void UI::FindLayer()
 				}
 			}
 		}
+	}
+}
+
+void UI::ShiftLayer(DrawLayer* l, int offset)
+{
+	pos2d curPos;
+	for (auto& l : l->dLayer)
+	{
+		curPos = l.cell->GetIdx();
+		curPos.x += offset;
+
+		l.SetCell(pApp->dList.grid.GetCellByPos(curPos.x, curPos.y));
 	}
 }
 
