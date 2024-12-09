@@ -48,11 +48,11 @@ DrawLayer::DrawLayer(const std::string& path, ResourceManager& rManager, Grid& g
 
 					for (const auto& data : objs.at(k))
 					{
-						Add(Object2D(
+						Add(std::move(Object2D(
 							rManager[data.at("resource")],
 							grid.GetCellByPos(data.at("c-x"), data.at("c-y")),
 							data.at("id")
-						));
+						)));
 					}
 				}
 			}

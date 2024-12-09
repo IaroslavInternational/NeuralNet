@@ -33,7 +33,7 @@ ResourceManager::ResourceManager()
 			currentColor[2] = obj.at("ch-key-g");
 			currentColor[3] = obj.at("ch-key-b");
 
-			Add(resource, Texture(currentStr, Color(currentColor[0], currentColor[1], currentColor[2], currentColor[3])));
+			Add(resource, std::move(Texture(currentStr, Color(currentColor[0], currentColor[1], currentColor[2], currentColor[3]))));
 		}
 	}
 }

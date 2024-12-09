@@ -19,8 +19,12 @@ struct ContextMenu
 	bool flag_released = false;
 	bool ctrl_pressed = false;
 	bool shift_pressed = false;
+
 	bool a_pressed = false;
 	bool d_pressed = false;
+	bool h_pressed = false;
+	bool g_pressed = false;
+
 	float counter = 0.0f;
 	Cell* first_ptr = nullptr;
 	Cell* second_ptr = nullptr;
@@ -43,6 +47,7 @@ private:
 	bool CheckExLayer(LayerType type);
 	void AddNeuron();
 	void DeleteNeuron();
+	void AddHiddenLayer();
 	void SpawnThread(void (UI::*ptr)());
 	void FindLayer();
 private:
@@ -56,6 +61,8 @@ private:
 	bool isAddLayer = false;
 	bool invalid_cell = false;
 	bool isAddNeuron = false;
+	bool isAddHiddenLayer = false;
+	bool isDeleteHiddenLayer = false;
 	bool isDeleteNeuron = false;
 	bool ShowLayerInfo = false;
 

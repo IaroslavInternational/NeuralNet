@@ -45,7 +45,7 @@ DrawList::DrawList(const std::string& path, ResourceManager& rManager, Graphics&
 
 		for (const auto& obj : j.at(d))
 		{
-			Add(DrawLayer(std::string(obj), rManager, grid));
+			Add(std::move(DrawLayer(std::string(obj), rManager, grid)));
 		}
 	}
 }

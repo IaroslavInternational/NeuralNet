@@ -49,38 +49,45 @@ void UI::Update(float dt)
 {	
 	cMenu.ctrl_pressed = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
 	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);   // Если нажат Shift
-	
+
 	// Если нажата A
-	if (pApp->wnd.kbd.KeyIsPressed('A'))            
+	if (pApp->wnd.kbd.KeyIsPressed('A'))
 	{
-		if (!isAddNeuron)
-		{
-			cMenu.a_pressed = true;
-		}
-		else
-		{
-			cMenu.a_pressed = false;
-		}
+		cMenu.a_pressed = !isAddNeuron;
 	}
 	else
 	{
 		isAddNeuron = false;
 	}
     
-	if (pApp->wnd.kbd.KeyIsPressed('D'))  // Если нажата D
+	// Если нажата D
+	if (pApp->wnd.kbd.KeyIsPressed('D'))  
 	{
-		if (!isDeleteNeuron)
-		{
-			cMenu.d_pressed = true;
-		}
-		else
-		{
-			cMenu.d_pressed = false;
-		}
+		cMenu.d_pressed = !isDeleteNeuron;
 	}
 	else
 	{
 		isDeleteNeuron = false;
+	}
+
+	// Если нажата H
+	if (pApp->wnd.kbd.KeyIsPressed('H'))
+	{
+		cMenu.h_pressed = !isAddHiddenLayer;
+	}
+	else
+	{
+		isAddHiddenLayer = false;
+	}
+
+	// Если нажата G
+	if (pApp->wnd.kbd.KeyIsPressed('G'))
+	{
+		cMenu.g_pressed = !isDeleteHiddenLayer;
+	}
+	else
+	{
+		isDeleteHiddenLayer = false;
 	}
 
 	// Если курсор в рабочей области
@@ -251,7 +258,7 @@ void UI::Update(float dt)
 		}
 	}
 
-	// Добавление убавление объектов
+	// Добавление/убавление объектов
 	if (cMenu.ctrl_pressed)
 	{
 		if (cMenu.a_pressed)  // Если нажата кнопка A
@@ -263,6 +270,17 @@ void UI::Update(float dt)
 		{
 			DeleteNeuron();
 			isDeleteNeuron = true;
+		}
+		else if (cMenu.h_pressed)  // Если нажата кнопка H
+		{
+			AddHiddenLayer();
+			isAddHiddenLayer = true;
+		}
+		else if (cMenu.g_pressed)  // Если нажата кнопка G
+		{
+			pApp->dList.Delete(&pApp->dList.dLayers.back() - 1);
+			pLayer = nullptr;
+			isDeleteHiddenLayer = true;
 		}
 	}
 }
@@ -394,14 +412,14 @@ void UI::Render()
 				{
 				case LayerType::Input:  // Если входной слой
 					newLayer.name = "Входной слой";
-					newLayer.Add(Object2D(pApp->rManager["res-1"], nullptr, "Neuron_0_0"));
+					newLayer.Add(std::move(Object2D(pApp->rManager["res-1"], nullptr, "Neuron_0_0")));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Insert(std::move(newLayer), 0);
 					break;
 				case LayerType::Hidden: // Если скрытый слой
 					newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter);
-					newLayer.Add(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0")));
+					newLayer.Add(std::move(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0"))));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
@@ -478,7 +496,7 @@ void UI::Render()
 					break;
 				case LayerType::Output:
 					newLayer.name = "Выходной слой";
-					newLayer.Add(Object2D(pApp->rManager["res-3"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0")));
+					newLayer.Add(std::move(Object2D(pApp->rManager["res-3"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0"))));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
@@ -609,6 +627,8 @@ void UI::AddNeuron()
 {
 	if (pLayer != nullptr) 
 	{
+		isDeleteLayer = false;
+
 		std::ostringstream res;
 		std::ostringstream nId;
 		size_t counter = 0;
@@ -661,6 +681,110 @@ void UI::DeleteNeuron()
 			isDeleteLayer = true;
 		}
 	}
+}
+
+void UI::AddHiddenLayer()
+{
+	std::string baseName = "Neuron_";
+	std::ostringstream oss;
+
+	/* Настройки для перемещения слоёв */
+	pos2d curPos;
+	pos2d posSet;
+	int hiddenLayersCounter = 0;
+	DrawLayer* pCurLayer = nullptr;
+	DrawLayer* pNextLayer = nullptr;
+	Cell* CellToSet = nullptr;
+	/***********************************/
+
+	// Считаем кол-во скрытых слоёв
+	for (auto& l : pApp->dList.dLayers)
+	{
+		if (l.type == LayerType::Hidden)
+		{
+			hiddenLayersCounter++;
+		}
+	}
+
+	DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
+	newLayer.type = LayerType::Hidden;
+	newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter);
+	newLayer.Add(std::move(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0"))));
+	newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
+
+	pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
+
+	// Получаем текущий и предыдущий слои
+	pCurLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 2];
+	pNextLayer = &pApp->dList.dLayers[pApp->dList.dLayers.size() - 1];
+
+	if (pCurLayer->type == LayerType::Output)
+	{
+		// Поменять местами последний и предпоследний слои
+		std::swap(pApp->dList.dLayers[pApp->dList.dLayers.size() - 2],
+			pApp->dList.dLayers[pApp->dList.dLayers.size() - 1]);
+
+		// Сдвигаем последний слой вправо на 5 ячеек
+		for (auto& l : pNextLayer->dLayer)
+		{
+			curPos = l.cell->GetIdx();
+			curPos.x += 5;
+
+			l.SetCell(pApp->dList.grid.GetCellByPos(curPos.x, curPos.y));
+		}
+
+		// Если в последнем слое чётное кол-во нейронов
+		if (pNextLayer->dLayer.size() % 2 == 0)
+		{
+			size_t idx = int(pNextLayer->dLayer.size() / 2) - 1;
+			CellToSet = pApp->dList.grid.GetLowerCell(pNextLayer->dLayer[idx].cell);
+		}
+		else // Иначе
+		{
+			size_t idx = int(std::round(pNextLayer->dLayer.size() / 2));
+			CellToSet = pNextLayer->dLayer[idx].cell;
+		}
+
+		// Сдвигаем нейрон на 5 ячеек влево
+		posSet = CellToSet->GetIdx();
+		posSet.x -= 5;
+
+		CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+		pCurLayer->dLayer[0].SetCell(CellToSet);
+	}
+	else
+	{
+		// Если в последнем слое чётное кол-во нейронов
+		if (pCurLayer->dLayer.size() % 2 == 0)
+		{
+			size_t idx = int(pCurLayer->dLayer.size() / 2) - 1;
+			CellToSet = pApp->dList.grid.GetLowerCell(pCurLayer->dLayer[idx].cell);
+		}
+		else // Иначе
+		{
+			size_t idx = int(std::round(pCurLayer->dLayer.size() / 2));
+			CellToSet = pCurLayer->dLayer[idx].cell;
+		}
+
+		// Сдвигаем нейрон на 5 ячеек вправо
+		posSet = CellToSet->GetIdx();
+		posSet.x += 5;
+
+		CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+		pNextLayer->dLayer[0].SetCell(CellToSet);
+	}
+
+	for (size_t i = 0; i < pApp->dList.dLayers.back().dLayer.size(); i++)
+	{
+		oss << baseName << hiddenLayersCounter + 2 << "_" << i;
+		pApp->dList.dLayers.back().dLayer[i].id = oss.str();
+
+		oss.str("");
+		oss.clear();
+	}
+
+	selected_layers.resize(pApp->dList.dLayers.size());
+	pLayer = nullptr;
 }
 
 void UI::SpawnThread(void (UI::* ptr)())
@@ -757,6 +881,8 @@ void UI::ShowPanel()
 						bool curr = selected_layers[i];
 						if (ImGui::Selectable(layers[i].name.c_str(), curr))  // Выбранные слои
 						{
+							ShowLayerInfo = false; // Убираем окно
+
 							pLayer = &layers[i];  // Указатель на тек. слой
 							pApp->dList.selected = pLayer;
 
