@@ -31,6 +31,7 @@ public:
 	void DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx);
 	void DrawSelectedLayer(DrawLayer* l, Graphics& gfx);
 	void CheckHover(int x, int y);
+	size_t GetIdByPtr(DrawLayer* l);
 private:
 	void DrawLine(pos2d& p1, pos2d& p2, Color c, Graphics& gfx, bool isBlended = false);
 	void DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gfx);

@@ -111,6 +111,17 @@ void DrawList::CheckHover(int x, int y)
 	hoveredCell = grid.GetCellByHover(x, y);
 }
 
+size_t DrawList::GetIdByPtr(DrawLayer* l)
+{
+	for (size_t i = 0; i < dLayers.size(); i++)
+	{
+		if (&dLayers[i] == l)
+		{
+			return i;
+		}
+	}
+}
+
 void DrawList::DrawLine(pos2d& p0, pos2d& p1, Color c, Graphics& gfx, bool isBlended)
 {
 	float m = 0.0f;

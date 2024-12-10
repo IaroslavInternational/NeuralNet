@@ -317,9 +317,22 @@ void UI::Render()
 
 			if (ImGui::Button("Да", { 100, 0 }))
 			{
-				isDeleteLayer = false;
-				pApp->dList.Delete(pLayer);
+				if (pLayer->type == LayerType::Output)
+				{
+					pApp->dList.Delete(pLayer);
+				}
+				else if (pLayer->type == LayerType::Hidden)
+				{
+					pApp->dList.Delete(pLayer);
+					for (size_t i = pApp->dList.GetIdByPtr(pLayer); i < pApp->dList.dLayers.size(); i++)
+					{
+						RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
+					}
+				}
+				
 				pLayer = nullptr;
+
+				isDeleteLayer = false;
 			}
 
 			ImGui::SameLine();
@@ -558,7 +571,6 @@ void UI::AddNeuron()
 
 		std::ostringstream res;
 		std::ostringstream nId;
-		size_t counter = 0;
 
 		res << "res-" << (int)pLayer->type + 1;
 		nId << "Neuron_";
@@ -569,15 +581,7 @@ void UI::AddNeuron()
 			nId << "0_";
 			break;
 		case LayerType::Hidden:
-			for (auto& l : pApp->dList.dLayers)
-			{
-				if (l.type == LayerType::Hidden)
-				{
-					counter++;
-				}
-			}
-
-			nId << counter << "_";
+			nId << pApp->dList.GetIdByPtr(pLayer) << "_";
 			break;
 		case LayerType::Output:
 			nId << pApp->dList.dLayers.size() - 1 << "_";
@@ -755,7 +759,7 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 	switch (l->type)
 	{
 	case LayerType::Hidden:
-		oss << "Скрытый слой " << GetHiddenLayersAmount() - 1;
+		oss << "Скрытый слой " << pApp->dList.GetIdByPtr(l);
 		l->name = oss.str();
 
 		oss.str("");
@@ -763,7 +767,7 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 
 		for (size_t i = 0; i < l->dLayer.size(); i++)
 		{
-			oss << baseName << GetHiddenLayersAmount() - 1 << "_" << i;
+			oss << baseName << pApp->dList.GetIdByPtr(l) << "_" << i;
 			l->dLayer[i].id = oss.str();
 
 			oss.str("");
@@ -775,11 +779,11 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 		{
 			if (state == RenameState::Down)
 			{
-				oss << baseName << GetHiddenLayersAmount() << "_" << i;
+				oss << baseName << pApp->dList.GetIdByPtr(l) << "_" << i;
 			}
 			else if (state == RenameState::Up)
 			{
-				oss << baseName << GetHiddenLayersAmount() + 1 << "_" << i;
+				oss << baseName << pApp->dList.GetIdByPtr(l) + 1 << "_" << i;
 			}
 			
 			l->dLayer[i].id = oss.str();
