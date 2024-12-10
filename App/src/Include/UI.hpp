@@ -30,6 +30,12 @@ struct ContextMenu
 	Cell* second_ptr = nullptr;
 };
 
+enum class RenameState
+{
+	Down,
+	Up
+};
+
 class UI
 {
 public:
@@ -51,6 +57,8 @@ private:
 	void SpawnThread(void (UI::*ptr)());
 	void FindLayer();
 	void ShiftLayer(DrawLayer* l, int offset);
+	void RenameLayer(DrawLayer* l, RenameState state);
+	size_t GetHiddenLayersAmount() const;
 private:
 	App* pApp;							// ”казатель на приложение
 	float appScale = 1.0f;				// ћножитель ViewPort			
