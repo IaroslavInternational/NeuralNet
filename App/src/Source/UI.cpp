@@ -283,6 +283,8 @@ void UI::Update(float dt)
 		else if (cMenu.g_pressed)  // Если нажата кнопка G
 		{
 			pApp->dList.Delete(&pApp->dList.dLayers.back() - 1);
+			
+			RenameLayer(&pApp->dList.dLayers.back(), RenameState::Down);
 			ShiftLayer(&pApp->dList.dLayers.back(), -2);
 
 			dragLayer = nullptr;
@@ -783,7 +785,7 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 			}
 			else if (state == RenameState::Up)
 			{
-				oss << baseName << pApp->dList.GetIdByPtr(l) + 1 << "_" << i;
+				oss << baseName << pApp->dList.GetIdByPtr(l) << "_" << i;
 			}
 			
 			l->dLayer[i].id = oss.str();
