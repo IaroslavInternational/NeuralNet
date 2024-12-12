@@ -779,21 +779,14 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 	case LayerType::Output:
 		for (size_t i = 0; i < l->dLayer.size(); i++)
 		{
-			if (state == RenameState::Down)
-			{
-				oss << baseName << pApp->dList.GetIdByPtr(l) << "_" << i;
-			}
-			else if (state == RenameState::Up)
-			{
-				oss << baseName << pApp->dList.GetIdByPtr(l) << "_" << i;
-			}
-			
+			oss << baseName << pApp->dList.GetIdByPtr(l) << "_" << i;
 			l->dLayer[i].id = oss.str();
 
 			oss.str("");
 			oss.clear();
 		}
 	default:
+		throw ("Smth go wrong");
 		break;
 	}
 }
