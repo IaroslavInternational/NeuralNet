@@ -19,6 +19,9 @@ public:
 	Cell* GetCellByHover(int x, int y);
 	Cell* GetUpperCell(Cell* cell);
 	Cell* GetLowerCell(Cell* cell);
+public:
+	int GetPadding() const;
+	void SetPadding(int padding);
 private:
 	int padding;
 	Color color;

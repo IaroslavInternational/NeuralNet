@@ -192,12 +192,12 @@ void DrawList::DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gf
 	auto& p2 = obj2.GetPos();
 
 	pos2d _p1;
-	_p1.x = p1.x + 50;
-	_p1.y = p1.y + 25;
+	_p1.x = p1.x + grid.GetPadding();
+	_p1.y = p1.y + grid.GetPadding() / 2;
 
 	pos2d _p2;
 	_p2.x = p2.x;
-	_p2.y = p2.y + 25;
+	_p2.y = p2.y + grid.GetPadding() / 2;
 
 	DrawLine(_p1, _p2, c, gfx);
 }
@@ -220,14 +220,14 @@ void DrawList::DrawSelectedLayer(DrawLayer* l, Graphics& gfx)
 		return;
 	}
 
-	pos2d TopLeft = l->Get()[0].GetPos();
-	pos2d BotRight = l->Get().back().GetPos();
+	pos2d TopLeft = l->Get()[0].GetPos();  // Первый объект
+	pos2d BotRight = l->Get().back().GetPos();  // Последний объект
 
-	TopLeft.x -= 50;
-	TopLeft.y -= 50;
+	TopLeft.x -= grid.GetPadding();
+	TopLeft.y -= grid.GetPadding();
 
-	BotRight.x += 100;
-	BotRight.y += 100;
+	BotRight.x += grid.GetPadding() * 2;
+	BotRight.y += grid.GetPadding() * 2;
 
 	int w = BotRight.x - TopLeft.x;
 	int h = BotRight.y - TopLeft.y;

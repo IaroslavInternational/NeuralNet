@@ -189,6 +189,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\grid.json" />
+    <None Include="data\Projects\Sample\layer0.json" />
+    <None Include="data\Projects\Sample\layer1.json" />
+    <None Include="data\Projects\Sample\layer2.json" />
+    <None Include="data\Projects\Sample\prj.json" />
     <None Include="data\rManager.json" />
     <None Include="src\shaders\FramebufferPS.shh" />
     <None Include="src\shaders\FramebufferVS.shh" />

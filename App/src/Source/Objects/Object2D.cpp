@@ -61,3 +61,8 @@ void Object2D::Translate(int dx, int dy)
 {
 	cell->Translate(dx, dy);
 }
+
+void Object2D::Translate(const pos2d& dpos)
+{
+	Translate(dpos.x, dpos.y);
+}

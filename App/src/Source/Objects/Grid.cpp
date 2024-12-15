@@ -34,12 +34,12 @@ Grid::Grid(Graphics& gfx)
 		hLimit = R100(gfx.GetHeight() - gfx.GetMenuHeight());
 	}
 	
-	// Тест на заполнение ячейками
+	// Заполнение ячейками
 	for (int i = -wLimit / padding; i < 2 * (wLimit / padding); i++)
 	{
 		for (int j = -hLimit / padding; j < 2 * (hLimit / padding); j++)
 		{
-			cells.emplace_back(i, j);
+			cells.emplace_back(i, j, padding);
 		}
 	}
 }
@@ -114,4 +114,24 @@ Cell* Grid::GetUpperCell(Cell* cell)
 Cell* Grid::GetLowerCell(Cell* cell)
 {
 	return GetCellByPos(cell->GetIdx().x, cell->GetIdx().y + 1);
+}
+
+int Grid::GetPadding() const
+{
+	return padding;
+}
+
+void Grid::SetPadding(int padding)
+{
+	this->padding = padding;
+	cells.clear();
+
+	// Заполнение ячейками
+	for (int i = -wLimit / padding; i < 2 * (wLimit / padding); i++)
+	{
+		for (int j = -hLimit / padding; j < 2 * (hLimit / padding); j++)
+		{
+			cells.emplace_back(i, j, padding);
+		}
+	}
 }

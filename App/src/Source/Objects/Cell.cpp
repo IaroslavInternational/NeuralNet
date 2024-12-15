@@ -2,11 +2,11 @@
 
 #include "../../Include/Core/Graphics.hpp"
 
-Cell::Cell(int x, int y)
+Cell::Cell(int x, int y, int size)
 	:
 	x(x),
 	y(y),
-	size(50),
+	size(size),
 	pos(x * size, y * size)
 {
 
@@ -52,6 +52,16 @@ void Cell::Translate(int dx, int dy)
 void Cell::Translate(const pos2d& dpos)
 {
 	Translate(dpos.x, dpos.y);
+}
+
+int Cell::GetSize() const
+{
+	return size;
+}
+
+void Cell::SetSize(int size)
+{
+	this->size = size;
 }
 
 bool Cell::IsHovered(int x, int y)

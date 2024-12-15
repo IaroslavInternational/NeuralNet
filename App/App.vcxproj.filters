@@ -112,6 +112,10 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
     <None Include="data\rManager.json" />
     <None Include="data\grid.json" />
+    <None Include="data\Projects\Sample\layer0.json" />
+    <None Include="data\Projects\Sample\layer1.json" />
+    <None Include="data\Projects\Sample\layer2.json" />
+    <None Include="data\Projects\Sample\prj.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Include\Core\AppWin.hpp">

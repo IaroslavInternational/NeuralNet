@@ -275,21 +275,9 @@ void UI::Render()
 
 			if (ImGui::Button("Да", { 100, 0 }))
 			{
-				if (pLayer->type == LayerType::Output)
+				pApp->dList.Delete(pLayer);
+				if (pLayer->type != LayerType::Output)
 				{
-					pApp->dList.Delete(pLayer);
-				}
-				else if (pLayer->type == LayerType::Hidden)
-				{
-					pApp->dList.Delete(pLayer);
-					for (size_t i = pApp->dList.GetIdByPtr(pLayer); i < pApp->dList.dLayers.size(); i++)
-					{
-						RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
-					}
-				}
-				else if (pLayer->type == LayerType::Input)  // FIX !
-				{
-					pApp->dList.Delete(pLayer);
 					for (size_t i = pApp->dList.GetIdByPtr(pLayer); i < pApp->dList.dLayers.size(); i++)
 					{
 						RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
@@ -395,6 +383,11 @@ void UI::Render()
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Insert(std::move(newLayer), 0);
+
+					for (size_t i = pApp->dList.GetIdByPtr(&pApp->dList.dLayers[1]); i < pApp->dList.dLayers.size(); i++)
+					{
+						RenameLayer(&pApp->dList.dLayers[i], RenameState::Up);
+					}
 					break;
 				case LayerType::Hidden: // Если скрытый слой
 					AddHiddenLayer();
@@ -537,7 +530,7 @@ void UI::AddNeuron()
 		std::ostringstream res;
 		std::ostringstream nId;
 
-		res << "res-" << (int)pLayer->type + 1;
+		res << "res-" << (int)pLayer->type + 3;
 		nId << "Neuron_";
 
 		switch (pLayer->type)
@@ -1056,6 +1049,32 @@ void UI::Debug()
 
 			if (ImGui::BeginTabItem("Gfx"))
 			{	
+				if (ImGui::Button("Test compress"))
+				{
+					// Тест уменьшения масштаба
+					// ячейки в объектах теряют указатель
+					for (auto& layer : pApp->dList.dLayers)
+					{
+						for (auto& obj : layer.dLayer)
+						{
+							if (obj.pTex->path == "input_n.bmp")
+							{
+								obj.pTex = pApp->rManager["res-4"];
+							}
+							else if (obj.pTex->path == "hidden_n.bmp")
+							{
+								obj.pTex = pApp->rManager["res-5"];
+							}
+							else if (obj.pTex->path == "output_n.bmp")
+							{
+								obj.pTex = pApp->rManager["res-6"];
+							}
+						}
+					}
+
+					pApp->dList.grid.SetPadding(25);
+				}
+
 				ImGui::EndTabItem();
 			}
 
