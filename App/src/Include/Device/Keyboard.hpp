@@ -22,13 +22,13 @@ public:
 	public:
 		Event()
 			:
-			type( Invalid ),
-			code( 0u )
+			type(Invalid),
+			code(0u)
 		{}
-		Event( Type type,unsigned char code )
+		Event(Type type, unsigned char code)
 			:
-			type( type ),
-			code( code )
+			type(type),
+			code(code)
 		{}
 		bool IsPress() const
 		{
@@ -49,9 +49,10 @@ public:
 	};
 public:
 	Keyboard() = default;
-	Keyboard( const Keyboard& ) = delete;
-	Keyboard& operator=( const Keyboard& ) = delete;
-	bool KeyIsPressed( unsigned char keycode ) const;
+	Keyboard(const Keyboard&) = delete;
+	Keyboard& operator=(const Keyboard&) = delete;
+public:
+	bool KeyIsPressed(unsigned char keycode) const;
 	Event ReadKey();
 	bool KeyIsEmpty() const;
 	char ReadChar();
@@ -63,11 +64,11 @@ public:
 	void DisableAutorepeat();
 	bool AutorepeatIsEnabled() const;
 private:
-	void OnKeyPressed( unsigned char keycode );
-	void OnKeyReleased( unsigned char keycode );
-	void OnChar( char character );
+	void OnKeyPressed(unsigned char keycode);
+	void OnKeyReleased(unsigned char keycode);
+	void OnChar(char character);
 	template<typename T>
-	void TrimBuffer( std::queue<T>& buffer );
+	void TrimBuffer(std::queue<T>& buffer);
 private:
 	static constexpr unsigned int nKeys = 256u;
 	static constexpr unsigned int bufferSize = 4u;

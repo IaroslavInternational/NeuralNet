@@ -9,6 +9,8 @@
 
 #include <sstream>
 
+#define N_OFFSET 4
+
 #pragma execution_character_set("utf-8")  // Для отображения на русском языке
 
 UI::UI(App* app)
@@ -47,53 +49,14 @@ UI::UI(App* app)
 
 void UI::Update(float dt)
 {	
-	cMenu.ctrl_pressed = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
+	cMenu.ctrl_pressed  = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
 	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);   // Если нажат Shift
-
-	// Если нажата A
-	if (pApp->wnd.kbd.KeyIsPressed('A'))
-	{
-		cMenu.a_pressed = !isAddNeuron;
-	}
-	else
-	{
-		cMenu.a_pressed = false;
-		isAddNeuron = false;
-	}
-    
-	// Если нажата D
-	if (pApp->wnd.kbd.KeyIsPressed('D'))  
-	{
-		cMenu.d_pressed = !isDeleteNeuron;
-	}
-	else
-	{
-		cMenu.d_pressed = false;
-		isDeleteNeuron = false;
-	}
-
-	// Если нажата H
-	if (pApp->wnd.kbd.KeyIsPressed('H'))
-	{
-		cMenu.h_pressed = !isAddHiddenLayer;
-	}
-	else
-	{
-		cMenu.h_pressed = false;
-		isAddHiddenLayer = false;
-	}
-
-	// Если нажата G
-	if (pApp->wnd.kbd.KeyIsPressed('G'))
-	{
-		cMenu.g_pressed = !isDeleteHiddenLayer;
-	}
-	else
-	{
-		cMenu.g_pressed = false;
-		isDeleteHiddenLayer = false;
-	}
-
+	 
+	KeyProc('A', &cMenu.a_pressed, &isAddNeuron);         // Если нажата A - добавить нейрон
+	KeyProc('D', &cMenu.d_pressed, &isDeleteNeuron);      // Если нажата D - удалить нейрон
+	KeyProc('H', &cMenu.h_pressed, &isAddHiddenLayer);    // Если нажата H - добавить скрытый слой
+	KeyProc('G', &cMenu.g_pressed, &isDeleteHiddenLayer); // Если нажата G - удалить скрытый слой
+ 
 	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
 		pApp->wnd.mouse.GetPosY() >= pApp->gfx.menuH &&
@@ -282,14 +245,7 @@ void UI::Update(float dt)
 		}
 		else if (cMenu.g_pressed)  // Если нажата кнопка G
 		{
-			pApp->dList.Delete(&pApp->dList.dLayers.back() - 1);
-			
-			RenameLayer(&pApp->dList.dLayers.back(), RenameState::Down);
-			ShiftLayer(&pApp->dList.dLayers.back(), -2);
-
-			dragLayer = nullptr;
-			pLayer = nullptr;
-			pApp->dList.selected = nullptr;
+			DeleteHiddenLayer();
 			isDeleteHiddenLayer = true;
 		}
 	}
@@ -331,9 +287,16 @@ void UI::Render()
 						RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
 					}
 				}
+				else if (pLayer->type == LayerType::Input)  // FIX !
+				{
+					pApp->dList.Delete(pLayer);
+					for (size_t i = pApp->dList.GetIdByPtr(pLayer); i < pApp->dList.dLayers.size(); i++)
+					{
+						RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
+					}
+				}
 				
 				pLayer = nullptr;
-
 				isDeleteLayer = false;
 			}
 
@@ -359,9 +322,9 @@ void UI::Render()
 		{
 			ImGui::Text("Выберите тип слоя:");
 
-			LayerType type = LayerType::All;
+			static LayerType type = LayerType::All;
 			static bool selected_type[3] = {};
-			std::string names[3] = { "Входной слой", "Скрытый слой", "Выходной слой" };
+			static const std::string names[3] = { "Входной слой", "Скрытый слой", "Выходной слой" };
 
 			for (int i = 0; i < (int)LayerType::All; i++)
 			{
@@ -459,9 +422,9 @@ void UI::Render()
 						CellToSet = pCurLayer->dLayer[idx].cell;
 					}
 
-					// Сдвигаем нейрон на 5 ячеек вправо
+					// Сдвигаем нейрон на N_OFFSET + 1 ячеек вправо
 					posSet = CellToSet->GetIdx();
-					posSet.x += 2;
+					posSet.x += (N_OFFSET + 1);
 
 					CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
 					pNextLayer->dLayer[0].SetCell(CellToSet);
@@ -622,7 +585,6 @@ void UI::AddHiddenLayer()
 	std::ostringstream oss;
 
 	/* Настройки для перемещения слоёв */
-	pos2d curPos;
 	pos2d posSet;
 	int hiddenLayersCounter = 0;
 	DrawLayer* pCurLayer = nullptr;
@@ -657,8 +619,23 @@ void UI::AddHiddenLayer()
 		std::swap(pApp->dList.dLayers[pApp->dList.dLayers.size() - 2],
 			pApp->dList.dLayers[pApp->dList.dLayers.size() - 1]);
 
-		// Сдвигаем последний слой вправо на 2 ячейки
-		ShiftLayer(pNextLayer, 2);
+		{
+			auto neuronPosPrev = (pCurLayer - 1)->Get()[0].cell->x;
+			auto neuronPosNext = pNextLayer->Get()[0].cell->x;
+
+			auto dPos = neuronPosNext - neuronPosPrev;
+
+			if (dPos <= 0)  // Если слои располагаются некорректно
+			{
+				// Сдвигаем последний слой вправо до расстояния между слоями 2*N_OFFSET
+				ShiftLayer(pNextLayer, abs(dPos) + 2 * N_OFFSET + 2);
+			}
+			else
+			{
+				// Сдвигаем последний слой вправо до расстояния между слоями 2*N_OFFSET
+				ShiftLayer(pNextLayer, 2 * N_OFFSET + 2 - dPos);
+			}
+		}
 
 		// Если в последнем слое чётное кол-во нейронов
 		if (pNextLayer->dLayer.size() % 2 == 0)
@@ -672,9 +649,9 @@ void UI::AddHiddenLayer()
 			CellToSet = pNextLayer->dLayer[idx].cell;
 		}
 
-		// Сдвигаем нейрон на 5 ячеек влево
+		// Сдвигаем нейрон на N_OFFSET + 1 ячеек влево
 		posSet = CellToSet->GetIdx();
-		posSet.x -= 4;
+		posSet.x -= (N_OFFSET + 1);
 
 		CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
 		pCurLayer->dLayer[0].SetCell(CellToSet);
@@ -695,7 +672,7 @@ void UI::AddHiddenLayer()
 
 		// Сдвигаем нейрон на 5 ячеек вправо
 		posSet = CellToSet->GetIdx();
-		posSet.x += 2;
+		posSet.x += (N_OFFSET + 1);
 
 		CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
 		pNextLayer->dLayer[0].SetCell(CellToSet);
@@ -704,9 +681,24 @@ void UI::AddHiddenLayer()
 	RenameLayer(&pApp->dList.dLayers.back(), RenameState::Up);
 
 	selected_layers.resize(pApp->dList.dLayers.size());
-	pLayer = nullptr;
+	pLayer = &pApp->dList.dLayers.back() - 1;
 	dragLayer = nullptr;
 	pApp->dList.selected = nullptr;
+}
+
+void UI::DeleteHiddenLayer()
+{
+	if ((&pApp->dList.dLayers.back() - 1)->type == LayerType::Hidden)
+	{
+		pApp->dList.Delete(&pApp->dList.dLayers.back() - 1);
+
+		RenameLayer(&pApp->dList.dLayers.back(), RenameState::Down);
+		ShiftLayer(&pApp->dList.dLayers.back(), -2);
+
+		dragLayer = nullptr;
+		pLayer = nullptr;
+		pApp->dList.selected = nullptr;
+	}
 }
 
 void UI::SpawnThread(void (UI::* ptr)())
@@ -786,7 +778,6 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 			oss.clear();
 		}
 	default:
-		throw ("Smth go wrong");
 		break;
 	}
 }
@@ -805,6 +796,19 @@ size_t UI::GetHiddenLayersAmount() const
 	}
 
 	return hiddenLayersCounter;
+}
+
+void UI::KeyProc(unsigned char key, bool* ctx_state, bool* query)
+{
+	if (pApp->wnd.kbd.KeyIsPressed(key))
+	{
+		*ctx_state = !(*query);
+	}
+	else
+	{
+		*ctx_state = false;
+		*query     = false;
+	}
 }
 
 // Windows
@@ -955,7 +959,7 @@ void UI::ShowViewPort()
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
 	{
 		ImGui::PushID("vp_slider");
-		if (ImGui::VSliderFloat("", { 18, pApp->gfx.GetHeight() * 0.2f}, &appScale, 1.0f, 5.0f))
+		if (ImGui::VSliderFloat("", { 18, pApp->gfx.GetHeight() * 0.2f}, &appScale, 1.0f, 5.0f, "%.1f"))
 		{
 			// set viewport dimensions
 			D3D11_VIEWPORT vp;

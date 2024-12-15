@@ -52,14 +52,19 @@ private:
 	F_DEBUG(void Debug());
 private:
 	bool CheckExLayer(LayerType type);
+
 	void AddNeuron();									// Добавить нейрон  в слое pLayer
 	void DeleteNeuron();								// Удалить нейрон в слое pLayer
 	void AddHiddenLayer();								// Добавить скрытый слой
+	void DeleteHiddenLayer();						    // Удалить скрытый слой
+
 	void SpawnThread(void (UI::*ptr)());				// Выполнить ф-ию в отдельном потоке
 	void FindLayer();									// Найти слой по ячейке
 	void ShiftLayer(DrawLayer* l, int offset);			// Сдвинуть слой на offset
 	void RenameLayer(DrawLayer* l, RenameState state);  // Переименовать слой после добавления/удаления слоёв
 	size_t GetHiddenLayersAmount() const;				// Посчитать кол-во скрытых слоёв
+
+	void KeyProc(unsigned char key, bool* ctx_state, bool* query);
 private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			
@@ -68,14 +73,17 @@ private:
 	DrawLayer* dragLayer = nullptr;		// Указатель на тек. слой для Drag
 	std::vector<bool> selected_layers;  // Выбранные слои
 
-	bool isDeleteLayer = false;	        // Запрос на удаление слоя
 	bool isAddLayer = false;            // Запрос на добавления слоя
-	bool invalid_cell = false;          // Для проверки валидности перемещения слоёв (перекрытие)
+	bool isDeleteLayer = false;	        // Запрос на удаление слоя
+
 	bool isAddNeuron = false;           // Запрос на добавление нейрона в слой
+	bool isDeleteNeuron = false;        // Запрос на удаление нейрона в слой
+	
 	bool isAddHiddenLayer = false;      // Запрос на добавление скрытого слоя
 	bool isDeleteHiddenLayer = false;   // Запрос на удаление скрытого слоя
-	bool isDeleteNeuron = false;        // Запрос на удаление нейрона в слой
+	
 	bool ShowLayerInfo = false;	        // Запрос на показ информации о слое
+	bool invalid_cell = false;          // Для проверки валидности перемещения слоёв (перекрытие)
 
 	bool posSet = false;  // Костыль - чтобы установить положение окна об информации о слое 1 раз
 private:
