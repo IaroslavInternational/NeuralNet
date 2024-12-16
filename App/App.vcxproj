@@ -200,6 +200,7 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\stb_image.h" />
     <ClInclude Include="src\Include\Objects\DrawLayer.hpp" />
     <ClInclude Include="src\Include\Core\var.hpp" />
     <ClInclude Include="src\Include\Objects\Cell.hpp" />

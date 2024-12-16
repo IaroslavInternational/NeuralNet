@@ -6,6 +6,8 @@
 #include <future>
 #include <vector>
 
+#include "Core/Graphics.hpp"
+
 class App;
 class Cell;
 class DrawLayer;
@@ -51,7 +53,7 @@ private:
 	void ShowTopPanel();
 	F_DEBUG(void Debug());
 private:
-	bool CheckExLayer(LayerType type);
+	bool CheckExLayer(LayerType type);					// Проверить существования слоя в dList
 
 	void AddNeuron();									// Добавить нейрон  в слое pLayer
 	void DeleteNeuron();								// Удалить нейрон в слое pLayer
@@ -64,7 +66,12 @@ private:
 	void RenameLayer(DrawLayer* l, RenameState state);  // Переименовать слой после добавления/удаления слоёв
 	size_t GetHiddenLayersAmount() const;				// Посчитать кол-во скрытых слоёв
 
-	void KeyProc(unsigned char key, bool* ctx_state, bool* query);
+	void KeyProc(unsigned char key, bool* ctx_state, bool* query);  // Функция обработки нажатия кнопки
+#ifndef N_DEBUG
+private:
+	bool LoadTextureFromMemory(const void* data, size_t data_size, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
+	bool LoadTextureFromFile(const char* file_name, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
+#endif
 private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			
@@ -88,5 +95,8 @@ private:
 	bool posSet = false;  // Костыль - чтобы установить положение окна об информации о слое 1 раз
 private:
 	std::future<void> worker;
+#ifndef N_DEBUG
+	std::vector<ID3D11ShaderResourceView*> pTextures;
+#endif
 };
 

@@ -226,6 +226,9 @@
     <ClInclude Include="src\Include\Objects\DrawLayer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="libs\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="ico-16.ico">

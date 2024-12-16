@@ -63,9 +63,7 @@ void DrawList::Insert(DrawLayer& obj, size_t pos)
 void DrawList::Delete(DrawLayer* dLayer)
 {
 	assert(dLayer != nullptr);
-
-	auto iter = std::find(dLayers.begin(), dLayers.end(), *dLayer);
-	dLayers.erase(iter);
+	dLayers.erase(std::find(dLayers.begin(), dLayers.end(), *dLayer));
 }
 
 void DrawList::Draw(Graphics& gfx)
@@ -199,7 +197,7 @@ void DrawList::DrawSynapse(Object2D& obj1, Object2D& obj2, Color c, Graphics& gf
 	_p2.x = p2.x;
 	_p2.y = p2.y + grid.GetPadding() / 2;
 
-	DrawLine(_p1, _p2, c, gfx);
+	DrawLine(std::move(_p1), std::move(_p2), c, gfx);
 }
 
 void DrawList::DrawSynapses(DrawLayer& l1, DrawLayer& l2, Color c, Graphics& gfx)
@@ -220,7 +218,7 @@ void DrawList::DrawSelectedLayer(DrawLayer* l, Graphics& gfx)
 		return;
 	}
 
-	pos2d TopLeft = l->Get()[0].GetPos();  // Первый объект
+	pos2d TopLeft  = l->Get()[0].GetPos();      // Первый объект
 	pos2d BotRight = l->Get().back().GetPos();  // Последний объект
 
 	TopLeft.x -= grid.GetPadding();

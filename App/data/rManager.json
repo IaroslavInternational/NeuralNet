@@ -31,7 +31,7 @@
 
   "res-4": [
     {
-      "path": "input_n0.5.bmp",
+      "path": "input_n0.25.bmp",
       "ch-key-a": 255,
       "ch-key-r": 17,
       "ch-key-g": 17,
@@ -41,7 +41,7 @@
 
   "res-5": [
     {
-      "path": "hidden_n0.5.bmp",
+      "path": "hidden_n0.25.bmp",
       "ch-key-a": 255,
       "ch-key-r": 17,
       "ch-key-g": 17,
@@ -51,7 +51,7 @@
 
   "res-6": [
     {
-      "path": "output_n0.5.bmp",
+      "path": "output_n0.25.bmp",
       "ch-key-a": 255,
       "ch-key-r": 17,
       "ch-key-g": 17,

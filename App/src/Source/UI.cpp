@@ -9,6 +9,10 @@
 
 #include <sstream>
 
+#define _CRT_SECURE_NO_WARNINGS
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../libs/stb_image.h"
+
 #define N_OFFSET 4
 
 #pragma execution_character_set("utf-8")  // Для отображения на русском языке
@@ -45,6 +49,14 @@ UI::UI(App* app)
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.22f, 0.05f, 0.05f, 0.80f);
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+
+#ifndef N_DEBUG
+	for (auto& i : pApp->rManager.textures)
+	{
+		pTextures.emplace_back(nullptr);
+		LoadTextureFromFile(std::string("assets\\" + i.second.path).c_str(), &pTextures.back(), nullptr, nullptr);
+	}
+#endif
 }
 
 void UI::Update(float dt)
@@ -530,7 +542,7 @@ void UI::AddNeuron()
 		std::ostringstream res;
 		std::ostringstream nId;
 
-		res << "res-" << (int)pLayer->type + 3;
+		res << "res-" << (int)pLayer->type + 1;
 		nId << "Neuron_";
 
 		switch (pLayer->type)
@@ -1011,6 +1023,69 @@ void UI::ShowTopPanel()
 
 #ifndef NDEBUG
 
+// Simple helper function to load an image into a DX11 texture with common settings
+bool UI::LoadTextureFromMemory(const void* data, size_t data_size, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
+{
+	// Load from disk into a raw RGBA buffer
+	int image_width = 0;
+	int image_height = 0;
+	unsigned char* image_data = stbi_load_from_memory((const unsigned char*)data, (int)data_size, &image_width, &image_height, NULL, 4);
+	if (image_data == NULL)
+		return false;
+
+	// Create texture
+	D3D11_TEXTURE2D_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.Width = image_width;
+	desc.Height = image_height;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+
+	ID3D11Texture2D* pTexture = NULL;
+	D3D11_SUBRESOURCE_DATA subResource;
+	subResource.pSysMem = image_data;
+	subResource.SysMemPitch = desc.Width * 4;
+	subResource.SysMemSlicePitch = 0;
+	pApp->gfx.pDevice->CreateTexture2D(&desc, &subResource, &pTexture);
+
+	// Create texture view
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(srvDesc));
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = desc.MipLevels;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	pApp->gfx.pDevice->CreateShaderResourceView(pTexture, &srvDesc, out_srv);
+	pTexture->Release();
+
+	stbi_image_free(image_data);
+
+	return true;
+}
+
+// Open and read a file, then forward to LoadTextureFromMemory()
+bool UI::LoadTextureFromFile(const char* file_name, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
+{
+	FILE* f = fopen(file_name, "rb");
+	if (f == NULL)
+		return false;
+	fseek(f, 0, SEEK_END);
+	size_t file_size = (size_t)ftell(f);
+	if (file_size == -1)
+		return false;
+	fseek(f, 0, SEEK_SET);
+	void* file_data = IM_ALLOC(file_size);
+	fread(file_data, 1, file_size, f);
+	bool ret = LoadTextureFromMemory(file_data, file_size, out_srv, out_width, out_height);
+	IM_FREE(file_data);
+	return ret;
+}
+
 void UI::Debug()
 {
 	if (ImGui::Begin("Debug", NULL, ImGuiWindowFlags_NoCollapse))
@@ -1073,6 +1148,35 @@ void UI::Debug()
 					}
 
 					pApp->dList.grid.SetPadding(25);
+				}
+
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Resource"))
+			{
+				std::ostringstream oss;
+				size_t c = 0;
+
+				for (auto& i : pApp->rManager.textures)
+				{
+					if (ImGui::TreeNode(i.first.c_str()))
+					{
+						oss << "Path: "   << i.second.path   << "\n";
+						oss << "Width: "  << i.second.width  << "\n";
+						oss << "Height: " << i.second.height << "\n";
+						
+						ImGui::Text(oss.str().c_str());
+
+						oss.str("");
+						oss.clear();
+
+						ImGui::Image((ImTextureID)(intptr_t)pTextures[c], ImVec2(i.second.width, i.second.height));
+
+						ImGui::TreePop();
+					}
+
+					c++;
 				}
 
 				ImGui::EndTabItem();

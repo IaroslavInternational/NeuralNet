@@ -7,6 +7,7 @@
 
 class ResourceManager
 {
+	friend class UI;
 public:
 	ResourceManager();
 public:
