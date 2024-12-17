@@ -11,6 +11,7 @@
 class App;
 class Cell;
 class DrawLayer;
+class Object2D;
 enum class LayerType;
 
 // Структура работы с контекстными действиями
@@ -67,16 +68,12 @@ private:
 	size_t GetHiddenLayersAmount() const;				// Посчитать кол-во скрытых слоёв
 
 	void KeyProc(unsigned char key, bool* ctx_state, bool* query);  // Функция обработки нажатия кнопки
-#ifndef N_DEBUG
-private:
-	bool LoadTextureFromMemory(const void* data, size_t data_size, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
-	bool LoadTextureFromFile(const char* file_name, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
-#endif
 private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			
 	ContextMenu cMenu;					// Структура работы с контекстными действиями
-	DrawLayer* pLayer = nullptr;		// Указатель на тек. слой
+	Object2D*  pObj		 = nullptr;		// Выбранный нейрон
+	DrawLayer* pLayer    = nullptr;		// Указатель на тек. слой
 	DrawLayer* dragLayer = nullptr;		// Указатель на тек. слой для Drag
 	std::vector<bool> selected_layers;  // Выбранные слои
 
@@ -96,7 +93,10 @@ private:
 private:
 	std::future<void> worker;
 #ifndef N_DEBUG
+private:
 	std::vector<ID3D11ShaderResourceView*> pTextures;
+	bool LoadTextureFromMemory(const void* data, size_t data_size, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
+	bool LoadTextureFromFile(const char* file_name, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height);
 #endif
 };
 

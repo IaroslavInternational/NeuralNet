@@ -457,7 +457,7 @@ void UI::Render()
 	}
 	/************************************************/
 
-	/* ==== Окно информации о слоё ==== */
+	/* ==== Окно информации о слое ==== */
 	if (ShowLayerInfo)
 	{
 		ImGui::OpenPopup(pLayer->name.c_str());
@@ -500,7 +500,21 @@ void UI::Render()
 				oss << "Кол-во исходящих синапсов: " << pLayer->GetSize() * (pLayer + 1)->GetSize();
 				ImGui::Text(oss.str().c_str());
 			}	
+
+			if (pObj != nullptr)
+			{
+				ImGui::Separator();
+
+				ImGui::Text("Нейрон:");
+
+				oss.str("");
+				oss.clear();
+
+				oss << pObj->id;
 			
+				ImGui::Text(oss.str().c_str());
+			}
+						
 			ImGui::End();
 		}
 
@@ -538,6 +552,7 @@ void UI::AddNeuron()
 	if (pLayer != nullptr) 
 	{
 		isDeleteLayer = false;
+		ShowLayerInfo = false;
 
 		std::ostringstream res;
 		std::ostringstream nId;
@@ -572,6 +587,8 @@ void UI::DeleteNeuron()
 {
 	if (pLayer != nullptr)
 	{
+		ShowLayerInfo = false;
+
 		// Убрать нейрон
 		if (pLayer->dLayer.size() - 1 != 0)
 		{
@@ -586,6 +603,8 @@ void UI::DeleteNeuron()
 
 void UI::AddHiddenLayer()
 {
+	ShowLayerInfo = false;
+
 	std::string baseName = "Neuron_";
 	std::ostringstream oss;
 
@@ -695,10 +714,12 @@ void UI::DeleteHiddenLayer()
 {
 	if ((&pApp->dList.dLayers.back() - 1)->type == LayerType::Hidden)
 	{
+		ShowLayerInfo = false;
+
 		pApp->dList.Delete(&pApp->dList.dLayers.back() - 1);
 
 		RenameLayer(&pApp->dList.dLayers.back(), RenameState::Down);
-		ShiftLayer(&pApp->dList.dLayers.back(), -2);
+		ShiftLayer(&pApp->dList.dLayers.back(), -N_OFFSET - 1);
 
 		dragLayer = nullptr;
 		pLayer = nullptr;
@@ -721,14 +742,19 @@ void UI::FindLayer()
 			{
 				if (pLayer != &layer)
 				{
-					ShowLayerInfo = false; // Убираем окно с информацией о слоё					
+					ShowLayerInfo = false; // Убираем окно с информацией о слоё		
+
 					pLayer = &layer;
 
 					for (auto& s : selected_layers)
 					{
 						s = false;
 					}
+				}
 
+				if (pObj != &obj)
+				{
+					pObj = &obj;
 					break;
 				}
 			}
@@ -1190,4 +1216,3 @@ void UI::Debug()
 }
 
 #endif // NDEBUG
-
