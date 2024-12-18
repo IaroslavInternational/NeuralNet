@@ -50,6 +50,10 @@ UI::UI(App* app)
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
 
+	InputLayerCounter  = GetLayersAmount(LayerType::Input);
+	OutputLayerCounter = GetLayersAmount(LayerType::Output);
+	HiddenLayerCounter = GetLayersAmount(LayerType::Hidden);
+
 #ifndef N_DEBUG
 	for (auto& i : pApp->rManager.textures)
 	{
@@ -287,13 +291,28 @@ void UI::Render()
 
 			if (ImGui::Button("Да", { 100, 0 }))
 			{
+				auto deletedType = pLayer->type;
+
 				pApp->dList.Delete(pLayer);
-				if (pLayer->type != LayerType::Output)
+				for (size_t i = pApp->dList.GetIdByPtr(pLayer); i < pApp->dList.dLayers.size(); i++)
 				{
-					for (size_t i = pApp->dList.GetIdByPtr(pLayer); i < pApp->dList.dLayers.size(); i++)
-					{
-						RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
-					}
+					RenameLayer(&pApp->dList.dLayers[i], RenameState::Down);
+					ShiftLayer(&pApp->dList.dLayers[i], -N_OFFSET - 1);
+				}
+
+				switch (deletedType)
+				{
+				case LayerType::Input:
+					InputLayerCounter--;
+					break;
+				case LayerType::Hidden:
+					HiddenLayerCounter--;
+					break;
+				case LayerType::Output:
+					OutputLayerCounter--;
+					break;
+				default:
+					break;
 				}
 				
 				pLayer = nullptr;
@@ -368,20 +387,10 @@ void UI::Render()
 				/* Настройки для перемещения слоёв */
 				pos2d curPos;
 				pos2d posSet;
-				int hiddenLayersCounter = 0;
 				DrawLayer* pCurLayer  = nullptr;
 				DrawLayer* pNextLayer = nullptr;
 				Cell*	   CellToSet  = nullptr;
 				/***********************************/
-
-				// Считаем кол-во скрытых слоёв
-				for (auto& l : pApp->dList.dLayers)
-				{
-					if (l.type == LayerType::Hidden)
-					{
-						hiddenLayersCounter++;
-					}
-				}
 
 				DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
 				newLayer.type = type;
@@ -396,17 +405,50 @@ void UI::Render()
 
 					pApp->dList.Insert(std::move(newLayer), 0);
 
-					for (size_t i = pApp->dList.GetIdByPtr(&pApp->dList.dLayers[1]); i < pApp->dList.dLayers.size(); i++)
+					if (pApp->dList.dLayers.size() > 1)
 					{
-						RenameLayer(&pApp->dList.dLayers[i], RenameState::Up);
+						for (size_t i = pApp->dList.GetIdByPtr(&pApp->dList.dLayers[1]); i < pApp->dList.dLayers.size(); i++)
+						{
+							RenameLayer(&pApp->dList.dLayers[i], RenameState::Up);
+						}
 					}
+
+					if (HiddenLayerCounter + OutputLayerCounter == 0)
+					{
+						break;
+					}
+
+					// Получаем текущий и предыдущий слои
+					pCurLayer = &pApp->dList.dLayers[1];
+					pNextLayer = &pApp->dList.dLayers[0];
+
+					// Если в последнем слое чётное кол-во нейронов
+					if (pCurLayer->dLayer.size() % 2 == 0)
+					{
+						size_t idx = int(pCurLayer->dLayer.size() / 2) - 1;
+						CellToSet = pApp->dList.grid.GetLowerCell(pCurLayer->dLayer[idx].cell);
+					}
+					else // Иначе
+					{
+						size_t idx = int(std::round(pCurLayer->dLayer.size() / 2));
+						CellToSet = pCurLayer->dLayer[idx].cell;
+					}
+
+					// Сдвигаем нейрон на N_OFFSET + 1 ячеек влево
+					posSet = CellToSet->GetIdx();
+					posSet.x -= (N_OFFSET + 1);
+
+					CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
+					pNextLayer->dLayer[0].SetCell(CellToSet);
+
+					InputLayerCounter++;
 					break;
 				case LayerType::Hidden: // Если скрытый слой
 					AddHiddenLayer();
 					break;
 				case LayerType::Output:
 					newLayer.name = "Выходной слой";
-					newLayer.Add(std::move(Object2D(pApp->rManager["res-3"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0"))));
+					newLayer.Add(std::move(Object2D(pApp->rManager["res-3"], nullptr, std::string("Neuron_") + std::to_string(HiddenLayerCounter + 1) + std::string("_0"))));
 					newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 					pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
@@ -433,7 +475,8 @@ void UI::Render()
 
 					CellToSet = pApp->dList.grid.GetCellByPos(posSet.x, posSet.y);
 					pNextLayer->dLayer[0].SetCell(CellToSet);
-
+					
+					OutputLayerCounter++;
 					break;
 				}
 				
@@ -500,6 +543,12 @@ void UI::Render()
 				oss << "Кол-во исходящих синапсов: " << pLayer->GetSize() * (pLayer + 1)->GetSize();
 				ImGui::Text(oss.str().c_str());
 			}	
+
+			if (ImGui::Button("Удалить"))
+			{
+				isDeleteLayer = true;
+				ShowLayerInfo = false;
+			}
 
 			if (pObj != nullptr)
 			{
@@ -610,25 +659,15 @@ void UI::AddHiddenLayer()
 
 	/* Настройки для перемещения слоёв */
 	pos2d posSet;
-	int hiddenLayersCounter = 0;
 	DrawLayer* pCurLayer = nullptr;
 	DrawLayer* pNextLayer = nullptr;
 	Cell* CellToSet = nullptr;
 	/***********************************/
 
-	// Считаем кол-во скрытых слоёв
-	for (auto& l : pApp->dList.dLayers)
-	{
-		if (l.type == LayerType::Hidden)
-		{
-			hiddenLayersCounter++;
-		}
-	}
-
 	DrawLayer newLayer(pApp->rManager, pApp->dList.grid);
 	newLayer.type = LayerType::Hidden;
-	newLayer.name = std::string("Скрытый слой ") + std::to_string(hiddenLayersCounter + 1);
-	newLayer.Add(std::move(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(hiddenLayersCounter + 1) + std::string("_0"))));
+	newLayer.name = std::string("Скрытый слой ") + std::to_string(HiddenLayerCounter + InputLayerCounter);
+	newLayer.Add(std::move(Object2D(pApp->rManager["res-2"], nullptr, std::string("Neuron_") + std::to_string(HiddenLayerCounter + InputLayerCounter) + std::string("_0"))));
 	newLayer.dLayer[0].cell = pApp->dList.grid.GetCellByPos(0, 0);
 
 	pApp->dList.Add(std::move(newLayer)); // Добавить новый слой
@@ -694,7 +733,7 @@ void UI::AddHiddenLayer()
 			CellToSet = pCurLayer->dLayer[idx].cell;
 		}
 
-		// Сдвигаем нейрон на 5 ячеек вправо
+		// Сдвигаем нейрон на N_OFFSET + 1 ячеек вправо
 		posSet = CellToSet->GetIdx();
 		posSet.x += (N_OFFSET + 1);
 
@@ -708,6 +747,8 @@ void UI::AddHiddenLayer()
 	pLayer = &pApp->dList.dLayers.back() - 1;
 	dragLayer = nullptr;
 	pApp->dList.selected = nullptr;
+
+	HiddenLayerCounter++;
 }
 
 void UI::DeleteHiddenLayer()
@@ -724,6 +765,8 @@ void UI::DeleteHiddenLayer()
 		dragLayer = nullptr;
 		pLayer = nullptr;
 		pApp->dList.selected = nullptr;
+
+		HiddenLayerCounter--;
 	}
 }
 
@@ -813,20 +856,20 @@ void UI::RenameLayer(DrawLayer* l, RenameState state)
 	}
 }
 
-size_t UI::GetHiddenLayersAmount() const
+size_t UI::GetLayersAmount(LayerType type) const
 {
-	size_t hiddenLayersCounter = 0;
+	size_t counter = 0;
 
 	// Считаем кол-во скрытых слоёв
 	for (auto& l : pApp->dList.dLayers)
 	{
-		if (l.type == LayerType::Hidden)
+		if (l.type == type)
 		{
-			hiddenLayersCounter++;
+			counter++;
 		}
 	}
 
-	return hiddenLayersCounter;
+	return counter;
 }
 
 void UI::KeyProc(unsigned char key, bool* ctx_state, bool* query)

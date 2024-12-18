@@ -65,7 +65,7 @@ private:
 	void FindLayer();									// Найти слой по ячейке
 	void ShiftLayer(DrawLayer* l, int offset);			// Сдвинуть слой на offset
 	void RenameLayer(DrawLayer* l, RenameState state);  // Переименовать слой после добавления/удаления слоёв
-	size_t GetHiddenLayersAmount() const;				// Посчитать кол-во скрытых слоёв
+	size_t GetLayersAmount(LayerType type) const;       // Посчитать кол-во скрытых слоёв
 
 	void KeyProc(unsigned char key, bool* ctx_state, bool* query);  // Функция обработки нажатия кнопки
 private:
@@ -76,6 +76,10 @@ private:
 	DrawLayer* pLayer    = nullptr;		// Указатель на тек. слой
 	DrawLayer* dragLayer = nullptr;		// Указатель на тек. слой для Drag
 	std::vector<bool> selected_layers;  // Выбранные слои
+
+	size_t InputLayerCounter;
+	size_t OutputLayerCounter;
+	size_t HiddenLayerCounter;
 
 	bool isAddLayer = false;            // Запрос на добавления слоя
 	bool isDeleteLayer = false;	        // Запрос на удаление слоя
