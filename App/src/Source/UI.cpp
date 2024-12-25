@@ -910,21 +910,37 @@ void UI::SpawnInfoText(const std::string& str, size_t counter, size_t pass, size
 
 void UI::SaveAll()
 {
+	auto create_param_str = [](const std::string& key, const std::string& value)
+	{
+		std::ostringstream out;
+		out << "\"" << key << "\"" << ":" << "\"" << value << "\"";
+
+		return out.str();
+	};
+
 	std::string basePath = "data/Projects/Sample/";
 	std::ostringstream objectName;
 	std::ostringstream truePath;
+	std::ostringstream prjData;
 
-	std::string read = CreateJsonLayer(&pApp->dList.dLayers[0]);
+	prjData << "{";
+	prjData << create_param_str("project", pApp->dList.projectName) << ",";
 
 	for (size_t i = 0; i < pApp->dList.dLayers.size(); i++)
 	{
 		truePath << basePath << "layer" << i << ".json";
+		prjData << "\"layer-" << i << "\":" << "\"" << truePath.str() << "\",";
 
 		SetNewData(CreateJsonLayer(&pApp->dList.dLayers[i]), truePath.str());
 
 		truePath.str("");
 		truePath.clear();
 	}
+
+	std::string prjResult(std::move(prjData.str()));
+	prjResult.back() = '}';
+	
+	SetNewData(prjResult, basePath + "prj.json");
 
 	isChanges = false;
 }
@@ -998,9 +1014,6 @@ std::string UI::CreateJsonLayer(DrawLayer* l)
 
 void UI::SetNewData(const std::string& data, const std::string& path)
 {
-	/* TO DO
-	* Обновлять описание prj
-	*/
 	std::ofstream ostr(path);
 	ostr << data;
 

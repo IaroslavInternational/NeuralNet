@@ -1,1 +1,1 @@
-{"name":"Выходной слой", "type":2, "objects" : [{"object 0": [{"c-x":12,"c-y":5,"id":"Neuron_2_0","resource":"res-3"}] }]}
+{"name":"Скрытый слой 2", "type":1, "objects" : [{"object 0": [{"c-x":11,"c-y":2,"id":"Neuron_2_0","resource":"res-2"}] ,"object 1": [{"c-x":11,"c-y":4,"id":"Neuron_2_1","resource":"res-2"}] ,"object 2": [{"c-x":11,"c-y":6,"id":"Neuron_2_2","resource":"res-2"}] ,"object 3": [{"c-x":11,"c-y":8,"id":"Neuron_2_3","resource":"res-2"}] }]}
