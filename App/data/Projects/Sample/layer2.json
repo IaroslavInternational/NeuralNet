@@ -1,1 +1,1 @@
-{"name":"Выходной слой","objects":[{"object 0":[{"c-x":12,"c-y":6,"id":"Neuron_2_0","resource":"res-3"}],"object 1":[{"c-x":12,"c-y":8,"id":"Neuron_2_1","resource":"res-3"}]}],"type":2}
+{"name":"Выходной слой", "type":2, "objects" : [{"object 0": [{"c-x":12,"c-y":5,"id":"Neuron_2_0","resource":"res-3"}] }]}

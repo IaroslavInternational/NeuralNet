@@ -12,6 +12,8 @@ public:
 	ResourceManager();
 public:
 	void Add(const std::string& id, Texture& tex);
+	const std::string& GetNameBySource(const std::string& id);
+
 	Texture* operator[](const std::string& key)
 	{
 		return &textures.at(key);

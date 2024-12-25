@@ -42,3 +42,14 @@ void ResourceManager::Add(const std::string& id, Texture& tex)
 {
 	textures.insert({ id, tex });
 }
+
+const std::string& ResourceManager::GetNameBySource(const std::string& id)
+{
+	for (auto& r : textures)
+	{
+		if (r.second.GetPath() == id)
+		{
+			return r.first;
+		}
+	}
+}

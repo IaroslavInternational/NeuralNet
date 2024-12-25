@@ -136,7 +136,7 @@ LRESULT MainWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_DESTROY:
-		PostQuitMessage(0);
+		onClose = true;
 		break;
 
 	case WM_SIZE:

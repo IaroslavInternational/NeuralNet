@@ -18,7 +18,7 @@
 #define N_OFFSET 4
 
 #pragma execution_character_set("utf-8")  // Для отображения на русском языке
-
+ 
 UI::UI(App* app)
 	:
 	pApp(app)
@@ -67,6 +67,12 @@ UI::UI(App* app)
 
 void UI::Update(float dt)
 {	
+	if (pApp->wnd.onClose)
+	{
+		SaveAll();
+		exit(0);
+	}
+
 	cMenu.ctrl_pressed  = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
 	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);   // Если нажат Shift
 	 
@@ -229,6 +235,7 @@ void UI::Update(float dt)
 					}
 				}
 
+				isChanges = true;
 				cMenu.first_ptr = cMenu.second_ptr;
 				cMenu.second_ptr = nullptr;
 				cMenu.counter = 0.0f;
@@ -250,21 +257,25 @@ void UI::Update(float dt)
 		{
 			AddNeuron();
 			isAddNeuron = true;
+			isChanges = true;
 		}
 		else if (cMenu.d_pressed) // Если нажата кнопка D
 		{
 			DeleteNeuron();
 			isDeleteNeuron = true;
+			isChanges = true;
 		}
 		else if (cMenu.h_pressed)  // Если нажата кнопка H
 		{
 			AddHiddenLayer();
 			isAddHiddenLayer = true;
+			isChanges = true;
 		}
 		else if (cMenu.g_pressed)  // Если нажата кнопка G
 		{
 			DeleteHiddenLayer();
 			isDeleteHiddenLayer = true;
+			isChanges = true;
 		}
 	}
 }
@@ -505,6 +516,11 @@ void UI::Render()
 	/* ==== Окно информации о слое ==== */
 	if (ShowLayerInfo)
 	{
+		if (pLayer == nullptr)
+		{
+			return;
+		}
+
 		ImGui::OpenPopup(pLayer->name.c_str());
 
 		// Ставим окно рядом с курсором
@@ -898,57 +914,95 @@ void UI::SaveAll()
 	std::ostringstream objectName;
 	std::ostringstream truePath;
 
+	std::string read = CreateJsonLayer(&pApp->dList.dLayers[0]);
+
 	for (size_t i = 0; i < pApp->dList.dLayers.size(); i++)
 	{
 		truePath << basePath << "layer" << i << ".json";
 
-		for (size_t j = 0; j < pApp->dList.dLayers[i].GetSize(); j++)
-		{
-			objectName << "object " << j;
-			
-			SetNewValue(objectName.str().c_str(), "c-x", pApp->dList.dLayers[i].dLayer[j].cell->x, truePath.str().c_str());
-			SetNewValue(objectName.str().c_str(), "c-y", pApp->dList.dLayers[i].dLayer[j].cell->y, truePath.str().c_str());
-
-			objectName.str("");
-			objectName.clear();	
-		}
+		SetNewData(CreateJsonLayer(&pApp->dList.dLayers[i]), truePath.str());
 
 		truePath.str("");
 		truePath.clear();
 	}
+
+	isChanges = false;
 }
 
-template<typename T>
-void UI::SetNewValue(const std::string& objectName, const std::string& param, T val, const std::string& path)
+std::string UI::CreateJsonLayer(DrawLayer* l)
 {
-	using json = nlohmann::json;
-	using namespace std::string_literals;
+	static size_t local_hiddenLayerCounter = 0;
 
-	std::ifstream dataFile(path);
-	if (!dataFile.is_open())
+	auto create_param_str = [](const std::string& key, const std::string& value)
 	{
-		throw ("Json файла не существует");
-	}
-
-	json j;
-	dataFile >> j;
-
-	dataFile.close();
+		std::ostringstream out;
+		out << "\"" << key << "\"" << ":" << "\"" << value << "\"";
 	
+		return out.str();
+	};
 
-	for (auto& objs : j.at("objects"))
+	auto create_param_int = [](const std::string& key, int value)
 	{
-		for (auto c_obj = objs.begin(); c_obj != objs.end(); c_obj++)
-		{
-			for (auto& data : objs.at(objectName))
-			{
-				data[param] = val;
-			}
-		}
+		std::ostringstream out;
+		out << "\"" << key << "\"" << ":" << value;
+
+		return out.str();
+	};
+
+	std::ostringstream out;
+	std::string type;
+
+	out << "{";
+
+	switch (l->type)
+	{
+	case LayerType::Input:
+		type = "Входной слой";
+		break;
+	case LayerType::Hidden:
+		local_hiddenLayerCounter++;
+		type = "Скрытый слой " + std::to_string(local_hiddenLayerCounter);
+		break;
+	case LayerType::Output:
+		type = "Выходной слой";
+		local_hiddenLayerCounter = 0; // Ну такое
+		break;
+	default:
+		break;
 	}
 
+	out << create_param_str("name", type)		  << ", ";
+	out << create_param_int("type", int(l->type)) << ", ";
+
+	out << "\"objects\" : [";
+	out << "{";
+	
+	for (size_t i = 0; i < l->dLayer.size(); i++)
+	{
+		out << "\"object " << i << "\": [";
+		out << "{";
+		out << create_param_int("c-x",      l->dLayer[i].cell->x) << ",";
+		out << create_param_int("c-y",      l->dLayer[i].cell->y) << ",";
+		out << create_param_str("id",       l->dLayer[i].id)	  << ",";
+		out << create_param_str("resource", pApp->rManager.GetNameBySource(l->dLayer[i].pTex->path));
+		out << "}";
+		out << "] ,";
+	}
+
+	std::string result(std::move(out.str()));
+	result.back() = '}';
+	result += "]}";
+	
+	return std::move(result);
+}
+
+void UI::SetNewData(const std::string& data, const std::string& path)
+{
+	/* TO DO
+	* Обновлять описание prj
+	*/
 	std::ofstream ostr(path);
-	ostr << j.dump();
+	ostr << data;
 
 	ostr.close();
 }
@@ -993,9 +1047,16 @@ void UI::ShowPanel()
 	{
 		if (ImGui::BeginTabBar("Main bar"))
 		{
-			if (ImGui::BeginTabItem("Проекты"))
+			std::ostringstream prj;
+			prj << "Проекты" << (isChanges ? "*" : "");
+
+			if (ImGui::BeginTabItem(prj.str().c_str()))
 			{
-				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))  // Имя проекта
+				prj.str("");
+				prj.clear();
+
+				prj << pApp->dList.projectName.c_str() << (isChanges ? "" : " - Сохранено");
+				if (ImGui::TreeNode(prj.str().c_str()))  // Имя проекта
 				{
 					// Не менять положение контекстного меню
 					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));

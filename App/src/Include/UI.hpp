@@ -71,7 +71,9 @@ private:
 	void SpawnInfoText(const std::string& str, size_t counter, size_t pass, size_t fail);  // Функция для вывода общей информации
 
 	void SaveAll();
-	template<typename T> void SetNewValue(const std::string& objectName, const std::string& param, T val, const std::string& path);
+	void SetNewData(const std::string& data, const std::string& path);
+
+	std::string CreateJsonLayer(DrawLayer* l);
 private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			
@@ -98,6 +100,8 @@ private:
 	bool invalid_cell = false;          // Для проверки валидности перемещения слоёв (перекрытие)
 
 	bool posSet = false;  // Костыль - чтобы установить положение окна об информации о слое 1 раз
+
+	bool isChanges = false;
 private:
 	std::future<void> worker;
 #ifndef N_DEBUG

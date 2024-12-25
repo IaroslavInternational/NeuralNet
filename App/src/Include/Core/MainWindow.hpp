@@ -56,4 +56,5 @@ private:
 	std::wstring args;
 	int ScreenWidth;
 	int ScreenHeight;
+	bool onClose = false;
 };
