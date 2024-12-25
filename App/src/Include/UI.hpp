@@ -69,6 +69,9 @@ private:
 
 	void KeyProc(unsigned char key, bool* ctx_state, bool* query);  // Функция обработки нажатия кнопки
 	void SpawnInfoText(const std::string& str, size_t counter, size_t pass, size_t fail);  // Функция для вывода общей информации
+
+	void SaveAll();
+	template<typename T> void SetNewValue(const std::string& objectName, const std::string& param, T val, const std::string& path);
 private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			

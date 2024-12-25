@@ -8,10 +8,12 @@
 #include "../Include/App.hpp"
 
 #include <sstream>
+#include <fstream>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../libs/stb_image.h"
+#include "../../libs/json.hpp"
 
 #define N_OFFSET 4
 
@@ -890,6 +892,67 @@ void UI::SpawnInfoText(const std::string& str, size_t counter, size_t pass, size
 	ImGui::TextColored(ImVec4(counter == fail ? 0.8f : 0.0f, counter >= pass ? 0.8f : 0.0f, 0.0f, 1.0f), str.c_str());
 }
 
+void UI::SaveAll()
+{
+	std::string basePath = "data/Projects/Sample/";
+	std::ostringstream objectName;
+	std::ostringstream truePath;
+
+	for (size_t i = 0; i < pApp->dList.dLayers.size(); i++)
+	{
+		truePath << basePath << "layer" << i << ".json";
+
+		for (size_t j = 0; j < pApp->dList.dLayers[i].GetSize(); j++)
+		{
+			objectName << "object " << j;
+			
+			SetNewValue(objectName.str().c_str(), "c-x", pApp->dList.dLayers[i].dLayer[j].cell->x, truePath.str().c_str());
+			SetNewValue(objectName.str().c_str(), "c-y", pApp->dList.dLayers[i].dLayer[j].cell->y, truePath.str().c_str());
+
+			objectName.str("");
+			objectName.clear();	
+		}
+
+		truePath.str("");
+		truePath.clear();
+	}
+}
+
+template<typename T>
+void UI::SetNewValue(const std::string& objectName, const std::string& param, T val, const std::string& path)
+{
+	using json = nlohmann::json;
+	using namespace std::string_literals;
+
+	std::ifstream dataFile(path);
+	if (!dataFile.is_open())
+	{
+		throw ("Json файла не существует");
+	}
+
+	json j;
+	dataFile >> j;
+
+	dataFile.close();
+	
+
+	for (auto& objs : j.at("objects"))
+	{
+		for (auto c_obj = objs.begin(); c_obj != objs.end(); c_obj++)
+		{
+			for (auto& data : objs.at(objectName))
+			{
+				data[param] = val;
+			}
+		}
+	}
+
+	std::ofstream ostr(path);
+	ostr << j.dump();
+
+	ostr.close();
+}
+
 // Windows
 
 // Установить размер окна
@@ -1260,6 +1323,11 @@ void UI::Debug()
 				ImGui::Checkbox("Camera move", &pApp->camera.isActive);
 				ImGui::SliderInt("Camera x", &pApp->camera.dpos.x, -1000, 1000);
 				ImGui::SliderInt("Camera y", &pApp->camera.dpos.y, -1000, 1000);
+
+				if (ImGui::Button("Save all"))
+				{
+					SpawnThread(&UI::SaveAll);
+				}
 
 				ImGui::EndTabItem();
 			}

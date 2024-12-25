@@ -31,30 +31,22 @@ DrawLayer::DrawLayer(const std::string& path, ResourceManager& rManager, Grid& g
 	size_t obj_counter = 0;
 	std::ostringstream oss;
 
-	for (json::iterator m = j.begin(); m != j.end(); ++m)
+	name = j.at("name");
+	type = (LayerType)j.at("type");
+
+	for (const auto& objs : j.at("objects"))
 	{
-		auto& d = m.key();
-
-		for (const auto& obj : j.at(d))
+		for (auto c_obj = objs.begin(); c_obj != objs.end(); c_obj++)
 		{
-			name = obj.at("name");
-			type = (LayerType)obj.at("type");
+			auto& k = c_obj.key();
 
-			for (const auto& objs : obj.at("objects"))
+			for (const auto& data : objs.at(k))
 			{
-				for (auto c_obj = objs.begin(); c_obj != objs.end(); c_obj++)
-				{
-					auto& k = c_obj.key();
-
-					for (const auto& data : objs.at(k))
-					{
-						Add(std::move(Object2D(
-							rManager[data.at("resource")],
-							grid.GetCellByPos(data.at("c-x"), data.at("c-y")),
-							data.at("id")
-						)));
-					}
-				}
+				Add(std::move(Object2D(
+					rManager[data.at("resource")],
+					grid.GetCellByPos(data.at("c-x"), data.at("c-y")),
+					data.at("id")
+				)));
 			}
 		}
 	}
