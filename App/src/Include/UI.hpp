@@ -68,6 +68,7 @@ private:
 	size_t GetLayersAmount(LayerType type) const;       // Посчитать кол-во скрытых слоёв
 
 	void KeyProc(unsigned char key, bool* ctx_state, bool* query);  // Функция обработки нажатия кнопки
+	void SpawnInfoText(const std::string& str, size_t counter, size_t pass, size_t fail);  // Функция для вывода общей информации
 private:
 	App* pApp;							// Указатель на приложение
 	float appScale = 1.0f;				// Множитель ViewPort			

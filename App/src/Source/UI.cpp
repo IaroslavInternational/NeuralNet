@@ -885,6 +885,11 @@ void UI::KeyProc(unsigned char key, bool* ctx_state, bool* query)
 	}
 }
 
+void UI::SpawnInfoText(const std::string& str, size_t counter, size_t pass, size_t fail)
+{
+	ImGui::TextColored(ImVec4(counter == fail ? 0.8f : 0.0f, counter >= pass ? 0.8f : 0.0f, 0.0f, 1.0f), str.c_str());
+}
+
 // Windows
 
 // Установить размер окна
@@ -929,6 +934,7 @@ void UI::ShowPanel()
 			{
 				if (ImGui::TreeNode(pApp->dList.projectName.c_str()))  // Имя проекта
 				{
+					// Не менять положение контекстного меню
 					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));
 					if (ImGui::BeginPopupContextItem())
 					{
@@ -942,6 +948,31 @@ void UI::ShowPanel()
 						ImGui::EndPopup();
 					}
 					ImGui::PopStyleColor();
+
+					if (ImGui::TreeNode("Общая информация"))  // Состояние слоёв НС
+					{
+						std::ostringstream oss;
+
+						oss << "Входных слоёв:  " << InputLayerCounter << "\n";
+						SpawnInfoText(oss.str().c_str(), InputLayerCounter, 1, 0);
+
+						oss.str("");
+						oss.clear();
+
+						oss << "Скрытых слоёв:  " << HiddenLayerCounter << "\n";
+						SpawnInfoText(oss.str().c_str(), HiddenLayerCounter, 1, 0);
+
+						oss.str("");
+						oss.clear();
+
+						oss << "Выходных слоёв: " << OutputLayerCounter << "\n";
+						SpawnInfoText(oss.str().c_str(), OutputLayerCounter, 1, 0);
+
+						oss.str("");
+						oss.clear();
+
+						ImGui::TreePop();
+					}
 
 					auto& layers = pApp->dList.dLayers;			// Указатель на текущий слой
 					for (size_t i = 0; i < layers.size(); i++)  // Цикл по слоям 
