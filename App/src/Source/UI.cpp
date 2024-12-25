@@ -529,7 +529,7 @@ void UI::Render()
 			oss.str("");
 			oss.clear();
 
-			if (pLayer->type != LayerType::Input)
+			if (pLayer->type != LayerType::Input && HiddenLayerCounter != 0)
 			{
 				oss << "Кол-во входящих синапсов: " << pLayer->GetSize() * (pLayer - 1)->GetSize();
 				ImGui::Text(oss.str().c_str());
@@ -538,7 +538,7 @@ void UI::Render()
 			oss.str("");
 			oss.clear();
 
-			if (pLayer->type != LayerType::Output)
+			if (pLayer->type != LayerType::Output && HiddenLayerCounter != 0)
 			{
 				oss << "Кол-во исходящих синапсов: " << pLayer->GetSize() * (pLayer + 1)->GetSize();
 				ImGui::Text(oss.str().c_str());
@@ -1000,6 +1000,48 @@ void UI::ShowPanel()
 								for (size_t j = 0; j < layers[i].GetSize(); j++)
 								{
 									ImGui::BulletText(layers[i][j].id.c_str());
+								}
+
+								ImGui::TreePop();
+							}
+
+							if (pLayer->type == LayerType::Output)
+							{
+								break;
+							}
+
+							if (ImGui::TreeNode("Синапсы"))
+							{
+								std::ostringstream oss;
+
+								size_t c = 0;
+								for (size_t j = 0; j < pLayer->dLayer.size(); j++)
+								{
+									for (size_t k = 0; k < (pLayer+1)->dLayer.size(); k++)
+									{
+										oss << "Synapse_" << i << "_" << c;
+										if (ImGui::TreeNode(oss.str().c_str()))
+										{
+											oss.str("");
+											oss.clear();
+
+											oss << "From: " << pLayer[0][j].id;
+											ImGui::BulletText(oss.str().c_str());
+
+											oss.str("");
+											oss.clear();
+
+											oss << "To: " << (pLayer+1)[0][k].id;
+											ImGui::BulletText(oss.str().c_str());
+											
+											ImGui::TreePop();
+										}
+
+										oss.str("");
+										oss.clear();
+
+										c++;
+									}
 								}
 
 								ImGui::TreePop();
