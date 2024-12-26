@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 
 #define _CRT_SECURE_NO_WARNINGS
 #define STB_IMAGE_IMPLEMENTATION
@@ -69,17 +70,21 @@ void UI::Update(float dt)
 {	
 	if (pApp->wnd.onClose)
 	{
-		SaveAll();
+		if (isChanges)
+		{
+			SaveAll();
+		}
 		exit(0);
 	}
 
 	cMenu.ctrl_pressed  = pApp->wnd.kbd.KeyIsPressed(VK_CONTROL);  // Если нажат Ctrl
-	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);   // Если нажат Shift
+	cMenu.shift_pressed = pApp->wnd.kbd.KeyIsPressed(VK_SHIFT);    // Если нажат Shift
 	 
 	KeyProc('A', &cMenu.a_pressed, &isAddNeuron);         // Если нажата A - добавить нейрон
 	KeyProc('D', &cMenu.d_pressed, &isDeleteNeuron);      // Если нажата D - удалить нейрон
 	KeyProc('H', &cMenu.h_pressed, &isAddHiddenLayer);    // Если нажата H - добавить скрытый слой
 	KeyProc('G', &cMenu.g_pressed, &isDeleteHiddenLayer); // Если нажата G - удалить скрытый слой
+	KeyProc('S', &cMenu.s_pressed, &isSave);			  // Если нажата S - сохранить всё
  
 	// Если курсор в рабочей области
 	if (pApp->wnd.mouse.GetPosX() >= 0 &&
@@ -276,6 +281,10 @@ void UI::Update(float dt)
 			DeleteHiddenLayer();
 			isDeleteHiddenLayer = true;
 			isChanges = true;
+		}
+		else if (cMenu.s_pressed)  // Если нажата кнопка S
+		{
+			SpawnThread(&UI::SaveAll);
 		}
 	}
 }
@@ -942,6 +951,25 @@ void UI::SaveAll()
 	
 	SetNewData(prjResult, basePath + "prj.json");
 
+	// Число файлов в папке с проектом
+	auto dirIter = std::filesystem::directory_iterator(basePath);
+	size_t fileCount = std::count_if(
+		begin(dirIter),
+		end(dirIter),
+		[](auto& entry) { return entry.is_regular_file(); }
+	);
+
+	// Удаляем лишние файлы с инфо о слоях
+	for (size_t i = pApp->dList.dLayers.size(); i < fileCount - 1; i++)
+	{
+		truePath << basePath << "layer" << i << ".json";
+
+		std::remove(truePath.str().c_str());
+
+		truePath.str("");
+		truePath.clear();
+	}
+	
 	isChanges = false;
 }
 

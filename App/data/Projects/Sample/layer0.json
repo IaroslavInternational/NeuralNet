@@ -1,1 +1,1 @@
-{"name":"Входной слой", "type":0, "objects" : [{"object 0": [{"c-x":1,"c-y":4,"id":"Neuron_0_0","resource":"res-1"}] ,"object 1": [{"c-x":1,"c-y":6,"id":"Neuron_0_1","resource":"res-1"}] }]}
+{"name":"Входной слой", "type":0, "objects" : [{"object 0": [{"c-x":3,"c-y":5,"id":"Neuron_0_0","resource":"res-1"}] ,"object 1": [{"c-x":3,"c-y":7,"id":"Neuron_0_1","resource":"res-1"}] }]}

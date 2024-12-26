@@ -27,6 +27,7 @@ struct ContextMenu
 	bool d_pressed = false;
 	bool h_pressed = false;
 	bool g_pressed = false;
+	bool s_pressed = false;
 
 	float counter = 0.0f;
 	Cell* first_ptr = nullptr;
@@ -101,6 +102,7 @@ private:
 
 	bool posSet = false;  // Костыль - чтобы установить положение окна об информации о слое 1 раз
 
+	bool isSave = false;
 	bool isChanges = false;
 private:
 	std::future<void> worker;
