@@ -70,6 +70,7 @@ private:
 
 	void KeyProc(unsigned char key, bool* ctx_state, bool* query);  // Функция обработки нажатия кнопки
 	void SpawnInfoText(const std::string& str, size_t counter, size_t pass, size_t fail);  // Функция для вывода общей информации
+	void TextCentered(const std::string& text);
 
 	void SaveAll();
 	void SetNewData(const std::string& data, const std::string& path);

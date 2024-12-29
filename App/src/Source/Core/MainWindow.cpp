@@ -14,11 +14,11 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 	args(pArgs),
 	hInst(hInst)
 {
-	int WholeScreenWidth  = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
+	int WholeScreenWidth = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), HORZRES);
 	int WholeScreenHeight = GetDeviceCaps(CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL), VERTRES);
-
-	ScreenWidth = int(WholeScreenWidth * 0.677f);
-	ScreenHeight = int(WholeScreenHeight * 0.740f);
+	
+	ScreenWidth  = WholeScreenWidth - 200;
+	ScreenHeight = WholeScreenHeight - 200;
 
 	WNDCLASSEX wc = 
 	{
@@ -49,6 +49,7 @@ MainWindow::MainWindow(HINSTANCE hInst, wchar_t* pArgs)
 		throw (L"Failed to get valid window handle.");
 	}
 
+	// Windows 11 style
 	{
 		#define DWMWA_BORDER_COLOR DWORD(34)
 		#define DWMWA_CAPTION_COLOR DWORD(35)

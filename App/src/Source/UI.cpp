@@ -300,6 +300,29 @@ void UI::Render()
 	SetPanelSizeAndPosition(0, 0.8f, 0.05f, 0.2f, 0.0f);
 	ShowTopPanel();
 
+	{
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.00f, 0.00f, 0.00f, 0.00f));
+		std::string s;
+		for (auto& layer : pApp->dList.dLayers)
+		{
+			for (auto& obj : layer.dLayer)
+			{
+				s = std::string("wnd_") + obj.id;
+				ImGui::SetNextWindowPos({ float(obj.cell->pos.x) + pApp->gfx.GetPanelWidth(), float(obj.cell->pos.y) });
+				ImGui::SetNextWindowSize({ float(pApp->dList.grid.padding), float(pApp->dList.grid.padding) });
+
+				if (ImGui::Begin(s.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
+				{
+					TextCentered("0.00");
+				}
+
+				ImGui::End();
+			}
+		}
+		ImGui::PopStyleColor();
+	}
+
 	// Popups
 	/* ==== Окно подтверждения удаления слоя ==== */
 	if (isDeleteLayer)
@@ -917,6 +940,19 @@ void UI::SpawnInfoText(const std::string& str, size_t counter, size_t pass, size
 	ImGui::TextColored(ImVec4(counter == fail ? 0.8f : 0.0f, counter >= pass ? 0.8f : 0.0f, 0.0f, 1.0f), str.c_str());
 }
 
+void UI::TextCentered(const std::string& text)
+{
+	auto windowWidth = ImGui::GetWindowSize().x;
+	auto windowHeight = ImGui::GetWindowSize().y;
+
+	auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+	auto textHeight = ImGui::CalcTextSize(text.c_str()).y;
+
+	ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+	ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
+	ImGui::Text(text.c_str());
+}
+
 void UI::SaveAll()
 {
 	auto create_param_str = [](const std::string& key, const std::string& value)
@@ -1093,11 +1129,11 @@ void UI::ShowPanel()
 
 			if (ImGui::BeginTabItem(prj.str().c_str()))
 			{
-				prj.str("");
-				prj.clear();
+				//prj.str("");
+				//prj.clear();
 
-				prj << pApp->dList.projectName.c_str() << (isChanges ? "" : " - Сохранено");
-				if (ImGui::TreeNode(prj.str().c_str()))  // Имя проекта
+				//prj << pApp->dList.projectName.c_str() << (isChanges ? "" : " - Сохранено");
+				if (ImGui::TreeNodeEx(pApp->dList.projectName.c_str(), ImGuiTreeNodeFlags_Framed))  // Имя проекта
 				{
 					// Не менять положение контекстного меню
 					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.00f, 0.00f, 0.00f, 1.00f));
@@ -1252,7 +1288,7 @@ void UI::ShowPanel()
 					pLayer = nullptr;
 					pApp->dList.selected = nullptr;
 				}
-
+				
 				ImGui::EndTabItem();
 			}
 		}
