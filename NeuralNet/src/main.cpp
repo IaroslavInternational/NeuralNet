@@ -13,8 +13,8 @@ Net::fmatrix weights;
 void load()
 {
 	weights.resize(2);
-	weights[0].reserve(49*14);
-	weights[1].reserve(14*3);
+	weights[0].reserve(2*4);
+	weights[1].reserve(4*1);
 
 	std::string current;
 	std::ifstream file("weights.txt");
@@ -26,11 +26,11 @@ void load()
 	{
 		while (std::getline(file, current))
 		{
-			if (counter < 49 * 14)
+			if (counter < 2 * 4)
 			{
 				idx = 0;
 			}
-			else if (counter < 49 * 14 + 14 * 3)
+			else if (counter < 2 * 4 + 4 * 1)
 			{
 				idx = 1;
 			}
@@ -66,7 +66,7 @@ int main()
 	{
 		{"run",		 std::function<void()>(std::bind(&NetSystem::run, &nsystem))},
 		{"set w",    std::function<void()>(std::bind(&NetSystem::set_weights, &nsystem, weights))},
-		{"train",    std::function<void()>(std::bind(&NetSystem::train, &nsystem, "train"))},
+		{"train",    std::function<void()>(std::bind(&NetSystem::train, &nsystem, "train_xor"))},
 		{"validate", std::function<void()>(std::bind(&NetSystem::validate, &nsystem))},
 	};
 

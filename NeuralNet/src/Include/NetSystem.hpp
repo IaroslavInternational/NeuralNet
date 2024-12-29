@@ -6,6 +6,7 @@
 
 class NetSystem
 {
+	friend class UI;
 public:
 	NetSystem(const std::string& config);
 public:

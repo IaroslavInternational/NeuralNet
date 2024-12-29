@@ -10,6 +10,7 @@
 
 class NeuralNet
 {
+	friend class UI;
 	friend class Monitoring;
 public:
 	NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_size, size_t O_Layer_size);

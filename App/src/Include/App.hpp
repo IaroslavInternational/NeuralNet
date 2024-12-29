@@ -23,6 +23,10 @@
 
 #include "UI.hpp"
 
+#include "C:\Users\HYPERPC\source\repos\NeuralNet\NeuralNet\src\Include\NetSystem.hpp"
+
+#pragma comment(lib, "libs/NeuralNet.lib")
+
 // Класс приложения
 class App
 {
@@ -38,8 +42,9 @@ private:
 	void ComposeFrame(float dt);  // Отрисовка объектов 
 private:
 	MainWindow& wnd;  // Адрес окна отрисовки
-	Graphics gfx;	  // Графический API
-	FrameTimer ft;	  // Таймер
+	Graphics    gfx;  // Графический API
+	FrameTimer  ft;	  // Таймер
+	NetSystem   ns;
 private:
 	std::vector<std::future<void>> workers;  // Потоки
 	ResourceManager rManager;				 // Менеджер ресурсов
@@ -49,5 +54,5 @@ private:
 private:  // Атрибуты для перемещения карты
 	pos2d initPos{};		// Начальная позиция
 	bool  onDrag = false;   // Статус перемещения
-	float hTime   = 0.0f;   // Время задержки ЛКМ
+	float hTime  = 0.0f;    // Время задержки ЛКМ
 };

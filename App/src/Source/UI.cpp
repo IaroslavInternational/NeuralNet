@@ -300,28 +300,7 @@ void UI::Render()
 	SetPanelSizeAndPosition(0, 0.8f, 0.05f, 0.2f, 0.0f);
 	ShowTopPanel();
 
-	{
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.00f, 0.00f, 0.00f, 0.00f));
-		std::string s;
-		for (auto& layer : pApp->dList.dLayers)
-		{
-			for (auto& obj : layer.dLayer)
-			{
-				s = std::string("wnd_") + obj.id;
-				ImGui::SetNextWindowPos({ float(obj.cell->pos.x) + pApp->gfx.GetPanelWidth(), float(obj.cell->pos.y) });
-				ImGui::SetNextWindowSize({ float(pApp->dList.grid.padding), float(pApp->dList.grid.padding) });
-
-				if (ImGui::Begin(s.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-					ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
-				{
-					TextCentered("0.00");
-				}
-
-				ImGui::End();
-			}
-		}
-		ImGui::PopStyleColor();
-	}
+	ShowOutputs();
 
 	// Popups
 	/* ==== Окно подтверждения удаления слоя ==== */
@@ -1364,6 +1343,60 @@ void UI::ShowTopPanel()
 	ImGui::PopStyleVar();
 }
 
+// Показать выходы нейронов
+void UI::ShowOutputs()
+{
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.00f, 0.00f, 0.00f, 0.00f));
+	std::string s;
+
+	size_t layer_counter = 0;
+	size_t neuron_counter = 0;
+	std::ostringstream oss;
+
+	for (auto& layer : pApp->dList.dLayers)
+	{
+		for (auto& obj : layer.dLayer)
+		{
+			s = std::string("wnd_") + obj.id;
+			ImGui::SetNextWindowPos({ float(obj.cell->pos.x) + pApp->gfx.GetPanelWidth(), float(obj.cell->pos.y) });
+			ImGui::SetNextWindowSize({ float(pApp->dList.grid.padding), float(pApp->dList.grid.padding) });
+
+			if (ImGui::Begin(s.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
+			{	
+				if (layer_counter == 0)
+				{
+					oss << pApp->ns.net.input_layer.get_neuron(neuron_counter)->get_output();
+					TextCentered(oss.str().c_str());
+				}
+				else if (layer_counter == 2) // FIX
+				{
+					oss << pApp->ns.net.output_layer.get_neuron(neuron_counter)->get_output();
+					TextCentered(oss.str().c_str());
+				}
+				else
+				{
+					for (auto& h : pApp->ns.net.hidden_layers)
+					{
+						oss << h.get_neuron(neuron_counter)->get_output();
+						TextCentered(oss.str().c_str());
+					}										
+				}
+
+				oss.str("");
+				oss.clear();
+			}
+
+			ImGui::End();
+
+			neuron_counter++;
+		}
+		neuron_counter = 0;
+		layer_counter++;
+	}
+	ImGui::PopStyleColor();
+}
+
 #ifndef NDEBUG
 
 // Simple helper function to load an image into a DX11 texture with common settings
@@ -1530,6 +1563,17 @@ void UI::Debug()
 				ImGui::EndTabItem();
 			}
 
+			if (ImGui::BeginTabItem("NS"))
+			{
+				if (ImGui::Button("train"))
+				{
+					//worker = std::async(std::launch::async, ptr, this);
+					auto thread = std::async(std::launch::async, &NetSystem::train, &pApp->ns, "sets\\train_xor");
+					//pApp->ns.train("sets\\train_xor");
+				}
+
+				ImGui::EndTabItem();
+			}
 			ImGui::EndTabBar();
 		}
 	}

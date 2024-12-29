@@ -6,10 +6,10 @@
 
 NetSystem::NetSystem(const std::string& config)
 	:
-	net(49, 1, 14, 3),
-	mon(&net, "Figures 2.3")
+	net(2, 1, 4, 1),
+	mon(&net, "Test integration")
 {
-	add_module(std::move(std::make_unique<ModuleData>("scripts/im2bin.py")));
+	//add_module(std::move(std::make_unique<ModuleData>("scripts/im2bin.py")));
 }
 
 void NetSystem::run()
@@ -50,7 +50,7 @@ void NetSystem::train(const std::string& set_name)
 {
 	set_loader = std::async(std::launch::async, &Net::get_train_set, set_name + std::string("\\"));
 
-	constexpr size_t max_epochs = 500;   // Кол-во эпох тренировки
+	constexpr size_t max_epochs = 1500;   // Кол-во эпох тренировки
 	constexpr float  min_error = 0.002f; // Цель ошибки
 
 	float out_val = 0.0f;		// Ошибка
@@ -117,7 +117,7 @@ void NetSystem::validate()
 
 	for (size_t i = 0; i < train_set.second.size(); i++)
 	{
-		oss << "Train set N_" << i << "\n";
+		oss << "Train set Num_" << i << "\n";
 		for (size_t j = 0; j < train_set.second[0].size(); j++)  // Размер вых. слоя
 		{
 			oss << "Expected: " << train_set.second[i][j] << " -> Actual: " << roundf(res[i][j] * 100) / 100 << "\t";

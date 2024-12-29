@@ -16,7 +16,8 @@ App::App(MainWindow& wnd)
 	gfx(wnd, wnd.GetWidth(), wnd.GetHeight()),
 	ui(this),
 	dList("data/Projects/Sample/prj.json", rManager, gfx),
-	camera(0, 0, dList)
+	camera(0, 0, dList),
+	ns("")
 {
 
 }

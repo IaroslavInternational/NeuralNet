@@ -53,6 +53,7 @@ private:
 	void ShowPanel();
 	void ShowViewPort();
 	void ShowTopPanel();
+	void ShowOutputs();
 	F_DEBUG(void Debug());
 private:
 	bool CheckExLayer(LayerType type);					// Проверить существования слоя в dList
