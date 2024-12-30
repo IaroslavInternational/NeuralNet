@@ -3,12 +3,12 @@
 #include "../../Include/Core/DXErr.hpp"
 
 #include "../../../libs/imgui/imgui.h"
+#include "../../../libs/imgui/implot.h"
 #include "../../../libs/imgui/imgui_impl_win32.h"
 #include "../../../libs/imgui/imgui_impl_dx11.h"
 
 #include <assert.h>
 #include <string>
-#include <array>
 
 namespace FramebufferShaders
 {
@@ -16,7 +16,7 @@ namespace FramebufferShaders
 	#include "../../shaders/FramebufferVS.shh"
 }
 
-#pragma comment( lib,"d3d11.lib" )
+#pragma comment(lib, "d3d11.lib")
 
 using Microsoft::WRL::ComPtr;
 
@@ -221,6 +221,7 @@ Graphics::Graphics(HWNDKey& key, int width, int height)
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImPlot::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -236,6 +237,7 @@ Graphics::~Graphics()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
+	ImPlot::DestroyContext();
 	ImGui::DestroyContext();
 
 	// free sysbuffer memory (aligned free)

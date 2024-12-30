@@ -14,7 +14,7 @@ NeuralNet::NeuralNet(size_t I_Layer_size, size_t H_Layer_num, size_t H_Layer_siz
 	hidden_layers.reserve(H_Layer_num);
 	for (size_t i = 0; i < H_Layer_num; i++)
 	{
-		hidden_layers.push_back(HiddenLayer(H_Layer_size, "Hidden Layer " + std::to_string(i)));
+		hidden_layers.emplace_back(H_Layer_size, "Hidden Layer " + std::to_string(i));
 	}
 
 	// ====== Создаём синапсы ====== 
@@ -119,6 +119,51 @@ void NeuralNet::set_params(float E, float a)
 std::vector<float>& NeuralNet::get_result()
 {
 	return result;
+}
+
+void NeuralNet::clear()
+{
+	input_layer.clear();
+	hidden_layers.clear();
+	output_layer.clear();
+}
+
+void NeuralNet::config_layer(size_t layer_num, size_t layer_size, size_t hidden_limit)
+{
+	if (layer_num == 0)
+	{
+		input_layer = InputLayer(layer_size, "Input Layer");
+	}
+	else if (layer_num >= 1 && layer_num <= hidden_limit)
+	{
+		hidden_layers.emplace_back(layer_size, "Hidden Layer " + std::to_string(layer_num - 1));
+	}
+	else
+	{
+		output_layer = OutputLayer(layer_size, "Output Layer");
+	}
+}
+
+void NeuralNet::link_layers()
+{
+	// Резервируем память для синапсов
+	input_layer.get_synapses()->reserve(input_layer.length() * hidden_layers[0].length());
+
+	// ====== Создаём синапсы ====== 
+
+	// Синпасы между входным слоем и первым скрытым слоем
+	create_synapses(&input_layer, &hidden_layers[0]);
+
+	// Синпасы между скрытыми слоями
+	for (size_t i = 0; i < hidden_layers.size() - 1; i++)
+	{
+		create_synapses(&hidden_layers[i], &hidden_layers[i + 1]);
+	}
+
+	// Синпасы между последним скрытым слоем и выходным слоем
+	create_synapses(&hidden_layers.back(), &output_layer);
+
+	// =============================
 }
 
 /* Private */

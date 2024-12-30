@@ -20,6 +20,10 @@ public:
 	void set_weights(const Net::fmatrix& weights);
 	void set_params(float E = 0.7f, float a = 0.3f);
 	std::vector<float>& get_result();
+public:  // Взаимодействие с App
+	void clear();
+	void config_layer(size_t layer_num, size_t layer_size, size_t hidden_limit);
+	void link_layers();
 private:
 	template<class T1, class T2> void create_synapses(Layer<T1>* l1, Layer<T2>* l2);
 private:

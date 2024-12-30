@@ -1,6 +1,7 @@
 #include "../Include/UI.hpp"
 
 #include "../../libs/imgui/imgui.h"
+#include "../../libs/imgui/implot.h"
 #include "../../libs/imgui/imgui_impl_win32.h"
 #include "../../libs/imgui/imgui_impl_dx11.h"
 
@@ -301,7 +302,7 @@ void UI::Render()
 	ShowTopPanel();
 
 	ShowOutputs();
-
+	PlotError();
 	// Popups
 	/* ==== Окно подтверждения удаления слоя ==== */
 	if (isDeleteLayer)
@@ -609,7 +610,7 @@ void UI::Render()
 	/************************************/
 
 	F_DEBUG(Debug());
-	F_DEBUG(ImGui::ShowDemoWindow());
+	//F_DEBUG(ImGui::ShowDemoWindow());
 }
 
 bool UI::CheckExLayer(LayerType type)
@@ -1397,6 +1398,41 @@ void UI::ShowOutputs()
 	ImGui::PopStyleColor();
 }
 
+static bool got = false;
+float* get_arr(size_t size)
+{
+	std::vector<float> data;
+
+	for (size_t i = 0; i < size; i++)
+	{
+		data.push_back((float)i);
+	}
+
+	return std::move(data.data());
+}
+
+void UI::PlotError()
+{
+	if (ShowError)
+	{
+		if (ImGui::Begin("Plot test", &ShowError))
+		{
+			ImPlot::SetNextAxesLimits(0.0, double(pApp->ns.mon.data.size()), 0.0, 1.0);
+			if (ImPlot::BeginPlot("Error history"))
+			{
+				float* x = get_arr(pApp->ns.mon.data.size());
+				//float* y = pApp->ns.mon.data.data();
+
+				ImPlot::PlotLine<float>("Error", pApp->ns.mon.data.data(), pApp->ns.mon.data.size());
+
+				ImPlot::EndPlot();
+			}
+		}
+
+		ImGui::End();
+	}
+}
+
 #ifndef NDEBUG
 
 // Simple helper function to load an image into a DX11 texture with common settings
@@ -1565,11 +1601,30 @@ void UI::Debug()
 
 			if (ImGui::BeginTabItem("NS"))
 			{
+				if (ImGui::Button("match"))
+				{
+					pApp->ns.net.clear();
+					pApp->ns.net.config_layer(0, pApp->dList.dLayers[0].GetSize(), HiddenLayerCounter + 1);
+
+					for (size_t i = 1; i < HiddenLayerCounter + 1; i++)
+					{
+						pApp->ns.net.config_layer(i, pApp->dList.dLayers[i].GetSize(), HiddenLayerCounter + 1);
+					}
+
+					pApp->ns.net.config_layer(pApp->dList.dLayers.size(), OutputLayerCounter, HiddenLayerCounter + 1);
+
+					pApp->ns.net.link_layers();
+				}
+
 				if (ImGui::Button("train"))
 				{
-					//worker = std::async(std::launch::async, ptr, this);
 					auto thread = std::async(std::launch::async, &NetSystem::train, &pApp->ns, "sets\\train_xor");
-					//pApp->ns.train("sets\\train_xor");
+					ShowError = true;
+				}
+
+				if (ImGui::Button("validate"))
+				{
+					auto thread = std::async(std::launch::async, &NetSystem::validate, &pApp->ns);
 				}
 
 				ImGui::EndTabItem();

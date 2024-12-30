@@ -6,6 +6,7 @@
 
 class Monitoring
 {
+	friend class UI;
 public:
 	Monitoring(NeuralNet* nn, const std::string& model_name);
 public:

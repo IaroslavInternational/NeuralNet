@@ -77,6 +77,8 @@ private:
 	void SetNewData(const std::string& data, const std::string& path);
 
 	std::string CreateJsonLayer(DrawLayer* l);
+
+	void PlotError();
 private:
 	App* pApp;							// ”казатель на приложение
 	float appScale = 1.0f;				// ћножитель ViewPort			
@@ -106,6 +108,8 @@ private:
 
 	bool isSave = false;
 	bool isChanges = false;
+
+	bool ShowError = false;
 private:
 	std::future<void> worker;
 #ifndef N_DEBUG

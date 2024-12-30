@@ -23,7 +23,7 @@
 
 #include "UI.hpp"
 
-#include "C:\Users\HYPERPC\source\repos\NeuralNet\NeuralNet\src\Include\NetSystem.hpp"
+#include <NetSystem.hpp>
 
 #pragma comment(lib, "libs/NeuralNet.lib")
 

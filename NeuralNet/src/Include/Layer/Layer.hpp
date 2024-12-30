@@ -22,6 +22,7 @@ public:
 	void set_weights(const std::vector<float>& weights);
 public:
 	std::vector<Synapse>* get_synapses();
+	void clear();
 protected:
 	std::vector<std::shared_ptr<T>> neurons;
 	std::vector<Synapse> synapses;
@@ -75,4 +76,11 @@ template<class T>
 std::vector<Synapse>* Layer<T>::get_synapses()
 {
 	return &synapses;
+}
+
+template<class T>
+void Layer<T>::clear()
+{
+	neurons.clear();
+	synapses.clear();
 }

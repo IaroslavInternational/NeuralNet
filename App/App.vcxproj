@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\HYPERPC\source\repos\NeuralNet\NeuralNet\src\Include;$(SourcePath)</SourcePath>
+    <SourcePath>$(SourcePath)</SourcePath>
     <IncludePath>$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
@@ -98,11 +98,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <CallingConvention>VectorCall</CallingConvention>
+      <CallingConvention>Cdecl</CallingConvention>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NeuralNet\src\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -145,12 +145,12 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <CallingConvention>VectorCall</CallingConvention>
+      <CallingConvention>Cdecl</CallingConvention>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <PreprocessorDefinitions>NDEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NeuralNet\src\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -168,6 +168,9 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="libs\imgui\implot.cpp" />
+    <ClCompile Include="libs\imgui\implot_demo.cpp" />
+    <ClCompile Include="libs\imgui\implot_items.cpp" />
     <ClCompile Include="src\Source\Objects\Camera.cpp" />
     <ClCompile Include="src\Source\Objects\Cell.cpp" />
     <ClCompile Include="src\Source\Objects\DrawLayer.cpp" />
@@ -207,6 +210,8 @@
     <None Include="XAudio\XAudio2_7_64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\imgui\implot.h" />
+    <ClInclude Include="libs\imgui\implot_internal.h" />
     <ClInclude Include="libs\stb_image.h" />
     <ClInclude Include="src\Include\Objects\DrawLayer.hpp" />
     <ClInclude Include="src\Include\Core\var.hpp" />
