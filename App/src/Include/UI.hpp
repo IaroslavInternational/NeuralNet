@@ -109,6 +109,7 @@ private:
 	bool isSave = false;
 	bool isChanges = false;
 
+	bool isShowOutputs = false;
 	bool ShowError = false;
 private:
 	std::future<void> worker;

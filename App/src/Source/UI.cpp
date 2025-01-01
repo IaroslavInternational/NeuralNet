@@ -303,6 +303,7 @@ void UI::Render()
 
 	ShowOutputs();
 	PlotError();
+
 	// Popups
 	/* ==== Окно подтверждения удаления слоя ==== */
 	if (isDeleteLayer)
@@ -1347,68 +1348,56 @@ void UI::ShowTopPanel()
 // Показать выходы нейронов
 void UI::ShowOutputs()
 {
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.00f, 0.00f, 0.00f, 0.00f));
-	std::string s;
-
-	size_t layer_counter = 0;
-	size_t neuron_counter = 0;
-	std::ostringstream oss;
-
-	for (auto& layer : pApp->dList.dLayers)
+	if (isShowOutputs)
 	{
-		for (auto& obj : layer.dLayer)
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.00f, 0.00f, 0.00f, 0.00f));
+		std::string s;
+
+		size_t layer_counter = 0;
+		size_t neuron_counter = 0;
+		std::ostringstream oss;
+
+		for (auto& layer : pApp->dList.dLayers)
 		{
-			s = std::string("wnd_") + obj.id;
-			ImGui::SetNextWindowPos({ float(obj.cell->pos.x) + pApp->gfx.GetPanelWidth(), float(obj.cell->pos.y) });
-			ImGui::SetNextWindowSize({ float(pApp->dList.grid.padding), float(pApp->dList.grid.padding) });
+			for (auto& obj : layer.dLayer)
+			{
+				s = std::string("wnd_") + obj.id;
+				ImGui::SetNextWindowPos({ float(obj.cell->pos.x) + pApp->gfx.GetPanelWidth(), float(obj.cell->pos.y) });
+				ImGui::SetNextWindowSize({ float(pApp->dList.grid.padding), float(pApp->dList.grid.padding) });
 
-			if (ImGui::Begin(s.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-				ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
-			{	
-				if (layer_counter == 0)
+				if (ImGui::Begin(s.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus))
 				{
-					oss << pApp->ns.net.input_layer.get_neuron(neuron_counter)->get_output();
-					TextCentered(oss.str().c_str());
-				}
-				else if (layer_counter == 2) // FIX
-				{
-					oss << pApp->ns.net.output_layer.get_neuron(neuron_counter)->get_output();
-					TextCentered(oss.str().c_str());
-				}
-				else
-				{
-					for (auto& h : pApp->ns.net.hidden_layers)
+					if (layer_counter == 0)
 					{
-						oss << h.get_neuron(neuron_counter)->get_output();
+						oss << pApp->ns.net.input_layer.get_neuron(neuron_counter)->get_output();
 						TextCentered(oss.str().c_str());
-					}										
+					}
+					else if (layer_counter == pApp->dList.dLayers.size() - 1)
+					{
+						oss << pApp->ns.net.output_layer.get_neuron(neuron_counter)->get_output();
+						TextCentered(oss.str().c_str());
+					}
+					else
+					{
+						oss << pApp->ns.net.hidden_layers[layer_counter - 1].get_neuron(neuron_counter)->get_output();
+						TextCentered(oss.str().c_str());
+					}
+
+					oss.str("");
+					oss.clear();
 				}
 
-				oss.str("");
-				oss.clear();
+				ImGui::End();
+
+				neuron_counter++;
 			}
 
-			ImGui::End();
-
-			neuron_counter++;
+			neuron_counter = 0;
+			layer_counter++;
 		}
-		neuron_counter = 0;
-		layer_counter++;
+		ImGui::PopStyleColor();
 	}
-	ImGui::PopStyleColor();
-}
-
-static bool got = false;
-float* get_arr(size_t size)
-{
-	std::vector<float> data;
-
-	for (size_t i = 0; i < size; i++)
-	{
-		data.push_back((float)i);
-	}
-
-	return std::move(data.data());
 }
 
 void UI::PlotError()
@@ -1420,9 +1409,6 @@ void UI::PlotError()
 			ImPlot::SetNextAxesLimits(0.0, double(pApp->ns.mon.data.size()), 0.0, 1.0);
 			if (ImPlot::BeginPlot("Error history"))
 			{
-				float* x = get_arr(pApp->ns.mon.data.size());
-				//float* y = pApp->ns.mon.data.data();
-
 				ImPlot::PlotLine<float>("Error", pApp->ns.mon.data.data(), pApp->ns.mon.data.size());
 
 				ImPlot::EndPlot();
@@ -1601,6 +1587,8 @@ void UI::Debug()
 
 			if (ImGui::BeginTabItem("NS"))
 			{
+				ImGui::Checkbox("Show outputs", &isShowOutputs);
+
 				if (ImGui::Button("match"))
 				{
 					pApp->ns.net.clear();
@@ -1618,6 +1606,7 @@ void UI::Debug()
 
 				if (ImGui::Button("train"))
 				{
+					pApp->ns.mon.data.clear();
 					auto thread = std::async(std::launch::async, &NetSystem::train, &pApp->ns, "sets\\train_xor");
 					ShowError = true;
 				}
